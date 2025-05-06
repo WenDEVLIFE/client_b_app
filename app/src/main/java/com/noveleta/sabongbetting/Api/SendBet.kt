@@ -1,0 +1,101 @@
+package com.noveleta.sabongbetting.Api;
+
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.net.HttpURLConnection
+import java.net.URL
+
+import com.noveleta.sabongbetting.Model.*
+import com.noveleta.sabongbetting.SharedPreference.*
+
+class BettingViewModel : ViewModel() {
+
+    private val _betResponse = MutableStateFlow<BetResponse?>(null)
+    val betResponse: StateFlow<BetResponse?> = _betResponse
+
+    private val _betResult = MutableStateFlow<Int?>(null)
+    val betResult: StateFlow<Int?> = _betResult
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    fun placeBet(
+        userID: String,
+        roleID: String,
+        betType: Int,
+        betAmount: Int
+    ) {
+        viewModelScope.launch {
+            _isLoading.value = true
+
+            try {
+                val ip = SessionManager.ipAddress.orEmpty().takeIf { it.isNotBlank() } ?: "192.168.8.100"
+                val url = URL("http://$ip/main/print/printBetAndroid.php")
+                val conn = (url.openConnection() as HttpURLConnection).apply {
+                    requestMethod = "POST"
+                    setRequestProperty("Content-Type", "application/json")
+                    doOutput = true
+                }
+
+                val jsonBody = JSONObject().apply {
+                    put("userID", userID)
+                    put("roleID", roleID)
+                    put("cname", SessionManager.cname ?: "N/A")
+                    put("betType", betType)
+                    put("betAmount", betAmount.toDouble())
+                }
+
+                withContext(Dispatchers.IO) {
+                    conn.outputStream.bufferedWriter().use { it.write(jsonBody.toString()) }
+                }
+
+                val responseText = withContext(Dispatchers.IO) {
+                    conn.inputStream.bufferedReader().use { it.readText() }
+                }
+
+                val json = JSONObject(responseText)
+                val success = json.getBoolean("success")
+                val resultInt = json.getInt("result")
+                
+                if(success){
+                _betResult.value = 0
+                }
+
+                if (success) {
+                    _betResponse.value = BetResponse(
+                        success = true,
+                        barcode = json.getString("barcode"),
+                        fightNumber = json.getInt("fightNumber"),
+                        betType = json.getInt("betType"),
+                        amount = json.getDouble("amount"),
+                        transactionDate = json.getString("transactionDate"),
+                        cashier = json.getString("cashier"),
+                        systemName = json.getString("systemName")
+                    )
+                } else {
+                    _betResponse.value = null
+                    _betResult.value = resultInt
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _betResult.value = -1
+                _betResponse.value = null
+            }
+
+            _isLoading.value = false
+        }
+    }
+
+    fun clearBetState() {
+        _betResult.value = null
+        _betResponse.value = null
+    }
+}

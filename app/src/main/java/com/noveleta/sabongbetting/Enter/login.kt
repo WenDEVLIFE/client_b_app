@@ -1,0 +1,308 @@
+package com.noveleta.sabongbetting.Enter;
+
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.draw.*
+import androidx.compose.foundation.shape.*
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.*
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.*
+import androidx.compose.ui.text.input.*
+import androidx.compose.ui.text.style.*
+import androidx.compose.ui.unit.*
+import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.platform.LocalContext
+
+import android.widget.Toast
+
+import coil.compose.AsyncImage
+
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
+
+import kotlinx.coroutines.*
+
+import com.noveleta.sabongbetting.ui.theme.*
+import com.noveleta.sabongbetting.Factory.*
+import com.noveleta.sabongbetting.Model.*
+import com.noveleta.sabongbetting.SharedPreference.*
+import com.noveleta.sabongbetting.Helper.*
+import com.noveleta.sabongbetting.Network.*
+import com.noveleta.sabongbetting.widgets.*
+import com.noveleta.sabongbetting.R
+import com.noveleta.sabongbetting.*
+ 
+@Composable
+fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
+    val context = LocalContext.current
+    val loginState by viewModel.loginState
+    
+    var userError by remember { mutableStateOf(false) }
+    var passwordError by remember { mutableStateOf(false) }
+    
+    var showSettingsDialog by remember { mutableStateOf(false) }
+    var showWarningDialog by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        
+        Image(
+            painter = painterResource(id = R.drawable.bg),    
+            contentDescription = null,                                
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop,                         
+            alignment = Alignment.Center
+        )
+        
+        IconButton(
+            onClick = { showSettingsDialog = true },
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = "Settings",
+                tint = Color.White      
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 40.dp, end = 40.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "logo",
+                modifier = Modifier.size(110.dp),
+                contentScale = ContentScale.Crop
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "Log In",
+                fontSize =23.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                EditTextWidgets.editTextOneLine(
+                    placeHolderTitle = "Username",
+                    textValue = viewModel.userName.value,
+                    onTextValueChange = { viewModel.userName.value = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    isPasswordField = false,
+                    isError = userError
+                )
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                EditTextWidgets.editTextOneLine(
+                    placeHolderTitle = "Password",
+                    textValue = viewModel.password.value,
+                    onTextValueChange = { viewModel.password.value = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    isPasswordField = true,
+                    isError = passwordError
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            if (loginState is LoginState.Error) {
+                Text(
+                    text = (loginState as LoginState.Error).message,
+                    color = Color.Red,
+                    fontSize = 11.sp
+                )
+            }else if(passwordError){
+                Text(
+                    text = "Password cannot be empty!",
+                    color = Color.Red,
+                    fontSize = 11.sp
+                )
+            }else if(userError){
+                Text(
+                    text = "Username cannot be empty!",
+                    color = Color.Red,
+                    fontSize = 11.sp
+                )
+            }else if(userError && passwordError){
+                Text(
+                    text = "Username and Password cannot be empty!",
+                    color = Color.Red,
+                    fontSize = 11.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            if (loginState != LoginState.Loading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(45.dp)
+                        .clip(RoundedCornerShape(25.dp))
+                        .background(
+                            color = if (viewModel.userName.value.isNotBlank() && viewModel.password.value.isNotBlank())
+                                Color(0xFF3E65FF) else Color(0xFF3F4F8A),
+                            shape = RoundedCornerShape(25.dp)
+                        )
+                        .clickable {
+                         userError = viewModel.userName.value.isBlank()
+                         passwordError = viewModel.password.value.isBlank()
+
+                         val ipIsEmpty = SessionManager.ipAddress.isNullOrBlank()
+                         val portIsEmpty = SessionManager.portAddress.isNullOrBlank()
+
+                         if (!userError && !passwordError) {
+                            if (ipIsEmpty || portIsEmpty) {
+                               showWarningDialog = true
+                               } else {
+                               onSuccess()
+                               viewModel.logInUser()
+                             }
+                           }
+                       },    
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Sign In", fontSize = 12.sp,fontWeight = FontWeight.Bold, color = Color.White)
+                }
+            } else {
+                CircularProgressIndicator(color = Color.Black, modifier = Modifier.size(36.dp))
+            }
+
+            /*Text(
+                text = buildAnnotatedString {
+                    append("Create New Account as a New User")
+                    addStyle(
+                        SpanStyle(textDecoration = TextDecoration.Underline, color = Color(0xFFDB535A)),
+                        start = 0,
+                        end = 32
+                    )
+                },
+                fontSize = 11.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        context.startActivity(Intent(context, MainActivity::class.java))
+                    },
+                textAlign = TextAlign.Center
+            )*/
+        }
+
+        // Handle navigation on success, with a LaunchedEffect
+        LaunchedEffect(loginState) {
+            if (loginState is LoginState.Success) {
+                val code = (loginState as LoginState.Success).code
+                when (code) {
+                    1, 2 -> {
+                        onSuccess()
+                        viewModel.resetState()
+                    }
+                    6 -> {
+                        Toast.makeText(context, "System Access is not yet available!", Toast.LENGTH_SHORT).show()
+                        viewModel.resetState()
+                    }
+                    8 -> {
+                        Toast.makeText(context, "No event for today. Access to system is limited.", Toast.LENGTH_SHORT).show()
+                        viewModel.resetState()
+                    }
+                    10 -> {
+                        Toast.makeText(context, "Server might be offline, please try again later.", Toast.LENGTH_SHORT).show()
+                        viewModel.resetState()
+                    }
+                    else -> {
+                        Toast.makeText(context, "Login Credentials are Invalid!", Toast.LENGTH_SHORT).show()
+                        viewModel.resetState()
+                    }
+                }
+            }
+        }
+    }
+    
+    var ip = SessionManager.ipAddress
+    val port = SessionManager.portAddress
+
+    if (showSettingsDialog) {
+        if (ip.isNullOrEmpty()) {
+            ip = getWifiIpAddress(context)
+    }
+    SettingsUi.SettingsDialog(
+        onDismiss = { showSettingsDialog = false },
+        initialIp = ip ?: "",
+        initialPort = port ?: ""
+    )
+}
+
+if (showWarningDialog) {
+    AlertDialog(
+        onDismissRequest = { showWarningDialog = false },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    showWarningDialog = false
+                    showSettingsDialog = true
+                }
+            ) {
+                Text("Go to Settings")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { showWarningDialog = false }) {
+                Text("Cancel")
+            }
+        },
+        title = { Text("Missing Configuration!") },
+        text = { Text("Please set up your IP address and port number before logging in.") }
+    )
+}
+
+    
+}
+

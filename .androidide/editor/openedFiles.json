@@ -1,0 +1,35 @@
+{
+  "allFiles": [
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/Sabong Betting/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/cancelBet.kt",
+      "selection": {
+        "end": {
+          "column": 53,
+          "index": 3620,
+          "line": 91
+        },
+        "start": {
+          "column": 53,
+          "index": 3620,
+          "line": 91
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/Sabong Betting/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/withdrawDepositTicket.kt",
+      "selection": {
+        "end": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        },
+        "start": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        }
+      }
+    }
+  ],
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/Sabong Betting/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/withdrawDepositTicket.kt"
+}
