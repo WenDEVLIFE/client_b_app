@@ -86,12 +86,15 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     val viewModelReprintBet: ReprintBetViewModel = viewModel()
     
     val reprintResponse by viewModelReprintBet.betResponse.collectAsState()
+    val reprintErrorCode by viewModelReprintBet.betErrorCode.collectAsState()
     val reprintResult by viewModelReprintBet.betResult.collectAsState()
     
     val cashInResponse by viewModelCashInData.betResponse.collectAsState()
+    val cashInErrorCode by viewModelCashInData.betErrorCode.collectAsState()
     val cashInResult by viewModelCashInData.betResult.collectAsState()
     
     val cashOutResponse by viewModelCashOutData.betResponse.collectAsState()
+    val cashOutErrorCode by viewModelCashOutData.betErrorCode.collectAsState()
     val cashOutResult by viewModelCashOutData.betResult.collectAsState()
     
     val betResponse by viewModel.betResponse.collectAsState()
@@ -151,7 +154,7 @@ if (reprintResponse != null) {
         delay(3000) // 3 seconds
         rePrintBetResponse(context, reprintResponse!!)
     }
-}else if (reprintResponse == null) {
+}else if (reprintResponse == null && reprintErrorCode == -1) {
     
     RePrintBetErrorResults(reprintResult){
     viewModelReprintBet.clearBetState()
@@ -170,7 +173,7 @@ LaunchedEffect(cashOutResponse) {
         delay(3000) // 3 seconds
         printTellerCashoutResponse(context, cashOutResponse!!)
     }
-}else if (cashOutResponse == null) {
+}else if (cashOutResponse == null && cashInErrorCode == -1) {
     PrintTellerCashOutErrorResults(cashOutResult){
     viewModelCashOutData.clearBetState()
     }
@@ -187,7 +190,7 @@ LaunchedEffect(cashInResponse) {
         delay(3000) // 3 seconds
         printTellerCashinResponse(context, cashInResponse!!)
     }
-}else if (cashInResponse == null) {
+}else if (cashInResponse == null && cashOutErrorCode == -1) {
 
     PrintTellerCashOutErrorResults(cashInResult){
     viewModelCashInData.clearBetState()
