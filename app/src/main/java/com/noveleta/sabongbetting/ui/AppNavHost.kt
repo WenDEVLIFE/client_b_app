@@ -36,6 +36,8 @@ import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.*
 import kotlinx.coroutines.delay
+import android.content.Intent
+import android.provider.Settings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,12 +61,15 @@ fun AppNavHost(
         animationSpec = tween(durationMillis = 500),
         label = "Banner Color Animation"
     )
+    
+    var showOfflineDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(isConnected) {
         if (!isConnected) {
             bannerMessage = "You are offline"
             bannerColor = Color.Red
             showBanner = true
+            showOfflineDialog = true
         } else if (showBanner) {
             bannerMessage = "Back online"
             bannerColor = Color(0xFF1BEB53)
@@ -73,6 +78,38 @@ fun AppNavHost(
             showBanner = false
         }
     }
+
+if (showOfflineDialog) {
+    AlertDialog(
+        onDismissRequest = {},
+        title = {
+            Text("No Internet Connection")
+        },
+        text = {
+            Text("You are currently offline. Please reconnect or quit the app.")
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                showOfflineDialog = false
+                val intent = Intent(Settings.ACTION_WIFI_SETTINGS)
+                context.startActivity(intent)
+            }) {
+                Text("Reconnect")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = {
+                showOfflineDialog = false
+                if (context is Activity) {
+                    context.finishAffinity() // Quits the app
+                }
+            }) {
+                Text("Quit")
+            }
+        }
+    )
+}
+
 
     Scaffold(
         modifier = Modifier
