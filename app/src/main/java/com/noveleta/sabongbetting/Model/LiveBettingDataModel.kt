@@ -25,7 +25,10 @@ data class LiveBettingData(
     val fightHistory: List<FightHistoryEntry>?,
     val cashHandlerNames: List<CashHandlers>?,
     val userTransactionLogs: List<FightLogEntry>?,
-    val userCurrentBets: List<CurrentBetLogs>?
+    val userCurrentBets: List<CurrentBetLogs>?,
+    val drawSettingData: String?,
+    val drawMultiplierData: String?,
+    val drawMaxData: String?
 )
 
     data class CashHandlers(
