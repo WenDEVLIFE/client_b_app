@@ -9,6 +9,12 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
+<uses-permission android:name="android.permission.BLUETOOTH" />
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+<!-- Android 12+ -->
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+
     <!-- 3. Let your app query the Sunmi scanner packages on Android 11+ -->
     <queries>
         <package android:name="com.sunmi.sunmiqrcodescanner"/>
