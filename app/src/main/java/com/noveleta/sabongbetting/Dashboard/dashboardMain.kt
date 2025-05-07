@@ -62,6 +62,8 @@ import kotlinx.coroutines.launch
 import androidx.compose.material3.ModalNavigationDrawer
 import kotlinx.coroutines.delay
 import android.util.Log
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.graphics.ColorFilter
@@ -107,12 +109,15 @@ fun MainWithDrawer() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainWithDrawer() {
-    // Obtain activity for finish() and launching MainActivity
+    
     val activity = LocalContext.current as? Activity
     val context = LocalContext.current
     val viewModelDashboardData: LiveBettingViewModel = viewModel()
     val viewModelStaffBetData: PlaceBetsViewModel = viewModel()
     val viewModelPayoutData: SendPayoutViewModel = viewModel()
+    
+    val errorMsg by viewModelDashboardData.errorResult.observeAsState()
+    val clipboard = LocalClipboardManager.current
     
     val betResponse by viewModelPayoutData.betResponse.collectAsState()
     val betResult by viewModelPayoutData.betResult.collectAsState()
@@ -173,6 +178,34 @@ if(betResponse != null){
         // Simplified: hide after a delay or based on a flag in ViewModel
         delay(2000L)
         showConnectingDialog = false
+    }
+    
+    errorMsg?.let { message ->
+        AlertDialog(
+            onDismissRequest = {
+                viewModelDashboardData.clearError()
+                activity?.finishAffinity()
+            },
+            title = { Text("WebSocket Error") },
+            text = { Text(message) },
+            confirmButton = {
+                TextButton(onClick = {
+                    // Copy to clipboard
+                    clipboard.setText(AnnotatedString(message))
+                    Toast.makeText(context, "Error copied to clipboard", Toast.LENGTH_SHORT).show()
+                    viewModelDashboardData.clearError()
+                }) {
+                    Text("Copy")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    activity?.finishAffinity()
+                }) {
+                    Text("Quit")
+                }
+            }
+        )
     }
 
     val navController = rememberNavController()
@@ -309,6 +342,7 @@ if(betResponse != null){
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(Color(0xFF19181B))
                 .height(56.dp) // typical AppBar height
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -489,5 +523,8 @@ if (dashboardData != null) {
                 }
             )
         }
+        
+        
+        
     }
 }
