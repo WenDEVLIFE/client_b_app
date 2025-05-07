@@ -77,6 +77,7 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     val currentFight = liveBetData?.fightNumber?.toIntOrNull() ?: 75
     
     var showCashTellerDialog by remember { mutableStateOf(false) }
+    var showWarningBetDraw by remember { mutableStateOf(false) }
     var cashInOrOut by remember { mutableStateOf("Cash In") } 
     
     val viewModel: BettingViewModel = viewModel()
@@ -264,8 +265,19 @@ Row(
              DigitInputBox.DigitInputBoxDisplay(clickableMeron = { betAmount ->
              viewModel.placeBet(userID = companyId, roleID = userRole, betType = 1, betAmount = betAmount)
              },
+             
              clickableDraw = { betAmount ->
-             viewModel.placeBet(userID = companyId, roleID = userRole, betType = 3, betAmount = betAmount)
+             val drawMax = liveBetData?.drawMaxData ?: 0
+             
+               if (betAmount <= drawMax) {
+                  viewModel.placeBet(userID = companyId, roleID = userRole, betType = 3, betAmount = betAmount)
+               } else {
+                 // Optionally show a message: "Bet amount exceeds the draw limit."
+                 showWarningBetDraw = true
+               }
+             }
+
+             
              },
              clickableWala = { betAmount ->
              viewModel.placeBet(userID = companyId, roleID = userRole, betType = 2, betAmount = betAmount)
@@ -304,6 +316,23 @@ if (showCashTellerDialog) {
             // handle the result (cashAmount, selectedHandlerId, password, cashInOrOut)
             
             showCashTellerDialog = false
+        }
+    )
+}
+
+if (showWarningBetDraw) {
+    AlertDialog(
+        onDismissRequest = { showWarningBetDraw = false },
+        confirmButton = {
+            TextButton(onClick = { showWarningBetDraw = false }) {
+                Text("Okay")
+            }
+        },
+        title = {
+            Text("Bet Limit Exceeded")
+        },
+        text = {
+            Text("Your bet exceeds the allowed draw limit. Please enter a smaller amount.")
         }
     )
 }
