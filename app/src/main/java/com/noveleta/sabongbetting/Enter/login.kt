@@ -63,7 +63,11 @@ import com.noveleta.sabongbetting.Network.*
 import com.noveleta.sabongbetting.widgets.*
 import com.noveleta.sabongbetting.R
 import com.noveleta.sabongbetting.*
- 
+
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import coil.size.Size
+
 @Composable
 fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
     val context = LocalContext.current
@@ -80,13 +84,7 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
             .fillMaxSize()
     ) {
         
-        Image(
-            painter = painterResource(id = R.drawable.bg),    
-            contentDescription = null,                                
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop,                         
-            alignment = Alignment.Center
-        )
+        CoilBackground()
         
         IconButton(
             onClick = { showSettingsDialog = true },
@@ -108,13 +106,13 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            
             Image(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "logo",
                 modifier = Modifier.size(110.dp),
                 contentScale = ContentScale.Crop
             )
-
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
@@ -306,3 +304,19 @@ if (showWarningDialog) {
     
 }
 
+@Composable
+fun CoilBackground() {
+  val painter = rememberAsyncImagePainter(
+    ImageRequest.Builder(LocalContext.current)
+      .data(R.drawable.bg)
+      .size(Size.ORIGINAL)       // or a fixed target like (1080,1920)
+      .allowHardware(false)      // use software bitmaps to avoid GL texture issues
+      .build()
+  )
+  Image(
+    painter = painter,
+    contentDescription = null,
+    contentScale = ContentScale.Crop,
+    modifier = Modifier.fillMaxSize()
+  )
+}
