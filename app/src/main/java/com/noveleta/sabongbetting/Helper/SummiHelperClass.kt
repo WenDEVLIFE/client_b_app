@@ -24,12 +24,32 @@ class SunmiPrinterHelper {
     /**
      * SunmiPrinterService for API
      */
+    
     private var sunmiPrinterService: SunmiPrinterService? = null
+    private var onPrinterReady: (() -> Unit)? = null
 
+    fun initSunmiPrinterService(context: Context, onReady: () -> Unit) {
+        this.mContext = context
+        this.onPrinterReady = onReady
+        try {
+            val ret = InnerPrinterManager.getInstance().bindService(
+                context.applicationContext,
+                innerPrinterCallback
+            )
+            if (!ret) {
+                sunmiPrinter = NoSunmiPrinter
+            }
+        } catch (e: InnerPrinterException) {
+            showPrinterStatus(context)
+            Toast.makeText(context, "Printing failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+        }
+    }
+    
     private val innerPrinterCallback: InnerPrinterCallback = object : InnerPrinterCallback() {
         override fun onConnected(service: SunmiPrinterService) {
             sunmiPrinterService = service
-            checkSunmiPrinterService(service)
+            sunmiPrinter = FoundSunmiPrinter
+            onPrinterReady?.invoke()
         }
 
         override fun onDisconnected() {
@@ -37,22 +57,11 @@ class SunmiPrinterHelper {
             sunmiPrinter = LostSunmiPrinter
         }
     }
-
-    fun initSunmiPrinterService(context: Context?) {
-        try {
-            this.mContext = context!!
-            val ret = InnerPrinterManager.getInstance().bindService(
-                context,
-                innerPrinterCallback
-            )
-            if (!ret) {
-                sunmiPrinter = NoSunmiPrinter
-            }
-        } catch (e: InnerPrinterException) {
-            e.printStackTrace()
-        }
+    
+    fun isPrinterReady(): Boolean {
+        return sunmiPrinterService != null
     }
-
+    
     /**
      * deInit sunmi print service
      */

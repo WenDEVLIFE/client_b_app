@@ -5,12 +5,10 @@ import com.noveleta.sabongbetting.Model.*
 
 fun printBetResponse(context: Context, betResponse: BetResponse) {
     val printerHelper = SunmiPrinterHelper()
-    printerHelper.initSunmiPrinterService(context)
-
-    try {
-       
+    printerHelper.initSunmiPrinterService(context){
+    printerHelper.setAlign(1) // 0 = Left, 1 = Center, 2 = Right
         
-        // Print Barcode using printer's native method
+    // Print Barcode using printer's native method
         printerHelper.printQr(
            data = betResponse.barcode,
            modulesize = 8,    // size of each QR “dot” (1–16)
@@ -39,21 +37,16 @@ fun printBetResponse(context: Context, betResponse: BetResponse) {
         // Cut paper and feed
         printerHelper.cutpaper()
         printerHelper.feedPaper()
-
-    } catch (e: Exception) {
-        printerHelper.showPrinterStatus(context)
-        //Toast.makeText(context, "Printing failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+        
     }
 }
 
 fun rePrintBetResponse(context: Context, betResponse: ReprintBetResponse) {
     val printerHelper = SunmiPrinterHelper()
-    printerHelper.initSunmiPrinterService(context)
-
-    try {
-       
+    printerHelper.initSunmiPrinterService(context){
+    printerHelper.setAlign(1) // 0 = Left, 1 = Center, 2 = Right
         
-        // Print Barcode using printer's native method
+    // Print Barcode using printer's native method
         printerHelper.printQr(
            data = betResponse.barcode,
            modulesize = 8,    // size of each QR “dot” (1–16)
@@ -76,9 +69,5 @@ fun rePrintBetResponse(context: Context, betResponse: ReprintBetResponse) {
         // Cut paper and feed
         printerHelper.cutpaper()
         printerHelper.feedPaper()
-
-    } catch (e: Exception) {
-        printerHelper.showPrinterStatus(context)
-        //Toast.makeText(context, "Printing failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
     }
 }

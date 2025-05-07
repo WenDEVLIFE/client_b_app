@@ -5,10 +5,8 @@ import com.noveleta.sabongbetting.Model.*
 
 fun printTellerCashoutResponse(context: Context, betResponse: CashoutResponse) {
     val printerHelper = SunmiPrinterHelper()
-    printerHelper.initSunmiPrinterService(context)
-
-    try {
-        printerHelper.setAlign(1) // 0 = Left, 1 = Center, 2 = Right
+    printerHelper.initSunmiPrinterService(context){
+    printerHelper.setAlign(1) // 0 = Left, 1 = Center, 2 = Right
 
         // Print Details
         printerHelper.printText("${betResponse.transactionDate}", 20f, false, false, "MONOSPACE")
@@ -24,19 +22,13 @@ fun printTellerCashoutResponse(context: Context, betResponse: CashoutResponse) {
         // Cut paper and feed
         printerHelper.cutpaper()
         printerHelper.feedPaper()
-
-    } catch (e: Exception) {
-        printerHelper.showPrinterStatus(context)
-        //Toast.makeText(context, "Printing failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
     }
 }
 
 fun printTellerCashinResponse(context: Context, betResponse: CashinResponse) {
     val printerHelper = SunmiPrinterHelper()
-    printerHelper.initSunmiPrinterService(context)
-
-    try {
-        printerHelper.setAlign(1) // 0 = Left, 1 = Center, 2 = Right
+    printerHelper.initSunmiPrinterService(context){
+    printerHelper.setAlign(1) // 0 = Left, 1 = Center, 2 = Right
 
         // Print Details
         printerHelper.printText("${betResponse.transactionDate}", 20f, false, false, "MONOSPACE")
@@ -52,20 +44,13 @@ fun printTellerCashinResponse(context: Context, betResponse: CashinResponse) {
         // Cut paper and feed
         printerHelper.cutpaper()
         printerHelper.feedPaper()
-
-    } catch (e: Exception) {
-        printerHelper.showPrinterStatus(context)
-        //Toast.makeText(context, "Printing failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
     }
 }
 
 fun printPayout(context: Context, betResponse: BetPayoutResponse) {
     val printerHelper = SunmiPrinterHelper()
-    printerHelper.initSunmiPrinterService(context)
-
-    try {
-        
-        printerHelper.setAlign(1) // 0 = Left, 1 = Center, 2 = Right
+    printerHelper.initSunmiPrinterService(context){
+    printerHelper.setAlign(1) // 0 = Left, 1 = Center, 2 = Right
 
         // Print Details
         printerHelper.printText("${betResponse.transactionCode}", 20f, true, false, "MONOSPACE")
@@ -86,10 +71,6 @@ printerHelper.printLabelValue("PAYOUT: ", betResponse.payout)
         // Cut paper and feed
         printerHelper.cutpaper()
         printerHelper.feedPaper()
-
-    } catch (e: Exception) {
-        printerHelper.showPrinterStatus(context)
-        //Toast.makeText(context, "Printing failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
     }
 }
 

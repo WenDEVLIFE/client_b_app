@@ -6,10 +6,8 @@ import com.noveleta.sabongbetting.Model.*
 fun printCancelledBetting(context: Context, betResponse: CancelledBetResponse) {
 
 val printerHelper = SunmiPrinterHelper()
-    printerHelper.initSunmiPrinterService(context)
-
-    try {
-        printerHelper.setAlign(1) // 0 = Left, 1 = Center, 2 = Right
+    printerHelper.initSunmiPrinterService(context){
+    printerHelper.setAlign(1) // 0 = Left, 1 = Center, 2 = Right
         
         // Print Barcode using printer's native method
         printerHelper.printQr(
@@ -30,13 +28,11 @@ val printerHelper = SunmiPrinterHelper()
         printerHelper.printText("CANCELLED TICKET BET", 26f, false, false, "DEFAULT")
         
         printerHelper.printText(" ", 20f, false, false, "MONOSPACE")
-        printerHelper.printText("Fight #: ${betResponse.fightNumber}", 18f, false, false, "MONOSPACE")
-        printerHelper.printText("SIDE: ${betResponse.side}", 18f, false, false, "MONOSPACE")
-        printerHelper.printText("AMOUNT: ${betResponse.amount}", 18f, false, false, "MONOSPACE")
-    } catch (e: Exception) {
-        printerHelper.showPrinterStatus(context)
-        //Toast.makeText(context, "Printing failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
-    }
+        printerHelper.printLabelValue("Fight #: ", betResponse.fightNumber)
+        printerHelper.printLabelValue("SIDE: ", betResponse.side)
+        printerHelper.printLabelValue("AMOUNT: ", betResponse.amount)
+        
+        }
 }
 
 
