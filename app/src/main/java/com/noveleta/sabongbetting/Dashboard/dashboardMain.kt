@@ -67,6 +67,8 @@ import androidx.compose.ui.text.AnnotatedString
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.graphics.ColorFilter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 /*
 @OptIn(ExperimentalMaterial3Api::class)
@@ -110,7 +112,7 @@ fun MainWithDrawer() {
 @Composable
 fun MainWithDrawer() {
     
-    val activity = LocalContext.current as? Activity
+    val activity = LocalContext.current as Activity
     val context = LocalContext.current
     val viewModelDashboardData: LiveBettingViewModel = viewModel()
     val viewModelStaffBetData: PlaceBetsViewModel = viewModel()
@@ -363,7 +365,25 @@ if(betResponse != null){
                 modifier = Modifier.weight(1f)
             )
 
-            IconButton(onClick = { /* Do something for the end icon */ }) {
+            IconButton(onClick = { /* Do something for the end icon */ 
+           
+CoroutineScope(Dispatchers.IO).launch {
+    // Call your suspend function here
+  try {
+    connectAndPrint(
+      context = context,
+      activity = activity,
+      width   = PaperWidth.WIDTH_50,     // or WIDTH_80
+      text    = "Hello Sumni!\nThank you for choosing Sabong betting.\n"
+    )
+    
+    Toast.makeText(context, "Printing status: printed successfully", Toast.LENGTH_LONG).show()
+  } catch (e: Exception) {
+  Toast.makeText(context, "Printing status: print failed - ${e.message}", Toast.LENGTH_LONG).show()
+  }
+}
+
+            }) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_scan_barcode),
                     contentDescription = "Scan Barcode",
