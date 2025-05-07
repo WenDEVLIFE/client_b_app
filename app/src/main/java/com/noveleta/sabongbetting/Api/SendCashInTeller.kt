@@ -98,7 +98,7 @@ class SendCashInTellerViewModel : ViewModel() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 _betResult.value = null
-                _betErrorCode.value = -1
+                _betErrorCode.value = 0
                 _betResponse.value = null
             }
 
@@ -108,7 +108,7 @@ class SendCashInTellerViewModel : ViewModel() {
 
     fun clearBetState() {
         _betResult.value = null
-        _betErrorCode.value = null
+        _betErrorCode.value = 0
         _betResponse.value = null
     }
 }

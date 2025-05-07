@@ -87,7 +87,7 @@ class ReprintBetViewModel : ViewModel() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 _betResult.value = null
-                _betErrorCode.value = null
+                _betErrorCode.value = 0
                 _betResponse.value = null
             }
 
@@ -97,7 +97,7 @@ class ReprintBetViewModel : ViewModel() {
 
     fun clearBetState() {
         _betResult.value = null
-        _betErrorCode.value = null
+        _betErrorCode.value = 0
         _betResponse.value = null
     }
 }

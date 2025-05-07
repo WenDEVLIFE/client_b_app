@@ -34,59 +34,65 @@ import kotlinx.coroutines.delay
 
 class LiveBettingViewModel : ViewModel() {
    
-    private val _dashboardData = MutableLiveData<LiveBettingData?>(null)
+    private val _dashboardData = MutableLiveData<LiveBettingData?>()
     val dashboardData: LiveData<LiveBettingData?> = _dashboardData
-    
+
+    // 1) New error LiveData
+    private val _errorResult = MutableLiveData<String?>()
+    val errorResult: LiveData<String?> = _errorResult
+
     private lateinit var webSocket: WebSocket
     private var retryCount = 0
-    private val maxRetries = 5
+    private val maxRetries = 10
     
     private var updateJob: Job? = null
 
-private fun startPeriodicSubscription() {
-    updateJob = viewModelScope.launch {
-        while (isActive) {
-            delay(5000L) // every 5 seconds
-            val subscribe = """{"type":"androidDashboard","roleID":${SessionManager.roleID?.toIntOrNull() ?: 2}, "companyID": "${SessionManager.accountID}"}"""
-            webSocket.send(subscribe)
-            Log.d("WebSocket", "Periodic subscription sent")
+    private fun startPeriodicSubscription() {
+        updateJob = viewModelScope.launch {
+            while (isActive) {
+                delay(5_000L)
+                val subscribe = """{"type":"androidDashboard","roleID":${SessionManager.roleID?.toIntOrNull() ?: 2}, "companyID": "${SessionManager.accountID}"}"""
+                webSocket.send(subscribe)
+                Log.d("WebSocket", "Periodic subscription sent")
+            }
         }
     }
-}
 
-
- fun stopPeriodicSubscription() {
-    updateJob?.cancel()
-}
-
+    fun stopPeriodicSubscription() {
+        updateJob?.cancel()
+    }
     
+    fun clearError() {
+        _errorResult.postValue(null)
+    }
+
     fun connectWebSocket() {
-          if (retryCount > maxRetries) {
-              Log.e("WebSocket", "Max retries reached, giving up.")
-              return
-          }
-          val ip = SessionManager.ipAddress?.takeIf { it.isNotBlank() } ?: "192.168.8.100"
-          val port = SessionManager.portAddress?.takeIf { it.isNotBlank() } ?: "8080"
-    
-          val sessionId = SessionManager.sessionId
-          val userRole = SessionManager.roleID?.toIntOrNull() ?: 2
-          val request = Request.Builder()
-              .url("ws://$ip:$port")
-              .apply { sessionId?.let { addHeader("Cookie", "PHPSESSID=$it") } }
-              .build()
-          val client = OkHttpClient()
-        
-          val listener = object : WebSocketListener() {
-        
-          override fun onOpen(ws: WebSocket, resp: okhttp3.Response) {
-              retryCount = 0
-              Log.d("WebSocket", "Connection opened with response code: ${resp.code}")
-              Log.d("WebSocket", "Headers: ${resp.headers}")
-         
-              startPeriodicSubscription()
-              
-           }
-    
+        if (retryCount > maxRetries) {
+            val msg = "Max retries ($maxRetries) reached, giving up."
+            Log.e("WebSocket", msg)
+            _errorResult.postValue(msg)        // <-- surface this error
+            return
+        }
+
+        val ip = SessionManager.ipAddress?.takeIf { it.isNotBlank() } ?: "192.168.8.100"
+        val port = SessionManager.portAddress?.takeIf { it.isNotBlank() } ?: "8080"
+        val sessionId = SessionManager.sessionId
+
+        val request = Request.Builder()
+            .url("ws://$ip:$port")
+            .apply { sessionId?.let { addHeader("Cookie", "PHPSESSID=$it") } }
+            .build()
+        val client = OkHttpClient()
+
+        val listener = object : WebSocketListener() {
+
+            override fun onOpen(ws: WebSocket, resp: okhttp3.Response) {
+                retryCount = 0
+                _errorResult.postValue(null)      // clear any previous error
+                Log.d("WebSocket", "Connection opened: ${resp.code}")
+                startPeriodicSubscription()
+            }
+
             override fun onMessage(ws: WebSocket, text: String) {
                 Log.d("WebSocket", "Raw message: $text")
                 try {
@@ -114,37 +120,49 @@ private fun startPeriodicSubscription() {
                     Log.e("WebSocket", "JSON error: ${e.message}")
                 }
             }
+
             override fun onFailure(ws: WebSocket, t: Throwable, resp: okhttp3.Response?) {
-               Log.e("WebSocket", "Connection failure", t)
-               Log.e("WebSocket", "Response: ${resp?.message}")
-               retryCount++
+                // 2) Post the actual error message
+                val errorMsg = t.localizedMessage ?: resp?.message ?: "Unknown WebSocket error"
+                Log.e("WebSocket", "Connection failure: $errorMsg", t)
+                _errorResult.postValue(errorMsg)
+
+                // existing retry logic
+                if (retryCount < maxRetries) {
+                    retryCount++
+                    viewModelScope.launch {
+                        delay(2_000L * retryCount)
+                        connectWebSocket()
+                    }
+                }
             }
+
             override fun onClosing(ws: WebSocket, code: Int, reason: String) {
-            stopPeriodicSubscription()
-               Log.d("WebSocket", "Connection closing: code=$code, reason=$reason")
+                stopPeriodicSubscription()
+                Log.d("WebSocket", "Connection closing: $code / $reason")
             }
+
             override fun onClosed(ws: WebSocket, code: Int, reason: String) {
-            stopPeriodicSubscription()
-               Log.d("WebSocket", "Connection closed: code=$code, reason=$reason")
-             }
+                stopPeriodicSubscription()
+                Log.d("WebSocket", "Connection closed: $code / $reason")
+            }
         }
+
         webSocket = client.newWebSocket(request, listener)
     }
-    
+
     override fun onCleared() {
         super.onCleared()
         stopPeriodicSubscription()
         if (::webSocket.isInitialized) webSocket.cancel()
     }
-    
+
     fun closeWebSocket() {
-    try {
-        webSocket.close(1000, "App backgrounded or stopped")
-        Log.d("WebSocket", "WebSocket closed manually")
-    } catch (e: Exception) {
-        Log.e("WebSocket", "Error closing WebSocket: ${e.message}")
+        try {
+            webSocket.close(1000, "App backgrounded or stopped")
+            Log.d("WebSocket", "WebSocket closed manually")
+        } catch (e: Exception) {
+            Log.e("WebSocket", "Error closing WebSocket: ${e.message}")
+        }
     }
-}
-
-
 }
