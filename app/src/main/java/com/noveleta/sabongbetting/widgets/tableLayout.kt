@@ -171,6 +171,7 @@ fun FightHistoryOneGrid(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
+            .background(Color(0xFF19181B))
             .verticalScroll(rememberScrollState())
     ) {
         // Header
