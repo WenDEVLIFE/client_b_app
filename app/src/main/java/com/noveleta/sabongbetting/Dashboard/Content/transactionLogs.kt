@@ -100,7 +100,7 @@ fun transactionLogsUI(liveBetData: LiveBettingData) {
     
 }
     
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
         Column(
             modifier = Modifier
                 .padding(16.dp)

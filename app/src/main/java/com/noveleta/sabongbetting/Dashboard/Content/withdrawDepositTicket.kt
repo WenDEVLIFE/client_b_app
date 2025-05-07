@@ -113,7 +113,7 @@ val context = LocalContext.current
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
             
-    Box(Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
     
         Column(
             Modifier

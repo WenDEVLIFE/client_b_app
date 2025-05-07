@@ -128,7 +128,7 @@ fun cancelBetUI() {
 
     
 
-    Box(Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
     
         Column(
             Modifier
