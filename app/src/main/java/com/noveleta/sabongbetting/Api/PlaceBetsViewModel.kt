@@ -63,8 +63,6 @@ private fun startPeriodicSubscription() {
             delay(5000L) // every 5 seconds
              val subscribeMessages = listOf(
         """{"type": "androidViewBets", "roleID": 2}""",
-        """{"type": "drawSetting", "roleID": 2}""",
-        """{"type": "newFight", "roleID": 2}""",
         """{"type": "transactionHistoryAndroid", "roleID": 2, "companyID": "${SessionManager.accountID}"}"""
     )
             for (message in subscribeMessages) {
