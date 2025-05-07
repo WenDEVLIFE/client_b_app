@@ -7,8 +7,11 @@ import android.os.RemoteException
 import android.widget.Toast
 import com.noveleta.sabongbetting.R
 import com.sunmi.peripheral.printer.*
+import android.util.Log
+import android.os.Handler
+import android.os.Looper
 
-class SunmiPrinterHelper {
+object SunmiPrinterHelper {
 
     var NoSunmiPrinter = 0x00000000
     var CheckSunmiPrinter = 0x00000001
@@ -38,28 +41,71 @@ class SunmiPrinterHelper {
             )
             if (!ret) {
                 sunmiPrinter = NoSunmiPrinter
+                Toast.makeText(context, "No printer found", Toast.LENGTH_SHORT).show()
+                Log.e("SunmiPrinterHelper", "bindService returned false")
+            } else {
+                Log.d("SunmiPrinterHelper", "bindService called successfully")
             }
         } catch (e: InnerPrinterException) {
-            showPrinterStatus(context)
+            sunmiPrinter = NoSunmiPrinter
+            Log.e("SunmiPrinterHelper", "InnerPrinterException: ${e.localizedMessage}")
             Toast.makeText(context, "Printing failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
         }
     }
-    
+
     private val innerPrinterCallback: InnerPrinterCallback = object : InnerPrinterCallback() {
         override fun onConnected(service: SunmiPrinterService) {
             sunmiPrinterService = service
             sunmiPrinter = FoundSunmiPrinter
-            onPrinterReady?.invoke()
+            Log.d("SunmiPrinterHelper", "Printer connected")
+            
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (isPrinterReady()) {
+                    Log.d("SunmiPrinterHelper", "Calling onPrinterReady()")
+                    Toast.makeText(mContext, "Printer connected", Toast.LENGTH_SHORT).show()
+                    onPrinterReady?.invoke()
+                } else {
+                    Log.e("SunmiPrinterHelper", "Printer service is still null after connection")
+                    Toast.makeText(mContext, "Printer not ready after connect", Toast.LENGTH_SHORT).show()
+                }
+            }, 300) // Delay to ensure service is ready
         }
 
         override fun onDisconnected() {
             sunmiPrinterService = null
             sunmiPrinter = LostSunmiPrinter
+            Log.w("SunmiPrinterHelper", "Printer disconnected")
+            Toast.makeText(mContext, "Printer disconnected", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun isPrinterReady(): Boolean {
+        return sunmiPrinterService != null
+    }
+    
+    /**
+     * Initialize the printer
+     * All style settings will be restored to default
+     */
+    fun initPrinter() {
+        if (sunmiPrinterService == null) {
+            //TODO Service disconnection processing
+            return
+        }
+        try {
+            sunmiPrinterService!!.printerInit(null)
+        } catch (e: RemoteException) {
+            handleRemoteException(e)
         }
     }
     
-    fun isPrinterReady(): Boolean {
-        return sunmiPrinterService != null
+    fun printLabelValue(label: String, value: String) {
+    try {
+        val data = formatLabelValue(label, value)
+        sunmiPrinterService?.sendRAWData(data, null)
+    } catch (e: RemoteException) {
+        e.printStackTrace()
+    }
     }
     
     /**
@@ -116,14 +162,6 @@ class SunmiPrinterHelper {
         }
     }
     
-    fun printLabelValue(label: String, value: String) {
-    try {
-        val data = formatLabelValue(label, value)
-        sunmiPrinterService?.sendRAWData(data, null)
-    } catch (e: RemoteException) {
-        e.printStackTrace()
-    }
-    }
     
     fun formatLabelValue(label: String, value: String): ByteArray {
     val normal = byteArrayOf(0x1B, 0x45, 0x00) // ESC E 0 - disable bold
@@ -137,21 +175,7 @@ class SunmiPrinterHelper {
     }
 
 
-    /**
-     * Initialize the printer
-     * All style settings will be restored to default
-     */
-    fun initPrinter() {
-        if (sunmiPrinterService == null) {
-            //TODO Service disconnection processing
-            return
-        }
-        try {
-            sunmiPrinterService!!.printerInit(null)
-        } catch (e: RemoteException) {
-            handleRemoteException(e)
-        }
-    }
+    
 
     /**
      * paper feed three lines
@@ -300,7 +324,7 @@ class SunmiPrinterHelper {
             print3Line()
         }
     }
-
+    
     fun printText(
         content: String?, size: Float, isBold: Boolean, isUnderLine: Boolean,
         typeface: String?
@@ -334,6 +358,23 @@ class SunmiPrinterHelper {
             e.printStackTrace()
         }
     }
+    
+    /**
+     * print Qr Code
+     */
+    fun printQr(data: String?, modulesize: Int, errorlevel: Int) {
+        if (sunmiPrinterService == null) {
+            //TODO Service disconnection processing
+            return
+        }
+        try {
+            sunmiPrinterService!!.printQRCode(data, modulesize, errorlevel, null)
+        } catch (e: RemoteException) {
+            e.printStackTrace()
+        }
+    }
+
+
 
     /**
      * print Bar Code
@@ -345,21 +386,6 @@ class SunmiPrinterHelper {
         }
         try {
             sunmiPrinterService!!.printBarCode(data, symbology, height, width, textposition, null)
-        } catch (e: RemoteException) {
-            e.printStackTrace()
-        }
-    }
-
-    /**
-     * print Qr Code
-     */
-    fun printQr(data: String?, modulesize: Int, errorlevel: Int) {
-        if (sunmiPrinterService == null) {
-            //TODO Service disconnection processing
-            return
-        }
-        try {
-            sunmiPrinterService!!.printQRCode(data, modulesize, errorlevel, null)
         } catch (e: RemoteException) {
             e.printStackTrace()
         }
