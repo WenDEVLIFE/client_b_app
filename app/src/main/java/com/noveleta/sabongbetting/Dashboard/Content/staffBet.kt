@@ -267,17 +267,13 @@ Row(
              },
              
              clickableDraw = { betAmount ->
-             val drawMax = liveBetData?.drawMaxData ?: 0
-             
-               if (betAmount <= drawMax) {
-                  viewModel.placeBet(userID = companyId, roleID = userRole, betType = 3, betAmount = betAmount)
-               } else {
-                 // Optionally show a message: "Bet amount exceeds the draw limit."
-                 showWarningBetDraw = true
-               }
-             }
+             val drawMax = liveBetData?.drawMaxData?.toIntOrNull() ?: 0
 
-             
+if (betAmount != null && betAmount <= drawMax) {
+    viewModel.placeBet(userID = companyId, roleID = userRole, betType = 3, betAmount = betAmount)
+} else {
+    showWarningBetDraw = true
+}
              },
              clickableWala = { betAmount ->
              viewModel.placeBet(userID = companyId, roleID = userRole, betType = 2, betAmount = betAmount)
