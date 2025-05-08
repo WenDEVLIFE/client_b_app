@@ -202,6 +202,7 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
                             if (ipIsEmpty || portIsEmpty) {
                                showWarningDialog = true
                                } else {
+                               onSuccess()
                                viewModel.logInUser()
                              }
                            }
