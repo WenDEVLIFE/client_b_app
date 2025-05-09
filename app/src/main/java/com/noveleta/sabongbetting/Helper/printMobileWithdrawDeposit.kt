@@ -22,19 +22,15 @@ fun printMobileWithdraw(context: Context, betResponse: MobileWithdrawResponse) {
         )
         
         // Print Details
-        SunmiPrinterHelper.printText("${betResponse.barcode}", 30f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 20f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("${betResponse.timestamp}", 30f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 30f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("${betResponse.systemName}", 30f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("Cashier: ${betResponse.cashier}", 28f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
+        SunmiPrinterHelper.printLabelValue("${betResponse.barcode}","")
+        SunmiPrinterHelper.print3Line()
+    
+        SunmiPrinterHelper.printLabelValue("${betResponse.timestamp}","")
+        SunmiPrinterHelper.printLabelValue("${betResponse.systemName}","")
         
-        // Print Title
-        SunmiPrinterHelper.printText("POINTS WITHDRAWN", 30f, false, false, "MONOSPACE")
+        SunmiPrinterHelper.printLabelValue("Cashier: ", betResponse.cashier)
+        SunmiPrinterHelper.printLabelValue("POINTS WITHDRAWN", "")
         
-        SunmiPrinterHelper.printText(" ", 20f, false, false, "MONOSPACE")
         SunmiPrinterHelper.printLabelValue("ACCOUNT: ", betResponse.accountID)
         SunmiPrinterHelper.printLabelValue("CURRENT POINTS: ", betResponse.currentBalance)
         SunmiPrinterHelper.printLabelValue("WITHDRAW AMOUNT: ", betResponse.withdrawnAmount)
@@ -64,24 +60,20 @@ if (!SunmiPrinterHelper.isPrinterReady()) {
         )
         
         // Print Details
-        SunmiPrinterHelper.printText("${betResponse.barcode}", 30f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 20f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("${betResponse.datetime}", 30f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("${betResponse.systemName}", 30f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("Cashier: ${betResponse.cashier}", 28f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
+        SunmiPrinterHelper.printLabelValue("${betResponse.barcode}","")
+        SunmiPrinterHelper.print3Line()
+    
+        SunmiPrinterHelper.printLabelValue("${betResponse.datetime}","")
+        SunmiPrinterHelper.printLabelValue("${betResponse.systemName}","")
         
-        // Print Title
-        SunmiPrinterHelper.printText("POINTS DEPOSITED", 30f, false, false, "MONOSPACE")
+        SunmiPrinterHelper.printLabelValue("Cashier: ", betResponse.cashier)
+        SunmiPrinterHelper.printLabelValue("POINTS DEPOSITED", "")
         
-        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
         SunmiPrinterHelper.printLabelValue("ACCOUNT: ", betResponse.accountID)
         SunmiPrinterHelper.printLabelValue("CURRENT POINTS: ", betResponse.currentBalance)
         SunmiPrinterHelper.printLabelValue("DEPOSIT AMOUNT: ", betResponse.depositAmount)
         SunmiPrinterHelper.printLabelValue("AVAILABLE POINTS: ", betResponse.availablePoints)
-        
+        SunmiPrinterHelper.print3Line()
         // Cut paper and feed
         SunmiPrinterHelper.cutpaper()
         SunmiPrinterHelper.feedPaper()

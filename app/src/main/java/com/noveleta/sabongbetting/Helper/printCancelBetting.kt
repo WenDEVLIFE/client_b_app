@@ -21,23 +21,23 @@ if (!SunmiPrinterHelper.isPrinterReady()) {
         )
         
         // Print Details
-        SunmiPrinterHelper.printText("${betResponse.barcode}", 30f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("${betResponse.dateTime}", 30f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("${betResponse.systemName}", 30f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("Cashier: ${betResponse.cashier}", 28f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 20f, false, false, "MONOSPACE")
+        SunmiPrinterHelper.printLabelValue("${betResponse.barcode}","")
+        SunmiPrinterHelper.print3Line()
+    
+        SunmiPrinterHelper.printLabelValue("${betResponse.dateTime}","")
+        SunmiPrinterHelper.printLabelValue("${betResponse.systemName}","")
         
+        SunmiPrinterHelper.printLabelValue("Cashier: ", betResponse.cashier)
+        SunmiPrinterHelper.printLabelValue("CANCELLED TICKET BET", "")
         // Print Title
-        SunmiPrinterHelper.printText("CANCELLED TICKET BET", 30f, false, false, "MONOSPACE")
         
-        SunmiPrinterHelper.printText(" ", 20f, false, false, "MONOSPACE")
         SunmiPrinterHelper.printLabelValue("Fight #: ", betResponse.fightNumber)
         SunmiPrinterHelper.printLabelValue("SIDE: ", betResponse.side)
         SunmiPrinterHelper.printLabelValue("AMOUNT: ", betResponse.amount)
+        SunmiPrinterHelper.print3Line()
         
+        SunmiPrinterHelper.cutpaper()
+    SunmiPrinterHelper.feedPaper()
 }
 
 

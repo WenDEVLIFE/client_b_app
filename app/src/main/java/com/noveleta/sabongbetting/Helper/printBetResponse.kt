@@ -20,14 +20,13 @@ fun printBetResponse(context: Context, betResponse: BetResponse) {
     )
 
     // Text details
-    SunmiPrinterHelper.printText("${betResponse.barcode}",        30f, true,  false, "MONOSPACE")
-    SunmiPrinterHelper.printText(" ",                             30f, false, false, "MONOSPACE")
-    SunmiPrinterHelper.printText("${betResponse.transactionDate}",30f, true,  false, "MONOSPACE")
-    SunmiPrinterHelper.printText(" ",                             30f, false, false, "MONOSPACE")
-    SunmiPrinterHelper.printText("${betResponse.systemName}",     30f, true,  false, "MONOSPACE")
-    SunmiPrinterHelper.printText("Cashier: ${betResponse.cashier}",28f, true,  false, "MONOSPACE")
-    SunmiPrinterHelper.printText("Bet",                           30f, true,  false, "MONOSPACE")
-
+    SunmiPrinterHelper.printLabelValue("${betResponse.barcode}","")
+    SunmiPrinterHelper.print3Line()
+    
+    SunmiPrinterHelper.printLabelValue("${betResponse.transactionDate}","")
+    SunmiPrinterHelper.printLabelValue("${betResponse.systemName}","")
+    SunmiPrinterHelper.printLabelValue("Cashier: ",    betResponse.cashier)
+    SunmiPrinterHelper.printLabelValue("BET", "")
     // Label/value pairs
     SunmiPrinterHelper.printLabelValue("AMOUNT: ",    betResponse.amount.toString())
     SunmiPrinterHelper.printLabelValue("FIGHT #: ",   betResponse.fightNumber.toString())
@@ -36,7 +35,7 @@ fun printBetResponse(context: Context, betResponse: BetResponse) {
         2 -> "WALA"
         else -> "DRAW"
     })
-
+SunmiPrinterHelper.print3Line()
     // Finish
     SunmiPrinterHelper.cutpaper()
     SunmiPrinterHelper.feedPaper()
@@ -59,21 +58,18 @@ fun rePrintBetResponse(context: Context, betResponse: ReprintBetResponse) {
         )
         
         // Print Details
-        SunmiPrinterHelper.printText("${betResponse.barcode}", 30f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("${betResponse.transactionDate}", 30f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("${betResponse.systemName}", 30f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("Cashier: ${betResponse.cashier}", 28f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
-        // Print Title
-        SunmiPrinterHelper.printText("Reprint Bet", 30f, true, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 20f, false, false, "MONOSPACE")
+        SunmiPrinterHelper.printLabelValue("${betResponse.barcode}","")
+        SunmiPrinterHelper.print3Line()
+    
+        SunmiPrinterHelper.printLabelValue("${betResponse.transactionDate}","")
+        SunmiPrinterHelper.printLabelValue("${betResponse.systemName}","")
+        
+        SunmiPrinterHelper.printLabelValue("Cashier: ", betResponse.cashier)
+        SunmiPrinterHelper.printLabelValue("Reprint Bet", "")
         SunmiPrinterHelper.printLabelValue("AMOUNT: ", betResponse.betType)
         SunmiPrinterHelper.printLabelValue("FIGHT #: ", betResponse.fightNumber)
         SunmiPrinterHelper.printLabelValue("SIDE: ", betResponse.fightNumber)
-        
+        SunmiPrinterHelper.print3Line()
         // Cut paper and feed
         SunmiPrinterHelper.cutpaper()
         SunmiPrinterHelper.feedPaper()
