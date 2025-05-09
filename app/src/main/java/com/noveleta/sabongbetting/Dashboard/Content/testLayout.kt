@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -53,6 +54,9 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 import kotlinx.coroutines.*
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+
 import com.noveleta.sabongbetting.ui.theme.*
 import com.noveleta.sabongbetting.Factory.*
 import com.noveleta.sabongbetting.Api.*
@@ -66,6 +70,7 @@ import com.noveleta.sabongbetting.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun testLayout() {
+val activity = LocalContext.current as Activity
     val context = LocalContext.current
     val isDarkTheme = isSystemInDarkTheme()
     val iconTint = if (isDarkTheme) Color.White else Color.Black
@@ -77,7 +82,6 @@ fun testLayout() {
     
     // dialog state
     var showDialog by remember { mutableStateOf(false) }
-    var transactionCode by remember { mutableStateOf("") }
     
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
@@ -96,35 +100,28 @@ fun testLayout() {
             }
             }
     
-    val scannerLauncher = rememberLauncherForActivityResult(
-    ActivityResultContracts.StartActivityForResult()
-) { result ->
-    val scans = result.data
-        ?.extras
-        ?.getSerializable("data")
-        .let { it as? ArrayList<HashMap<String, String>> }
-        ?.map { it["TYPE"].orEmpty() to it["VALUE"].orEmpty() }
-        .orEmpty()
-
-    // If we got at least one code, populate and show dialog
-    scans.firstOrNull()?.second?.let { code ->
-        transactionCode = code
-        viewModelPayoutData.claimPayout(userID = companyId, roleID = userRole, barcodeResult = transactionCode)
-    }
-}
-
-
-    // 1️⃣ Permission launcher
+    val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
+    // ➌ Remember the permission launcher
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
-        if (granted) {
-            launchSunmiScan(context, scannerLauncher)
-        } else {
-            Toast.makeText(context, "Camera permission is required", Toast.LENGTH_SHORT).show()
-        }
+        if (granted) startSunmiV2Scan(context)
+        else Toast.makeText(context, "Camera permission is required", Toast.LENGTH_SHORT).show()
     }
 
+    // ➍ Remember the scan ActivityResultLauncher
+    val scannerLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // Extract your scanned code; change the key if needed
+            val code = result.data?.getStringExtra("SCAN_BARCODE1") ?: ""
+            viewModelPayoutData.setTransactionCode(code)
+            
+            viewModelPayoutData.claimPayout(userID = companyId, roleID = userRole, barcodeResult = code)
+            viewModelPayoutData.setTransactionCode("")
+        }
+    }
     
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
@@ -160,13 +157,18 @@ fun testLayout() {
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            // On click: check permission or request then scan
                             if (ContextCompat.checkSelfPermission(
                                     context,
                                     Manifest.permission.CAMERA
                                 ) == PackageManager.PERMISSION_GRANTED
                             ) {
-                                launchSunmiScan(context, scannerLauncher)
+                                // Launch the Activity-based scan
+                                val intent = Intent("com.sunmi.scanner.ACTION_START_SCAN").apply {
+                                    putExtra("com.sunmi.scanner.extra.PLAY_SOUND", true)
+                                    putExtra("com.sunmi.scanner.extra.PLAY_VIBRATE", false)
+                                    putExtra("CURRENT_PKG_NAME", context.packageName)
+                                }
+                                scannerLauncher.launch(intent)
                             } else {
                                 cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
                             }
@@ -179,6 +181,24 @@ fun testLayout() {
 
             DigitInputBox.BetClaimPayout("Manual Input", Color(0xFF2EB132)) {
                 showDialog = true
+            }
+            
+            DigitInputBox.BetClaimPayout("Print Sample", Color(0xFF2EB132)) {
+                CoroutineScope(Dispatchers.IO).launch {
+    // Call your suspend function here
+  try {
+    connectAndPrint(
+      context = context,
+      activity = activity,
+      width   = PaperWidth.WIDTH_50,     // or WIDTH_80
+      text    = "Hello Sumni!\nThank you for choosing Sabong betting.\n"
+    )
+    
+    Toast.makeText(context, "Printing status: printed successfully", Toast.LENGTH_LONG).show()
+  } catch (e: Exception) {
+  Toast.makeText(context, "Printing status: print failed - ${e.message}", Toast.LENGTH_LONG).show()
+  }
+}
             }
         }
 
@@ -200,7 +220,7 @@ fun testLayout() {
     value = transactionCode,
     onValueChange = { 
         if (it.length <= 14 && it.all { char -> char.isDigit() }) {
-            transactionCode = it
+            viewModelPayoutData.setTransactionCode(it)
         }
     },
     placeholder = { Text("Enter Transaction Code") },
@@ -239,20 +259,12 @@ fun testLayout() {
     }
 }
 
-// Extracted helper to launch Sunmi scanner intents
- fun launchSunmiScan(
-    context: Context,
-    launcher: androidx.activity.result.ActivityResultLauncher<Intent>
-) {
-    val primary = Intent("com.summi.scan").apply {
-        `package` = "com.sunmi.sunmiqrcodescanner"
-        putExtra("PLAY_SOUND", true)
-        putExtra("PLAY_VIBRATE", false)
-        putExtra("IS_SHOW_FLASHLIGHT", true)
-    }
-    try {
-        launcher.launch(primary)
-    } catch (_: ActivityNotFoundException) {
-        launcher.launch(Intent("com.sunmi.scanner.qrscanner"))
+
+fun startSunmiV2Scan(context: Context) {
+    Intent("com.sunmi.scanner.ACTION_START_SCAN").also { intent ->
+        intent.putExtra("com.sunmi.scanner.extra.PLAY_SOUND", true)
+        intent.putExtra("com.sunmi.scanner.extra.PLAY_VIBRATE", false)
+        intent.putExtra("CURRENT_PKG_NAME", context.packageName)
+        context.sendBroadcast(intent)
     }
 }

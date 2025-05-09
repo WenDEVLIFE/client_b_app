@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -77,7 +78,6 @@ fun cancelBetUI() {
     
     // dialog state
     var showDialog by remember { mutableStateOf(false) }
-    var transactionCode by remember { mutableStateOf("") }
     
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
@@ -97,35 +97,27 @@ fun cancelBetUI() {
             }
             }
     
-    val scannerLauncher = rememberLauncherForActivityResult(
-    ActivityResultContracts.StartActivityForResult()
-) { result ->
-    val scans = result.data
-        ?.extras
-        ?.getSerializable("data")
-        .let { it as? ArrayList<HashMap<String, String>> }
-        ?.map { it["TYPE"].orEmpty() to it["VALUE"].orEmpty() }
-        .orEmpty()
-
-    // If we got at least one code, populate and show dialog
-    scans.firstOrNull()?.second?.let { code ->
-        transactionCode = code
-        viewModelCancelBetData.sendCancelBetBarcode(userID = companyId, roleID = userRole, barcodeTxt = transactionCode.toInt())
-    }
-}
-
-
-    // 1️⃣ Permission launcher
+    val transactionCode by viewModelCancelBetData.transactionCode.collectAsState()
+    // ➌ Remember the permission launcher
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
-        if (granted) {
-            launchSunmiScan(context, scannerLauncher)
-        } else {
-            Toast.makeText(context, "Camera permission is required", Toast.LENGTH_SHORT).show()
-        }
+        if (granted) startSunmiV2Scan(context)
+        else Toast.makeText(context, "Camera permission is required", Toast.LENGTH_SHORT).show()
     }
 
+    // ➍ Remember the scan ActivityResultLauncher
+    val scannerLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // Extract your scanned code; change the key if needed
+            val code = result.data?.getStringExtra("SCAN_BARCODE1") ?: ""
+            viewModelCancelBetData.setTransactionCode(code)
+            viewModelCancelBetData.sendCancelBetBarcode(userID = companyId, roleID = userRole, barcodeTxt = code.toInt())
+            viewModelCancelBetData.setTransactionCode("")
+        }
+    }
     
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
@@ -161,13 +153,18 @@ fun cancelBetUI() {
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            // On click: check permission or request then scan
                             if (ContextCompat.checkSelfPermission(
                                     context,
                                     Manifest.permission.CAMERA
                                 ) == PackageManager.PERMISSION_GRANTED
                             ) {
-                                launchSunmiScan(context, scannerLauncher)
+                                // Launch the Activity-based scan
+                                val intent = Intent("com.sunmi.scanner.ACTION_START_SCAN").apply {
+                                    putExtra("com.sunmi.scanner.extra.PLAY_SOUND", true)
+                                    putExtra("com.sunmi.scanner.extra.PLAY_VIBRATE", false)
+                                    putExtra("CURRENT_PKG_NAME", context.packageName)
+                                }
+                                scannerLauncher.launch(intent)
                             } else {
                                 cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
                             }
@@ -201,7 +198,7 @@ fun cancelBetUI() {
     value = transactionCode,
     onValueChange = { 
         if (it.length <= 14 && it.all { char -> char.isDigit() }) {
-            transactionCode = it
+            viewModelCancelBetData.setTransactionCode(it)
         }
     },
     placeholder = { Text("Enter Transaction Code") },
