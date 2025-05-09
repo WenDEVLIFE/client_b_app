@@ -132,44 +132,43 @@ fun MainWithDrawer() {
     var showExitDialog by remember { mutableStateOf(false) }
     // State for connection progress dialog
     var showConnectingDialog by remember { mutableStateOf(true) }
-    var transactionCode by remember { mutableStateOf("") }
     
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
     
-    val scannerLauncher = rememberLauncherForActivityResult(
-    ActivityResultContracts.StartActivityForResult()
-) { result ->
-    val scans = result.data
-        ?.extras
-        ?.getSerializable("data")
-        .let { it as? ArrayList<HashMap<String, String>> }
-        ?.map { it["TYPE"].orEmpty() to it["VALUE"].orEmpty() }
-        .orEmpty()
-
-    // If we got at least one code, populate and show dialog
-    scans.firstOrNull()?.second?.let { code ->
-        transactionCode = code
-        viewModelPayoutData.claimPayout(userID = companyId, roleID = userRole, barcodeResult = transactionCode)
-    }
-}
 
 if(betResponse != null){
-            
+            PayoutReceiptDialog(betResponse!!){
+            viewModelPayoutData.clearBetState()
+            }
+            LaunchedEffect(betResponse) {
+            delay(3000) // 3 seconds
+             printPayout(context, betResponse!!)
+            }
             }else if (betResponse == null && betResult == -1) {
             PrintBetPayoutErrorResults(betResult){
             viewModelPayoutData.clearBetState()
             }
             }
 
-    // 1️⃣ Permission launcher
+    val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
+
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
-        if (granted) {
-            launchSunmiScan(context, scannerLauncher)
-        } else {
-            Toast.makeText(context, "Camera permission is required", Toast.LENGTH_SHORT).show()
+        if (granted) startSunmiV2Scan(context)
+        else Toast.makeText(context, "Camera permission is required", Toast.LENGTH_SHORT).show()
+    }
+
+    val scannerLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // Extract your scanned code; change the key if needed
+            val code = result.data?.getStringExtra("SCAN_BARCODE1") ?: ""
+            viewModelPayoutData.setTransactionCode(code)
+            viewModelPayoutData.claimPayout(userID = companyId, roleID = userRole, barcodeResult = code)
+            viewModelPayoutData.setTransactionCode("")
         }
     }
     
@@ -366,22 +365,6 @@ if(betResponse != null){
             )
 
             IconButton(onClick = { /* Do something for the end icon */ 
-           
-CoroutineScope(Dispatchers.IO).launch {
-    // Call your suspend function here
-  try {
-    connectAndPrint(
-      context = context,
-      activity = activity,
-      width   = PaperWidth.WIDTH_50,     // or WIDTH_80
-      text    = "Hello Sumni!\nThank you for choosing Sabong betting.\n"
-    )
-    
-    Toast.makeText(context, "Printing status: printed successfully", Toast.LENGTH_LONG).show()
-  } catch (e: Exception) {
-  Toast.makeText(context, "Printing status: print failed - ${e.message}", Toast.LENGTH_LONG).show()
-  }
-}
 
             }) {
                 Image(
@@ -390,13 +373,18 @@ CoroutineScope(Dispatchers.IO).launch {
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            // On click: check permission or request then scan
-                            if (ContextCompat.checkSelfPermission(
+                           if (ContextCompat.checkSelfPermission(
                                     context,
                                     Manifest.permission.CAMERA
                                 ) == PackageManager.PERMISSION_GRANTED
                             ) {
-                                launchSunmiScan(context, scannerLauncher)
+                                // Launch the Activity-based scan
+                                val intent = Intent("com.sunmi.scanner.ACTION_START_SCAN").apply {
+                                    putExtra("com.sunmi.scanner.extra.PLAY_SOUND", true)
+                                    putExtra("com.sunmi.scanner.extra.PLAY_VIBRATE", false)
+                                    putExtra("CURRENT_PKG_NAME", context.packageName)
+                                }
+                                scannerLauncher.launch(intent)
                             } else {
                                 cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
                             }
