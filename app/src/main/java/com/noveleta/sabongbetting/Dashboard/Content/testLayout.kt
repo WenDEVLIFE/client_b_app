@@ -101,27 +101,30 @@ val activity = LocalContext.current as Activity
             }
     
     val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
-    // ➌ Remember the permission launcher
-    val cameraPermissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        if (granted) startSunmiV2Scan(context)
-        else Toast.makeText(context, "Camera permission is required", Toast.LENGTH_SHORT).show()
-    }
-
-    // ➍ Remember the scan ActivityResultLauncher
+  
     val scannerLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            // Extract your scanned code; change the key if needed
-            val code = result.data?.getStringExtra("SCAN_BARCODE1") ?: ""
-            viewModelPayoutData.setTransactionCode(code)
-            
-            viewModelPayoutData.claimPayout(userID = companyId, roleID = userRole, barcodeResult = code)
-            viewModelPayoutData.setTransactionCode("")
-        }
-    }
+  ActivityResultContracts.StartActivityForResult()
+) { result ->
+  if (result.resultCode == Activity.RESULT_OK) {
+    val intent = result.data
+    val code = intent
+      ?.getStringExtra("data")
+      ?: intent?.getStringExtra("barocode")
+      ?: run {
+        Log.d("ScanDebug", "keys=${intent.extras?.keySet()}")
+        ""
+      }
+
+    viewModelPayoutData.setTransactionCode(code)
+    viewModelPayoutData.claimPayout(
+      userID       = companyId,
+      roleID       = userRole,
+      barcodeResult = code
+    )
+    viewModelPayoutData.setTransactionCode("")
+  }
+}
+
     
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
@@ -157,21 +160,7 @@ val activity = LocalContext.current as Activity
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            if (ContextCompat.checkSelfPermission(
-                                    context,
-                                    Manifest.permission.CAMERA
-                                ) == PackageManager.PERMISSION_GRANTED
-                            ) {
-                                // Launch the Activity-based scan
-                                val intent = Intent("com.sunmi.scanner.ACTION_START_SCAN").apply {
-                                    putExtra("com.sunmi.scanner.extra.PLAY_SOUND", true)
-                                    putExtra("com.sunmi.scanner.extra.PLAY_VIBRATE", false)
-                                    putExtra("CURRENT_PKG_NAME", context.packageName)
-                                }
-                                scannerLauncher.launch(intent)
-                            } else {
-                                cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-                            }
+                            startSunmiV2Scan(context)
                         },
                     colorFilter = ColorFilter.tint(iconTint)
                 )
@@ -183,23 +172,6 @@ val activity = LocalContext.current as Activity
                 showDialog = true
             }
             
-            DigitInputBox.BetClaimPayout("Print Sample", Color(0xFF2EB132)) {
-                CoroutineScope(Dispatchers.IO).launch {
-    // Call your suspend function here
-  try {
-    connectAndPrint(
-      context = context,
-      activity = activity,
-      width   = PaperWidth.WIDTH_50,     // or WIDTH_80
-      text    = "Hello Sumni!\nThank you for choosing Sabong betting.\n"
-    )
-    
-    Toast.makeText(context, "Printing status: printed successfully", Toast.LENGTH_LONG).show()
-  } catch (e: Exception) {
-  Toast.makeText(context, "Printing status: print failed - ${e.message}", Toast.LENGTH_LONG).show()
-  }
-}
-            }
         }
 
         // --- DIALOG ---
@@ -260,11 +232,18 @@ val activity = LocalContext.current as Activity
 }
 
 
-fun startSunmiV2Scan(context: Context) {
-    Intent("com.sunmi.scanner.ACTION_START_SCAN").also { intent ->
-        intent.putExtra("com.sunmi.scanner.extra.PLAY_SOUND", true)
-        intent.putExtra("com.sunmi.scanner.extra.PLAY_VIBRATE", false)
-        intent.putExtra("CURRENT_PKG_NAME", context.packageName)
-        context.sendBroadcast(intent)
-    }
+fun startSunmiV2Scan(ctx: Context) {
+  val intent = Intent("com.sunmi.scanner.ACTION_START_SCAN").apply {
+    setPackage("com.sunmi.scanner")               // ← very important
+    putExtra("com.sunmi.scanner.extra.PLAY_SOUND", true)
+    putExtra("com.sunmi.scanner.extra.PLAY_VIBRATE", false)
+    putExtra("CURRENT_PKG_NAME", ctx.packageName)
+  }
+  // guard in case the scanner app isn’t there
+  if (intent.resolveActivity(ctx.packageManager) != null) {
+    scannerLauncher.launch(intent)
+  } else {
+    Toast.makeText(ctx, "Scanner service not available", Toast.LENGTH_SHORT).show()
+  }
 }
+

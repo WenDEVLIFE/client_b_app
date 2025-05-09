@@ -98,27 +98,30 @@ fun cancelBetUI() {
             }
     
     val transactionCode by viewModelCancelBetData.transactionCode.collectAsState()
-    // ➌ Remember the permission launcher
-    val cameraPermissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        if (granted) startSunmiV2Scan(context)
-        else Toast.makeText(context, "Camera permission is required", Toast.LENGTH_SHORT).show()
-    }
-
-    // ➍ Remember the scan ActivityResultLauncher
-    val scannerLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            // Extract your scanned code; change the key if needed
-            val code = result.data?.getStringExtra("SCAN_BARCODE1") ?: ""
-            viewModelCancelBetData.setTransactionCode(code)
-            viewModelCancelBetData.sendCancelBetBarcode(userID = companyId, roleID = userRole, barcodeTxt = code.toInt())
-            viewModelCancelBetData.setTransactionCode("")
-        }
-    }
     
+    val scannerLauncher = rememberLauncherForActivityResult(
+  ActivityResultContracts.StartActivityForResult()
+) { result ->
+  if (result.resultCode == Activity.RESULT_OK) {
+    val intent = result.data
+    val code = intent
+      ?.getStringExtra("data")
+      ?: intent?.getStringExtra("barocode")
+      ?: run {
+        Log.d("ScanDebug", "keys=${intent.extras?.keySet()}")
+        ""
+      }
+
+    viewModelCancelBetData.setTransactionCode(code)
+    viewModelCancelBetData.claimPayout(
+      userID       = companyId,
+      roleID       = userRole,
+      barcodeTxt = code.toInt()
+    )
+    viewModelCancelBetData.setTransactionCode("")
+  }
+}
+
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
     
@@ -153,21 +156,7 @@ fun cancelBetUI() {
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            if (ContextCompat.checkSelfPermission(
-                                    context,
-                                    Manifest.permission.CAMERA
-                                ) == PackageManager.PERMISSION_GRANTED
-                            ) {
-                                // Launch the Activity-based scan
-                                val intent = Intent("com.sunmi.scanner.ACTION_START_SCAN").apply {
-                                    putExtra("com.sunmi.scanner.extra.PLAY_SOUND", true)
-                                    putExtra("com.sunmi.scanner.extra.PLAY_VIBRATE", false)
-                                    putExtra("CURRENT_PKG_NAME", context.packageName)
-                                }
-                                scannerLauncher.launch(intent)
-                            } else {
-                                cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-                            }
+                            startSunmiV2Scan(context))
                         },
                     colorFilter = ColorFilter.tint(iconTint)
                 )
