@@ -156,7 +156,7 @@ fun cancelBetUI() {
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            startSunmiV2Scan(context))
+                            startSunmiV2Scan(context)
                         },
                     colorFilter = ColorFilter.tint(iconTint)
                 )
