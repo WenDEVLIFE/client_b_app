@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import android.util.Log
 
 import android.app.Activity
 import androidx.compose.foundation.Image
@@ -101,31 +102,33 @@ val activity = LocalContext.current as Activity
             }
     
     val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
-  
-    val scannerLauncher = rememberLauncherForActivityResult(
-  ActivityResultContracts.StartActivityForResult()
-) { result ->
-  if (result.resultCode == Activity.RESULT_OK) {
-    val intent = result.data
-    val code = intent
-      ?.getStringExtra("data")
-      ?: intent?.getStringExtra("barocode")
-      ?: run {
-        Log.d("ScanDebug", "keys=${intent.extras?.keySet()}")
-        ""
-      }
 
-    viewModelPayoutData.setTransactionCode(code)
-    viewModelPayoutData.claimPayout(
-      userID       = companyId,
-      roleID       = userRole,
-      barcodeResult = code
-    )
-    viewModelPayoutData.setTransactionCode("")
-  }
+    val scannerLauncher = rememberLauncherForActivityResult(
+    ActivityResultContracts.StartActivityForResult()
+) { result ->
+    if (result.resultCode == Activity.RESULT_OK) {
+        val intent = result.data
+        val extras = intent?.extras
+
+        val code = intent?.getStringExtra("data")
+            ?: intent?.getStringExtra("barocode")
+            ?: extras?.keySet()?.let {
+                Log.d("ScanDebug", "keys=$it")
+                ""
+            } ?: ""
+
+        if (code.isNotEmpty()) {
+            viewModelPayoutData.setTransactionCode(code)
+            viewModelPayoutData.claimPayout(
+                userID = companyId,
+                roleID = userRole,
+                barcodeResult = code
+            )
+            viewModelPayoutData.setTransactionCode("")
+        }
+    }
 }
 
-    
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
     
@@ -160,7 +163,18 @@ val activity = LocalContext.current as Activity
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            startSunmiV2Scan(context)
+                            val intent = Intent("com.sunmi.scanner.ACTION_START_SCAN").apply {
+    setPackage("com.sunmi.scanner")               // ← very important
+    putExtra("com.sunmi.scanner.extra.PLAY_SOUND", true)
+    putExtra("com.sunmi.scanner.extra.PLAY_VIBRATE", false)
+    putExtra("CURRENT_PKG_NAME", context.packageName)
+  }
+  // guard in case the scanner app isn’t there
+  if (intent.resolveActivity(context.packageManager) != null) {
+    scannerLauncher.launch(intent)
+  } else {
+    Toast.makeText(context, "Scanner service not available", Toast.LENGTH_SHORT).show()
+  }
                         },
                     colorFilter = ColorFilter.tint(iconTint)
                 )
@@ -233,17 +247,6 @@ val activity = LocalContext.current as Activity
 
 
 fun startSunmiV2Scan(ctx: Context) {
-  val intent = Intent("com.sunmi.scanner.ACTION_START_SCAN").apply {
-    setPackage("com.sunmi.scanner")               // ← very important
-    putExtra("com.sunmi.scanner.extra.PLAY_SOUND", true)
-    putExtra("com.sunmi.scanner.extra.PLAY_VIBRATE", false)
-    putExtra("CURRENT_PKG_NAME", ctx.packageName)
-  }
-  // guard in case the scanner app isn’t there
-  if (intent.resolveActivity(ctx.packageManager) != null) {
-    scannerLauncher.launch(intent)
-  } else {
-    Toast.makeText(ctx, "Scanner service not available", Toast.LENGTH_SHORT).show()
-  }
+  
 }
 
