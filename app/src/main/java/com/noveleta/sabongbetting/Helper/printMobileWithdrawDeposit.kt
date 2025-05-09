@@ -2,10 +2,15 @@ package com.noveleta.sabongbetting.Helper;
 
 import android.content.Context
 import com.noveleta.sabongbetting.Model.*
+import android.widget.Toast
 
 fun printMobileWithdraw(context: Context, betResponse: MobileWithdrawResponse) {
 
-    SunmiPrinterHelper.initSunmiPrinterService(context){
+    if (!SunmiPrinterHelper.isPrinterReady()) {
+        Toast.makeText(context, "Printer not ready", Toast.LENGTH_SHORT).show()
+        return
+    }
+
     
         SunmiPrinterHelper.setAlign(1) // 0 = Left, 1 = Center, 2 = Right
         
@@ -17,15 +22,17 @@ fun printMobileWithdraw(context: Context, betResponse: MobileWithdrawResponse) {
         )
         
         // Print Details
-        SunmiPrinterHelper.printText("${betResponse.barcode}", 20f, true, false, "MONOSPACE")
+        SunmiPrinterHelper.printText("${betResponse.barcode}", 30f, true, false, "MONOSPACE")
         SunmiPrinterHelper.printText(" ", 20f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("${betResponse.timestamp}", 20f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("${betResponse.systemName}", 20f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("Cashier: ${betResponse.cashier}", 18f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 20f, false, false, "MONOSPACE")
+        SunmiPrinterHelper.printText("${betResponse.timestamp}", 30f, true, false, "MONOSPACE")
+        SunmiPrinterHelper.printText(" ", 30f, true, false, "MONOSPACE")
+        SunmiPrinterHelper.printText("${betResponse.systemName}", 30f, true, false, "MONOSPACE")
+        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
+        SunmiPrinterHelper.printText("Cashier: ${betResponse.cashier}", 28f, true, false, "MONOSPACE")
+        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
         
         // Print Title
-        SunmiPrinterHelper.printText("POINTS WITHDRAWN", 26f, false, false, "DEFAULT")
+        SunmiPrinterHelper.printText("POINTS WITHDRAWN", 30f, false, false, "MONOSPACE")
         
         SunmiPrinterHelper.printText(" ", 20f, false, false, "MONOSPACE")
         SunmiPrinterHelper.printLabelValue("ACCOUNT: ", betResponse.accountID)
@@ -36,14 +43,16 @@ fun printMobileWithdraw(context: Context, betResponse: MobileWithdrawResponse) {
         // Cut paper and feed
         SunmiPrinterHelper.cutpaper()
         SunmiPrinterHelper.feedPaper()
-    }
 }
 
 
 fun printMobileDeposit(context: Context, betResponse: MobileDepositResponse) {
 
+if (!SunmiPrinterHelper.isPrinterReady()) {
+        Toast.makeText(context, "Printer not ready", Toast.LENGTH_SHORT).show()
+        return
+    }
 
-    SunmiPrinterHelper.initSunmiPrinterService(context){
     
     SunmiPrinterHelper.setAlign(1) // 0 = Left, 1 = Center, 2 = Right
         
@@ -55,17 +64,19 @@ fun printMobileDeposit(context: Context, betResponse: MobileDepositResponse) {
         )
         
         // Print Details
-        SunmiPrinterHelper.printText("${betResponse.barcode}", 20f, true, false, "MONOSPACE")
+        SunmiPrinterHelper.printText("${betResponse.barcode}", 30f, true, false, "MONOSPACE")
         SunmiPrinterHelper.printText(" ", 20f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("${betResponse.datetime}", 20f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("${betResponse.systemName}", 20f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText("Cashier: ${betResponse.cashier}", 18f, false, false, "MONOSPACE")
-        SunmiPrinterHelper.printText(" ", 20f, false, false, "MONOSPACE")
+        SunmiPrinterHelper.printText("${betResponse.datetime}", 30f, true, false, "MONOSPACE")
+        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
+        SunmiPrinterHelper.printText("${betResponse.systemName}", 30f, true, false, "MONOSPACE")
+        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
+        SunmiPrinterHelper.printText("Cashier: ${betResponse.cashier}", 28f, true, false, "MONOSPACE")
+        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
         
         // Print Title
-        SunmiPrinterHelper.printText("POINTS DEPOSITED", 26f, false, false, "DEFAULT")
+        SunmiPrinterHelper.printText("POINTS DEPOSITED", 30f, false, false, "MONOSPACE")
         
-        SunmiPrinterHelper.printText(" ", 20f, false, false, "MONOSPACE")
+        SunmiPrinterHelper.printText(" ", 30f, false, false, "MONOSPACE")
         SunmiPrinterHelper.printLabelValue("ACCOUNT: ", betResponse.accountID)
         SunmiPrinterHelper.printLabelValue("CURRENT POINTS: ", betResponse.currentBalance)
         SunmiPrinterHelper.printLabelValue("DEPOSIT AMOUNT: ", betResponse.depositAmount)
@@ -74,6 +85,5 @@ fun printMobileDeposit(context: Context, betResponse: MobileDepositResponse) {
         // Cut paper and feed
         SunmiPrinterHelper.cutpaper()
         SunmiPrinterHelper.feedPaper()
-    }
 }
 

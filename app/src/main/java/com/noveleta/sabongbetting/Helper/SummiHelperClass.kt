@@ -34,6 +34,12 @@ object SunmiPrinterHelper {
     fun initSunmiPrinterService(context: Context, onReady: () -> Unit) {
         this.mContext = context
         this.onPrinterReady = onReady
+        
+          sunmiPrinterService?.let {
+          onReady()
+          return
+          }
+          
         try {
             val ret = InnerPrinterManager.getInstance().bindService(
                 context.applicationContext,
@@ -326,38 +332,35 @@ object SunmiPrinterHelper {
     }
     
     fun printText(
-        content: String?, size: Float, isBold: Boolean, isUnderLine: Boolean,
-        typeface: String?
-    ) {
-        if (sunmiPrinterService == null) {
-            //TODO Service disconnection processing
-            Toast.makeText(mContext, "Printer not available!", Toast.LENGTH_SHORT).show()
-            return
-        }
-        try {
-            try {
-                sunmiPrinterService!!.setPrinterStyle(
-                    WoyouConsts.ENABLE_BOLD,
-                    if (isBold) WoyouConsts.ENABLE else WoyouConsts.DISABLE
-                )
-            } catch (e: RemoteException) {
-                e.printStackTrace()
-            }
-            try {
-                sunmiPrinterService!!.setPrinterStyle(
-                    WoyouConsts.ENABLE_UNDERLINE,
-                    if (isUnderLine) WoyouConsts.ENABLE else WoyouConsts.DISABLE
-                )
-            } catch (e: RemoteException) {
-                e.printStackTrace()
-            }
-            sunmiPrinterService!!.printTextWithFont(content, typeface, size, null)
-            Toast.makeText(mContext, "Print Successful!", Toast.LENGTH_SHORT).show()
-
-        } catch (e: RemoteException) {
-            e.printStackTrace()
-        }
+    content: String?, size: Float = 36f, isBold: Boolean, isUnderLine: Boolean,
+    typeface: String?
+) {
+    if (sunmiPrinterService == null) {
+        Toast.makeText(mContext, "Printer not available!", Toast.LENGTH_SHORT).show()
+        return
     }
+    try {
+        sunmiPrinterService!!.setPrinterStyle(
+            WoyouConsts.ENABLE_BOLD,
+            if (isBold) WoyouConsts.ENABLE else WoyouConsts.DISABLE
+        )
+        sunmiPrinterService!!.setPrinterStyle(
+            WoyouConsts.ENABLE_UNDERLINE,
+            if (isUnderLine) WoyouConsts.ENABLE else WoyouConsts.DISABLE
+        )
+
+        // Print with large font
+        sunmiPrinterService!!.printTextWithFont(content, typeface, size, null)
+
+        // One line spacing after text
+        sunmiPrinterService!!.sendRAWData(byteArrayOf(0x0A), null)
+
+        Toast.makeText(mContext, "Print Successful!", Toast.LENGTH_SHORT).show()
+    } catch (e: RemoteException) {
+        e.printStackTrace()
+    }
+}
+
     
     /**
      * print Qr Code
