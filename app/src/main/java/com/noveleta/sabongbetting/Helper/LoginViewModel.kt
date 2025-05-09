@@ -64,8 +64,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
                         _loginState.value = LoginState.Success(resultCode)
                     } catch (e: Exception) {
-                        _loginState.value = LoginState.Error("Invalid server response.")
-                    }
+    _loginState.value = LoginState.Error("Invalid server response: ${Log.getStackTraceString(e)}")
+}
                 } else {
                     _loginState.value = LoginState.Error("Login failed. Try again.")
                 }
