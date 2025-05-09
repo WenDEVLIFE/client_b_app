@@ -10,6 +10,9 @@ import androidx.lifecycle.ProcessLifecycleOwner
 
 import androidx.activity.viewModels
 
+import android.widget.Toast
+import com.sunmi.peripheral.printer.*
+
 import com.noveleta.sabongbetting.ui.theme.*
 import com.noveleta.sabongbetting.ui.*
 import com.noveleta.sabongbetting.Factory.*
@@ -33,6 +36,11 @@ class MainActivity : ComponentActivity() {
         ProcessLifecycleOwner.get().lifecycle.addObserver(
             AppLifecycleObserver(placeBetsViewModel, liveBettingViewModel)
         )
+        
+        SunmiPrinterHelper.initSunmiPrinterService(this) {
+            // Printer is ready here; you could enable your “Print” buttons, etc.
+            Toast.makeText(this, "Printer is ready", Toast.LENGTH_SHORT).show()
+        }
 
         setContent {
             MyComposeApplicationTheme {
@@ -47,5 +55,6 @@ class MainActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         networkMonitor.unregister()
+        SunmiPrinterHelper.deInitSunmiPrinterService(this)
     }
 }
