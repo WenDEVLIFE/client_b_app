@@ -12,6 +12,8 @@ import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
 
+import kotlinx.coroutines.flow.asStateFlow
+
 import com.noveleta.sabongbetting.Model.*
 import com.noveleta.sabongbetting.SharedPreference.*
 
@@ -19,7 +21,14 @@ class SendCancelBetViewModel : ViewModel() {
 
     private val _betResponse = MutableStateFlow<CancelledBetResponse?>(null)
     val betResponse: StateFlow<CancelledBetResponse?> = _betResponse
+    
+    private val _transactionCode = MutableStateFlow("")
+    val transactionCode: StateFlow<String> = _transactionCode.asStateFlow()
 
+    fun setTransactionCode(code: String) {
+        _transactionCode.value = code
+    }
+    
     private val _betResult = MutableStateFlow<Int?>(null)
     val betResult: StateFlow<Int?> = _betResult
     
