@@ -40,6 +40,7 @@ class MainActivity : ComponentActivity() {
         SunmiPrinterHelper.initSunmiPrinterService(this) {
             // Printer is ready here; you could enable your “Print” buttons, etc.
             Toast.makeText(this, "Printer is ready", Toast.LENGTH_SHORT).show()
+            SunmiPrinterHelper.showPrinterStatus(this)
         }
 
         setContent {
