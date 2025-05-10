@@ -152,8 +152,27 @@ if(betResponse != null){
             }
 
     val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
+var showScanner by remember { mutableStateOf(false) }
+if (showScanner) {
+  BarcodeScannerScreen(
+    onScanResult = { code ->
+      viewModelPayoutData.setTransactionCode(code)
+            viewModelPayoutData.claimPayout(
+                userID = companyId,
+                roleID = userRole,
+                barcodeResult = code
+            )
+            viewModelPayoutData.setTransactionCode("")
+      showScanner = false
+    },
+    onCancel = {
+      showScanner = false
+    }
+  )
+}
 
-    val scannerLauncher = rememberLauncherForActivityResult(
+
+  /*  val scannerLauncher = rememberLauncherForActivityResult(
     ActivityResultContracts.StartActivityForResult()
 ) { result ->
     if (result.resultCode == Activity.RESULT_OK) {
@@ -178,7 +197,7 @@ if(betResponse != null){
         }
     }
 }
-
+*/
     
     LaunchedEffect(Unit) {
         // Connect websockets and hide connecting dialog when done
@@ -381,18 +400,7 @@ if(betResponse != null){
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                           val intent = Intent("com.sunmi.scanner.ACTION_START_SCAN").apply {
-    setPackage("com.sunmi.scanner")               // ← very important
-    putExtra("com.sunmi.scanner.extra.PLAY_SOUND", true)
-    putExtra("com.sunmi.scanner.extra.PLAY_VIBRATE", false)
-    putExtra("CURRENT_PKG_NAME", context.packageName)
-  }
-  // guard in case the scanner app isn’t there
-  if (intent.resolveActivity(context.packageManager) != null) {
-    scannerLauncher.launch(intent)
-  } else {
-    Toast.makeText(context, "Scanner service not available", Toast.LENGTH_SHORT).show()
-  }
+                           showScanner = true
                         },
                     colorFilter = ColorFilter.tint(iconTint)
                 )
@@ -456,7 +464,7 @@ composable(DrawerScreen.claimPayout.route) {
 
 composable(DrawerScreen.cancelBet.route) {
 if (dashboardData != null) {
-        testLayout()
+        cancelBetUI()
     } else {
         Box(
             modifier = Modifier
