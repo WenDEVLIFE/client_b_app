@@ -83,7 +83,8 @@ val activity = LocalContext.current as Activity
     
     // dialog state
     var showDialog by remember { mutableStateOf(false) }
-    
+    var showScanner by remember { mutableStateOf(false) }
+
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
     
@@ -100,6 +101,24 @@ val activity = LocalContext.current as Activity
             viewModelPayoutData.clearBetState()
         }
     }
+    
+    if (showScanner) {
+  BarcodeScannerScreen(
+    onScanResult = { code ->
+      viewModelPayoutData.setTransactionCode(code)
+      viewModelPayoutData.claimPayout(
+        userID = companyId,
+        roleID = userRole,
+        barcodeResult = code
+      )
+      showScanner = false
+    },
+    onCancel = {
+      showScanner = false
+    }
+  )
+}
+
     
     val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
 
@@ -136,7 +155,7 @@ val activity = LocalContext.current as Activity
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-            
+                            showScanner = true
                          },
                     colorFilter = ColorFilter.tint(iconTint)
                 )

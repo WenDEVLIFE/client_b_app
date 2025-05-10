@@ -99,6 +99,25 @@ fun cancelBetUI() {
             }
     
     val transactionCode by viewModelCancelBetData.transactionCode.collectAsState()
+var showScanner by remember { mutableStateOf(false) }
+
+if (showScanner) {
+  BarcodeScannerScreen(
+    onScanResult = { code ->
+      viewModelCancelBetData.setTransactionCode(code)
+      viewModelCancelBetData.sendCancelBetBarcode(
+                userID = companyId,
+                roleID = userRole,
+                barcodeTxt = code.toInt()
+            )
+      viewModelCancelBetData.setTransactionCode("")
+      showScanner = false
+    },
+    onCancel = {
+      showScanner = false
+    }
+  )
+}
 
 /*val scannerLauncher = rememberLauncherForActivityResult(
     ActivityResultContracts.StartActivityForResult()
@@ -160,7 +179,7 @@ fun cancelBetUI() {
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            
+                            showScanner = true
                         },
                     colorFilter = ColorFilter.tint(iconTint)
                 )
