@@ -76,7 +76,8 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     
     val currentFight = liveBetData?.fightNumber?.toIntOrNull() ?: 75
     
-    var showCashTellerDialog by remember { mutableStateOf(false) }
+    var showCashInTellerDialog by remember { mutableStateOf(false) }
+    var showCashOutTellerDialog by remember { mutableStateOf(false) }
     var showWarningBetDraw by remember { mutableStateOf(false) }
     var cashInOrOut by remember { mutableStateOf("Cash In") } 
     
@@ -174,7 +175,7 @@ LaunchedEffect(cashOutResponse) {
         delay(3000) // 3 seconds
         printTellerCashoutResponse(context, cashOutResponse!!)
     }
-}else if (cashOutResponse == null && cashInErrorCode == -1) {
+}else if (cashOutErrorCode == -1) {
     PrintTellerCashOutErrorResults(cashOutResult){
     viewModelCashOutData.clearBetState()
     }
@@ -191,9 +192,9 @@ LaunchedEffect(cashInResponse) {
         delay(3000) // 3 seconds
         printTellerCashinResponse(context, cashInResponse!!)
     }
-}else if (cashInResponse == null && cashOutErrorCode == -1) {
+}else if (cashInErrorCode == -1) {
 
-    PrintTellerCashOutErrorResults(cashInResult){
+    PrintTellerCashInErrorResults(cashInResult){
     viewModelCashInData.clearBetState()
     }
     
@@ -245,11 +246,11 @@ Row(
 ) {
     DigitInputBox.TellerButton("Teller CashIn", Color(0xFFB12D36)) {
         cashInOrOut = "Cash In"
-        showCashTellerDialog = true
+        showCashInTellerDialog = true
     }
     DigitInputBox.TellerButton("Teller CashOut", Color(0xFFB12D36)) {
         cashInOrOut = "Cash Out"
-        showCashTellerDialog = true
+        showCashOutTellerDialog = true
     }
 }
 
@@ -302,19 +303,45 @@ if (betAmount != null && betAmount <= drawMax) {
         }
     }
     
-    // Show dialog if needed
-if (showCashTellerDialog) {
+    // Cash In Dialog
+if (showCashInTellerDialog) {
     CashTellerDialog(
         cashHandlers = liveBetData.cashHandlerNames ?: emptyList(),
         cashInOrOut = cashInOrOut,
-        onDismiss = { showCashTellerDialog = false },
+        onDismiss = { showCashInTellerDialog = false },
         onConfirm = { cashAmount, selectedHandlerId, password ->
             // handle the result (cashAmount, selectedHandlerId, password, cashInOrOut)
-            
-            showCashTellerDialog = false
+            viewModelCashInData.sendCashInTeller(
+        userID = companyId,
+         roleID = userRole, 
+         cashAmount.toInt(),
+         selectedHandlerId,
+         password
+        )
+            showCashInTellerDialog = false
         }
     )
 }
+
+if (showCashOutTellerDialog) {
+    CashTellerDialog(
+        cashHandlers = liveBetData.cashHandlerNames ?: emptyList(),
+        cashInOrOut = cashInOrOut,
+        onDismiss = { showCashOutTellerDialog = false },
+        onConfirm = { cashAmount, selectedHandlerId, password ->
+            // handle the result (cashAmount, selectedHandlerId, password, cashInOrOut)
+            viewModelCashOutData.sendCashOutTeller(
+        userID = companyId,
+         roleID = userRole, 
+         cashAmount.toInt(),
+         selectedHandlerId,
+         password
+        )
+            showCashOutTellerDialog = false
+        }
+    )
+}
+
 
 if (showWarningBetDraw) {
     AlertDialog(

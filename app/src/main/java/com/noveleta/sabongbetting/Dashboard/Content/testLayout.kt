@@ -88,47 +88,20 @@ val activity = LocalContext.current as Activity
     val companyId = SessionManager.accountID ?: "500"
     
     if(betResponse != null){
-            PayoutReceiptDialog(betResponse!!){
+        PayoutReceiptDialog(betResponse!!){
             viewModelPayoutData.clearBetState()
-            }
-            LaunchedEffect(betResponse) {
-            delay(3000) // 3 seconds
+        }
+    LaunchedEffect(betResponse) {
+        delay(3000) // 3 seconds
              printPayout(context, betResponse!!)
-            }
-            }else if (betResponse == null && betErrorCode == -1) {
-            PrintBetPayoutErrorResults(betResult){
+        }
+    }else if (betErrorCode == -1) {
+      PrintBetPayoutErrorResults(betResult){
             viewModelPayoutData.clearBetState()
-            }
-            }
-    
-    val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
-
-    val scannerLauncher = rememberLauncherForActivityResult(
-    ActivityResultContracts.StartActivityForResult()
-) { result ->
-    if (result.resultCode == Activity.RESULT_OK) {
-        val intent = result.data
-        val extras = intent?.extras
-
-        val code = intent?.getStringExtra("data")
-            ?: intent?.getStringExtra("barocode")
-            ?: extras?.keySet()?.let {
-                Log.d("ScanDebug", "keys=$it")
-                ""
-            } ?: ""
-
-        if (code.isNotEmpty()) {
-            viewModelPayoutData.setTransactionCode(code)
-            viewModelPayoutData.claimPayout(
-                userID = companyId,
-                roleID = userRole,
-                barcodeResult = code
-            )
-            viewModelPayoutData.setTransactionCode("")
         }
     }
-}
-
+    
+    val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
     
@@ -163,19 +136,8 @@ val activity = LocalContext.current as Activity
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            val intent = Intent("com.sunmi.scanner.ACTION_START_SCAN").apply {
-    setPackage("com.sunmi.scanner")               // ← very important
-    putExtra("com.sunmi.scanner.extra.PLAY_SOUND", true)
-    putExtra("com.sunmi.scanner.extra.PLAY_VIBRATE", false)
-    putExtra("CURRENT_PKG_NAME", context.packageName)
-  }
-  // guard in case the scanner app isn’t there
-  if (intent.resolveActivity(context.packageManager) != null) {
-    scannerLauncher.launch(intent)
-  } else {
-    Toast.makeText(context, "Scanner service not available", Toast.LENGTH_SHORT).show()
-  }
-                        },
+            
+                         },
                     colorFilter = ColorFilter.tint(iconTint)
                 )
             }

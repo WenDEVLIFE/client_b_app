@@ -92,7 +92,7 @@ fun cancelBetUI() {
         delay(3000) // 3 seconds
         printCancelledBetting(context, betResponse!!)
     }
-            }else if (betResponse == null && betErrorCode == -1) {
+            }else if (betErrorCode == -1) {
             PrintCancelBetErrorResults(betResult){
             viewModelCancelBetData.clearBetState()
             }
@@ -100,7 +100,7 @@ fun cancelBetUI() {
     
     val transactionCode by viewModelCancelBetData.transactionCode.collectAsState()
 
-val scannerLauncher = rememberLauncherForActivityResult(
+/*val scannerLauncher = rememberLauncherForActivityResult(
     ActivityResultContracts.StartActivityForResult()
 ) { result ->
     if (result.resultCode == Activity.RESULT_OK) {
@@ -124,7 +124,7 @@ val scannerLauncher = rememberLauncherForActivityResult(
             viewModelCancelBetData.setTransactionCode("")
         }
     }
-}
+}*/
 
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
@@ -160,18 +160,7 @@ val scannerLauncher = rememberLauncherForActivityResult(
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            val intent = Intent("com.sunmi.scanner.ACTION_START_SCAN").apply {
-    setPackage("com.sunmi.scanner")               // ← very important
-    putExtra("com.sunmi.scanner.extra.PLAY_SOUND", true)
-    putExtra("com.sunmi.scanner.extra.PLAY_VIBRATE", false)
-    putExtra("CURRENT_PKG_NAME", context.packageName)
-  }
-  // guard in case the scanner app isn’t there
-  if (intent.resolveActivity(context.packageManager) != null) {
-    scannerLauncher.launch(intent)
-  } else {
-    Toast.makeText(context, "Scanner service not available", Toast.LENGTH_SHORT).show()
-  }
+                            
                         },
                     colorFilter = ColorFilter.tint(iconTint)
                 )
