@@ -1,4 +1,4 @@
-package com.noveleta.sabongbetting.Helper
+package com.noveleta.sabongbetting.Helper;
 
 import android.content.Context
 import androidx.compose.runtime.*
@@ -25,8 +25,8 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 
 import java.util.concurrent.Executors
+import androidx.compose.ui.graphics.Color
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun BarcodeScannerScreen(
     modifier: Modifier = Modifier.fillMaxSize(),
@@ -40,89 +40,68 @@ fun BarcodeScannerScreen(
     val scanner = remember { BarcodeScanning.getClient() }
     // Camera executor
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
-    // PreviewView remembered to avoid re-creation
-    val previewView = remember {
-        PreviewView(context).apply {
-            scaleType = PreviewView.ScaleType.FILL_CENTER
-            implementationMode = PreviewView.ImplementationMode.COMPATIBLE
-        }
-    }
 
-    // CameraX setup and teardown
-    DisposableEffect(key1 = previewView) {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-        var cameraProvider: ProcessCameraProvider? = null
+    // PreviewView to show camera feed
+    AndroidView(
+        modifier = modifier,
+        factory = { ctx ->
+            PreviewView(ctx).apply {
+                scaleType = PreviewView.ScaleType.FILL_CENTER
+                implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+            }
+        },
+        update = { previewView ->
+            val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+            cameraProviderFuture.addListener({
+                val cameraProvider = cameraProviderFuture.get()
 
-        val listener = Runnable {
-            cameraProvider = cameraProviderFuture.get()
-
-            // Preview use-case
-            val previewUseCase = Preview.Builder()
-                .build()
-                .also { it.setSurfaceProvider(previewView.surfaceProvider) }
-
-            // ImageAnalysis use-case
-            val analysisUseCase = ImageAnalysis.Builder()
-                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .build()
-                .also { useCase ->
-                    useCase.setAnalyzer(cameraExecutor) { imageProxy ->
-                        imageProxy.image
-                            ?.let { mediaImage ->
-                                InputImage.fromMediaImage(
-                                    mediaImage,
-                                    imageProxy.imageInfo.rotationDegrees
-                                )
-                            }
-                            ?.let { inputImage ->
-                                scanner.process(inputImage)
-                                    .addOnSuccessListener { barcodes ->
-                                        barcodes.firstOrNull()
-                                            ?.rawValue
-                                            ?.takeIf { it.isNotEmpty() }
-                                            ?.let { code ->
-                                                // Stop further analysis
-                                                cameraProvider?.unbindAll()
-                                                onScanResult(code)
-                                            }
-                                    }
-                                    .addOnFailureListener {
-                                        // Log or handle error
-                                    }
-                                    .addOnCompleteListener {
-                                        imageProxy.close()
-                                    }
-                            } ?: imageProxy.close()
-                    }
+                // 1) Preview use-case
+                val preview = Preview.Builder().build().also {
+                    it.setSurfaceProvider(previewView.surfaceProvider)
                 }
 
-            // Bind use-cases to lifecycle
-            try {
-                cameraProvider?.unbindAll()
-                cameraProvider?.bindToLifecycle(
+                // 2) ImageAnalysis use-case
+                val analysis = ImageAnalysis.Builder()
+                    .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                    .build()
+                    .also { useCase ->
+                        useCase.setAnalyzer(cameraExecutor) { imageProxy ->
+                            // Convert to ML Kit's InputImage
+                            imageProxy.image
+                                ?.let { mediaImage ->
+                                    InputImage.fromMediaImage(
+                                        mediaImage,
+                                        imageProxy.imageInfo.rotationDegrees
+                                    )
+                                }
+                                ?.let { inputImage ->
+                                    scanner.process(inputImage)
+                                        .addOnSuccessListener { barcodes ->
+                                            barcodes.firstOrNull()
+                                                ?.rawValue
+                                                ?.takeIf { it.isNotEmpty() }
+                                                ?.also { code ->
+                                                    onScanResult(code)
+                                                }
+                                        }
+                                        .addOnCompleteListener {
+                                            imageProxy.close()
+                                        }
+                                } ?: imageProxy.close()
+                        }
+                    }
+
+                // 3) Bind to lifecycle
+                val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(
                     lifecycleOwner,
-                    CameraSelector.DEFAULT_BACK_CAMERA,
-                    previewUseCase,
-                    analysisUseCase
+                    cameraSelector,
+                    preview,
+                    analysis
                 )
-            } catch (exc: Exception) {
-                // Handle binding errors
-            }
+            }, ContextCompat.getMainExecutor(context))
         }
-        cameraProviderFuture.addListener(listener, ContextCompat.getMainExecutor(context))
-
-        onDispose {
-            // Cleanup resources
-            scanner.close()
-            cameraExecutor.shutdown()
-            cameraProvider?.unbindAll()
-        }
-    }
-
-    // UI: Camera preview
-    AndroidView(
-        factory = { previewView },
-        modifier = modifier
     )
 
     // Overlay: Cancel button
@@ -134,7 +113,7 @@ fun BarcodeScannerScreen(
     ) {
         IconButton(
             onClick = {
-                // shutdown and cancel
+                // shut down scanner to free resources
                 scanner.close()
                 cameraExecutor.shutdown()
                 onCancel()
@@ -143,7 +122,7 @@ fun BarcodeScannerScreen(
             Icon(
                 imageVector = Icons.Default.Close,
                 contentDescription = "Cancel scanning",
-                tint = androidx.compose.ui.graphics.Color.White
+                tint = Color.White
             )
         }
     }
