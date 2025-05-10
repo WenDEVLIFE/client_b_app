@@ -193,7 +193,7 @@ object SunmiPrinterHelper {
             return
         }
         try {
-            sunmiPrinterService!!.lineWrap(3, null)
+            sunmiPrinterService!!.lineWrap(1, null)
         } catch (e: RemoteException) {
             handleRemoteException(e)
         }
