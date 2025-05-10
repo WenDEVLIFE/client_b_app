@@ -189,6 +189,17 @@ fun PayoutReceiptDialog(
                 modifier = Modifier
                     .size(width = 320.dp, height = 380.dp)
             ) {
+            // Barcode display
+                AndroidView(
+                    factory = { context ->
+                        ImageView(context).apply {
+                            val bitmap = generateBarcodeBitmap(response.barcode, 300, 100)
+                            setImageBitmap(bitmap)
+                        }
+                    },
+                    modifier = Modifier.size(200.dp)
+                )
+
                 Spacer(Modifier.height(8.dp))
                 Text(text = response.transactionCode, fontSize = 15.sp)
                 Text(text = response.transactionDate, fontSize = 13.sp)
@@ -226,7 +237,7 @@ fun PayoutReceiptDialog(
                 )
                 }
                 Text(
-                    text = "AMOUNT: ${"%,.0f".format(response.amount)}",
+                    text = "AMOUNT: ${response.amount}",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -364,6 +375,17 @@ fun CancelReceiptDialog(
                 modifier = Modifier
                     .size(width = 320.dp, height = 380.dp)
             ) {
+            // Barcode display
+                AndroidView(
+                    factory = { context ->
+                        ImageView(context).apply {
+                            val bitmap = generateBarcodeBitmap(response.barcode, 300, 100)
+                            setImageBitmap(bitmap)
+                        }
+                    },
+                    modifier = Modifier.size(200.dp)
+                )
+                
                 Spacer(Modifier.height(8.dp))
                 Text(
                     text = response.barcode,
