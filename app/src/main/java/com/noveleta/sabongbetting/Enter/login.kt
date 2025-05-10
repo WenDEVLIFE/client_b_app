@@ -102,6 +102,7 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(start = 40.dp, end = 40.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -243,7 +244,7 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
                         viewModel.resetState()
                     }
                     6 -> {
-                        Toast.makeText(context, "System Access is not yet available!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "System Access is not y8et available!", Toast.LENGTH_SHORT).show()
                         viewModel.resetState()
                     }
                     8 -> {
