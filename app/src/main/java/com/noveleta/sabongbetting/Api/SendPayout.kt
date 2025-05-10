@@ -61,7 +61,6 @@ class SendPayoutViewModel : ViewModel() {
                 put("userID", userID)
                 put("roleID", roleID)
                 put("cname", SessionManager.cname ?: "N/A")
-                put("systemName", SessionManager.systemName ?: "N/A")
                 put("txtBarCode", barcodeResult.toLong())
             }
 
@@ -86,35 +85,34 @@ class SendPayoutViewModel : ViewModel() {
             if (success) {
     Log.e("WebSocket", "Response: CLAIMED PAYOUT!, message = $message")
     _betResponse.value = BetPayoutResponse(
-        success = true,
-        transactionCode        = if (json.getString("transactionCode").isNotBlank()) json.getString("transactionCode") else "N/A",
-        transactionFightNumber = json.optInt("transactionFightNumber", 0),
-        transactionSide        = if (json.getString("transactionSide").isNotBlank()) json.getString("transactionSide") else "N/A",
-        transactionAmount      = if (json.getString("transactionAmount").isNotBlank()) json.getString("transactionAmount") else "0",
-        transactionType        = if (json.getString("transactionType").isNotBlank()) json.getString("transactionType") else "N/A",
-        transactionDate        = if (json.getString("transactionDate").isNotBlank()) json.getString("transactionDate") else "N/A",
-        transactionCashier     = if (json.getString("transactionCashier").isNotBlank()) json.getString("transactionCashier") else "N/A",
-        transactionSystemName  = if (json.getString("transactionSystemName").isNotBlank()) json.getString("transactionSystemName") else "N/A",
-        transactionOddsMeron   = if (json.getString("transactionOddsMeron").isNotBlank()) json.getString("transactionOddsMeron") else "0",
-        transactionOddsWala    = if (json.getString("transactionOddsWala").isNotBlank()) json.getString("transactionOddsWala") else "0",
-        transactionPayout      = if (json.getString("transactionPayout").isNotBlank()) json.getString("transactionPayout") else "0",
-        betType                = json.optInt("betType", 0),
-        type                   = if (json.getString("type").isNotBlank()) json.getString("type") else "N/A",
-        roleID                 = if (json.getString("roleID").isNotBlank()) json.getString("roleID") else "N/A",
-        userID                 = if (json.getString("userID").isNotBlank()) json.getString("userID") else "N/A",
-        ticketLogo             = if (json.getString("ticketLogo").isNotBlank()) json.getString("ticketLogo") else "N/A",
-        barcode                = if (json.getString("barcode").isNotBlank()) json.getString("barcode") else "N/A",
-        dateTime               = if (json.getString("dateTime").isNotBlank()) json.getString("dateTime") else "N/A",
-        systemName             = if (json.getString("systemName").isNotBlank()) json.getString("systemName") else "N/A",
-        cashier                = if (json.getString("cashier").isNotBlank()) json.getString("cashier") else "N/A",
-        status                 = if (json.getString("status").isNotBlank()) json.getString("status") else "N/A",
-        fightNumber            = json.optInt("fightNumber", 0),
-        side                   = if (json.getString("side").isNotBlank()) json.getString("side") else "N/A",
-        amount                 = if (json.getString("amount").isNotBlank()) json.getString("amount") else "0",
-        odds                   = if (json.getString("odds").isNotBlank()) json.getString("odds") else "0",
-        payout                 = if (json.getString("payout").isNotBlank()) json.getString("payout") else "0"
-    )
-
+    success = true,
+    transactionCode        = json.safeGetString("transactionCode"),
+    transactionFightNumber = json.safeGetInt("transactionFightNumber"),
+    transactionSide        = json.safeGetString("transactionSide"),
+    transactionAmount      = json.safeGetString("transactionAmount"),
+    transactionType        = json.safeGetString("transactionType"),
+    transactionDate        = json.safeGetString("transactionDate"),
+    transactionCashier     = json.safeGetString("transactionCashier"),
+    transactionSystemName  = json.safeGetString("transactionSystemName"),
+    transactionOddsMeron   = json.safeGetString("transactionOddsMeron", "0"),
+    transactionOddsWala    = json.safeGetString("transactionOddsWala", "0"),
+    transactionPayout      = json.safeGetString("transactionPayout", "0"),
+    betType                = json.safeGetInt("betType", 0),
+    type                   = json.safeGetString("type"),
+    roleID                 = json.safeGetString("roleID"),
+    userID                 = json.safeGetString("userID"),
+    ticketLogo             = json.safeGetString("ticketLogo"),
+    barcode                = json.safeGetString("barcode"),
+    dateTime               = json.safeGetString("dateTime"),
+    systemName             = json.safeGetString("systemName"),
+    cashier                = json.safeGetString("cashier"),
+    status                 = json.safeGetString("status"),
+    fightNumber            = json.safeGetInt("fightNumber", 0),
+    side                   = json.safeGetString("side"),
+    amount                 = json.safeGetString("amount", "0"),
+    odds                   = json.safeGetString("odds", "0"),
+    payout                 = json.safeGetString("payout", "0")
+)
     _betResult.value = 0
 }  else {
                 _betResponse.value = null
@@ -126,8 +124,8 @@ class SendPayoutViewModel : ViewModel() {
 
         } catch (e: Exception) {
             e.printStackTrace()
-            _betResult.value = -1
-            _betErrorCode.value = -1
+            _betResult.value = null
+            _betErrorCode.value = null
             _betResponse.value = null
         }
 
@@ -141,6 +139,25 @@ class SendPayoutViewModel : ViewModel() {
         _betErrorCode.value = null
         _betResponse.value = null
     }
+    
+    fun JSONObject.safeGetString(key: String, default: String = "N/A"): String {
+    return try {
+        val value = this.getString(key)
+        if (value.isNotBlank()) value else default
+    } catch (e: Exception) {
+        default
+    }
+}
+
+fun JSONObject.safeGetInt(key: String, default: Int = 0): Int {
+    return try {
+        this.optInt(key, default)
+    } catch (e: Exception) {
+        default
+    }
+}
+
+
 }
 
 

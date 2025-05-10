@@ -51,10 +51,11 @@ class SendCashOutTellerViewModel : ViewModel() {
                 val jsonBody = JSONObject().apply {
                     put("userID", userID)
                     put("roleID", roleID)
-                    put("cashHandlerPassword", cashHandlerPassword)
+                    put("cashOutTellerPassword", cashHandlerPassword)
                     put("generate_cashoutteller", true)
-                    put("cashHandlerId", cashHandlerId)
-                    put("cashOutAmmount", cashOutAmmount)
+                    put("cashOutTellerID", cashHandlerId)
+                    put("cname", SessionManager.cname ?: "N/A")
+                    put("cashOutAmount", cashOutAmmount)
                 }
 
                 withContext(Dispatchers.IO) {

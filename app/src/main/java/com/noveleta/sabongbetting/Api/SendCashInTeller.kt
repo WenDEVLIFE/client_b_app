@@ -49,12 +49,13 @@ class SendCashInTellerViewModel : ViewModel() {
                 }
 
                 val jsonBody = JSONObject().apply {
-                    put("userID", userID)
+                    put("userID", userID.toInt())
                     put("roleID", roleID)
-                    put("cashHandlerPassword", cashHandlerPassword)
-                    put("generate_cashinteller", true)
-                    put("cashHandlerId", cashHandlerId)
-                    put("cashOutAmmount", cashOutAmmount)
+                    put("cashInHandlerPassword", cashHandlerPassword)
+                    put("generateCashInTeller", true)
+                    put("cashInHandlerId", cashHandlerId)
+                    put("cname", SessionManager.cname ?: "N/A")
+                    put("cashInAmmount", cashOutAmmount)
                 }
 
                 withContext(Dispatchers.IO) {
@@ -68,12 +69,14 @@ class SendCashInTellerViewModel : ViewModel() {
                 val json = JSONObject(responseText)
                 val success = json.getBoolean("success")
                 val resultInt = json.getInt("resultCode")
+                val message = json.getString("message")
                 
                 if(success){
                 _betResult.value = 0
                 }
 
                 if (success) {
+                 Log.e("WebSocket", "Response: Success Cash In, message = $message")
                     _betResponse.value = CashinResponse(
     success = json.getBoolean("success"),
     message = json.getString("message"),
@@ -93,6 +96,7 @@ class SendCashInTellerViewModel : ViewModel() {
                     _betResponse.value = null
                     _betErrorCode.value = -1
                     _betResult.value = resultInt
+                    Log.e("WebSocket", "Response: $resultInt, $message")
                 }
 
             } catch (e: Exception) {
