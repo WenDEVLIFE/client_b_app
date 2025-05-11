@@ -82,6 +82,7 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         
         CoilBackground()
@@ -102,7 +103,6 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .padding(start = 40.dp, end = 40.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
