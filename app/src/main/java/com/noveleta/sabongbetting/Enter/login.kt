@@ -80,34 +80,44 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
     var showWarningDialog by remember { mutableStateOf(false) }
 
     Box(
+    modifier = Modifier
+        .fillMaxSize()
+        .verticalScroll(rememberScrollState())
+) {
+    CoilBackground()
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .padding(start = 20.dp, end = 20.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        
-        CoilBackground()
-        
-        IconButton(
-            onClick = { showSettingsDialog = true },
+        Row(
             modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
         ) {
-            Icon(
-                imageVector = Icons.Default.Settings,
-                contentDescription = "Settings",
-                tint = Color.White      
-            )
+            IconButton(
+                onClick = { showSettingsDialog = true },
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Settings",
+                    tint = Color.White
+                )
+            }
         }
-
+        
+        Spacer(modifier = Modifier.height(80.dp))
+        
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 40.dp, end = 40.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            
+        modifier = Modifier
+            .padding(start = 20.dp, end = 20.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
             Image(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "logo",
@@ -232,6 +242,8 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
                     },
                 textAlign = TextAlign.Center
             )*/
+            
+            }
         }
 
         // Handle navigation on success, with a LaunchedEffect
@@ -306,17 +318,20 @@ if (showWarningDialog) {
 
 @Composable
 fun CoilBackground() {
-  val painter = rememberAsyncImagePainter(
-    ImageRequest.Builder(LocalContext.current)
-      .data(R.drawable.bg)
-      .size(Size.ORIGINAL)       // or a fixed target like (1080,1920)
-      .allowHardware(false)      // use software bitmaps to avoid GL texture issues
-      .build()
-  )
-  Image(
-    painter = painter,
-    contentDescription = null,
-    contentScale = ContentScale.Crop,
-    modifier = Modifier.fillMaxSize()
-  )
+    val painter = rememberAsyncImagePainter(
+        ImageRequest.Builder(LocalContext.current)
+            .data(R.drawable.bg)
+            .size(Size.ORIGINAL)
+            .allowHardware(false)
+            .build()
+    )
+
+    Image(
+        painter = painter,
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(800.dp) // show only part of the background
+    )
 }
