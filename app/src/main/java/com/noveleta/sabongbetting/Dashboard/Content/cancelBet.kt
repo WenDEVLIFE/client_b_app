@@ -112,9 +112,10 @@ var showScanner by remember { mutableStateOf(false) }
                 try {
                     viewModelCancelBetData.setTransactionCode(code)
             viewModelCancelBetData.sendCancelBetBarcode(
+                context,
                 userID = companyId,
                 roleID = userRole,
-                barcodeTxt = code.toInt()
+                barcodeTxt = code
             )
                 } catch (e: NumberFormatException) {
                     Toast.makeText(context, "Invalid barcode format", Toast.LENGTH_SHORT).show()
@@ -203,7 +204,7 @@ var showScanner by remember { mutableStateOf(false) }
 
                         Button(
                             onClick = { /* handle payout */ 
-                            viewModelCancelBetData.sendCancelBetBarcode(userID = companyId, roleID = userRole, barcodeTxt = transactionCode.toInt())
+                            viewModelCancelBetData.sendCancelBetBarcode(context,userID = companyId, roleID = userRole, barcodeTxt = transactionCode)
                             showDialog = false
                             },
                             modifier = Modifier

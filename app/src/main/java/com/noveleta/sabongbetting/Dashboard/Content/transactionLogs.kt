@@ -70,35 +70,11 @@ import com.noveleta.sabongbetting.*
 @Composable
 fun transactionLogsUI(liveBetData: LiveBettingData) {
     
-    val viewModelReprintBet: ReprintBetViewModel = viewModel()
-    
-    val reprintResponse by viewModelReprintBet.betResponse.collectAsState()
-    val reprintResult by viewModelReprintBet.betResult.collectAsState()
-    
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
     
     val context = LocalContext.current
     
-    if (reprintResponse != null) {
-    ReprintBetReceiptDialog(
-        response = reprintResponse!!,
-        onDismiss = {
-            viewModelReprintBet.clearBetState()
-        }
-    )
-
-    LaunchedEffect(reprintResponse) {
-        delay(3000) // 3 seconds
-        rePrintBetResponse(context, reprintResponse!!)
-    }
-}else if (reprintResponse == null) {
-    
-    RePrintBetErrorResults(reprintResult){
-    viewModelReprintBet.clearBetState()
-    }
-    
-}
     
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
         Column(
