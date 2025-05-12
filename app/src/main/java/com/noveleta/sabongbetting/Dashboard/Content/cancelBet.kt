@@ -70,7 +70,6 @@ import com.noveleta.sabongbetting.*
 fun cancelBetUI() {
     val context = LocalContext.current
     val isDarkTheme = isSystemInDarkTheme()
-    val iconTint = if (isDarkTheme) Color.White else Color.Black
     
     val viewModelCancelBetData: SendCancelBetViewModel = viewModel()
     val betResponse by viewModelCancelBetData.betResponse.collectAsState()
@@ -101,33 +100,28 @@ fun cancelBetUI() {
     val transactionCode by viewModelCancelBetData.transactionCode.collectAsState()
 var showScanner by remember { mutableStateOf(false) }
 
+// Scanner launcher with modern result API
+    val scannerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val intent = result.data
+            val code = intent?.getStringExtra("scanned_code") ?: ""
 
-/*val scannerLauncher = rememberLauncherForActivityResult(
-    ActivityResultContracts.StartActivityForResult()
-) { result ->
-    if (result.resultCode == Activity.RESULT_OK) {
-        val intent = result.data
-        val extras = intent?.extras
-
-        val code = intent?.getStringExtra("data")
-            ?: intent?.getStringExtra("barocode")
-            ?: extras?.keySet()?.let {
-                Log.d("ScanDebug", "keys=$it")
-                ""
-            } ?: ""
-
-        if (code.isNotEmpty()) {
-            viewModelCancelBetData.setTransactionCode(code)
+            if (code.isNotEmpty()) {
+                try {
+                    viewModelCancelBetData.setTransactionCode(code)
             viewModelCancelBetData.sendCancelBetBarcode(
                 userID = companyId,
                 roleID = userRole,
                 barcodeTxt = code.toInt()
             )
-            viewModelCancelBetData.setTransactionCode("")
+                } catch (e: NumberFormatException) {
+                    Toast.makeText(context, "Invalid barcode format", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
-}*/
-
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
     
@@ -162,9 +156,9 @@ var showScanner by remember { mutableStateOf(false) }
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            showScanner = true
-                        },
-                    colorFilter = ColorFilter.tint(iconTint)
+                            val intent = Intent(context, ScannerActivity::class.java)
+            scannerLauncher.launch(intent)
+                        }
                 )
             }
 
@@ -229,31 +223,5 @@ var showScanner by remember { mutableStateOf(false) }
                 }
             }
         }
-        
-        if (showScanner) {
-       Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.95f)) // Optional dim
-        ) {
-  BarcodeScannerScreen(
-    onScanResult = { code ->
-      viewModelCancelBetData.setTransactionCode(code)
-      viewModelCancelBetData.sendCancelBetBarcode(
-                userID = companyId,
-                roleID = userRole,
-                barcodeTxt = code.toInt()
-            )
-      viewModelCancelBetData.setTransactionCode("")
-      showScanner = false
-    },
-    onCancel = {
-      showScanner = false
-    }
-  )
-  }
-}
-
-        
     }
 }

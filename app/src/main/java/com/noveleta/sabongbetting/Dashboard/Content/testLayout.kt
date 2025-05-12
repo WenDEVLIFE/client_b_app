@@ -74,7 +74,6 @@ fun testLayout() {
 val activity = LocalContext.current as Activity
     val context = LocalContext.current
     val isDarkTheme = isSystemInDarkTheme()
-    val iconTint = if (isDarkTheme) Color.White else Color.Black
     
     val viewModelPayoutData: SendPayoutViewModel = viewModel()
     val betResponse by viewModelPayoutData.betResponse.collectAsState()
@@ -103,6 +102,29 @@ val activity = LocalContext.current as Activity
     }
     
     val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
+    
+    // Scanner launcher with modern result API
+    val scannerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val intent = result.data
+            val code = intent?.getStringExtra("scanned_code") ?: ""
+
+            if (code.isNotEmpty()) {
+                try {
+                    viewModelPayoutData.setTransactionCode(code)
+      viewModelPayoutData.claimPayout(
+        userID = companyId,
+        roleID = userRole,
+        barcodeResult = code
+      )
+                } catch (e: NumberFormatException) {
+                    Toast.makeText(context, "Invalid barcode format", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
     
@@ -137,9 +159,9 @@ val activity = LocalContext.current as Activity
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            showScanner = true
-                         },
-                    colorFilter = ColorFilter.tint(iconTint)
+                            val intent = Intent(context, ScannerActivity::class.java)
+                            scannerLauncher.launch(intent)
+                         }
                 )
             }
 
@@ -205,31 +227,6 @@ val activity = LocalContext.current as Activity
                 }
             }
         }
-        
-        
-        if (showScanner) {
-       Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.95f)) // Optional dim
-        ) {
-  BarcodeScannerScreen(
-    onScanResult = { code ->
-      viewModelPayoutData.setTransactionCode(code)
-      viewModelPayoutData.claimPayout(
-        userID = companyId,
-        roleID = userRole,
-        barcodeResult = code
-      )
-      showScanner = false
-    },
-    onCancel = {
-      showScanner = false
-    }
-  )
-  }
-}
-
     }
 }
 
