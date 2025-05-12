@@ -65,6 +65,8 @@ if(result == 89){
 resultText = "Login Error! Please logout and relogin your account!."
 }else if(result == 99){
 resultText = "Betting is not allowed at this Moment. Please Contact System Developer!."
+}else if(result == 40){
+resultText = "Your bet exceeds the allowed draw limit. Please enter a smaller amount."
 }else if(result == 98){
 resultText = "Betting is not allowed at this Moment. Please Contact System Developer!."
 }else if(result == 5){
@@ -218,13 +220,11 @@ when (result) {
     0  -> resultText = "ERROR! Transaction logging failed."
 }
 
-
-
 AlertDialog(
       onDismissRequest = confirmButton,
       title = {
         Text(
-          text = "Mobile Deposit Failed",
+          text = "Cancel Bet Failed",
           style = MaterialTheme.typography.headlineLarge
         )
       },
