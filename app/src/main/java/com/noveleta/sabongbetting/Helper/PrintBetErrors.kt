@@ -57,7 +57,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.*
 
 @Composable
-fun PrintBetErrorResults(result: Int?, confirmButton: () -> Unit){
+fun PrintBetErrorResults(result: Int?,messageBet: String?, confirmButton: () -> Unit){
 
 var resultText by remember { mutableStateOf("") } 
 
@@ -66,7 +66,7 @@ resultText = "Login Error! Please logout and relogin your account!."
 }else if(result == 99){
 resultText = "Betting is not allowed at this Moment. Please Contact System Developer!."
 }else if(result == 40){
-resultText = "Your bet exceeds the allowed draw limit. Please enter a smaller amount."
+resultText = "Your bet exceeds the allowed draw limit of $messageBet. Please enter a smaller amount."
 }else if(result == 98){
 resultText = "Betting is not allowed at this Moment. Please Contact System Developer!."
 }else if(result == 5){
