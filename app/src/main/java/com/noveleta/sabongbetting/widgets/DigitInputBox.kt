@@ -94,7 +94,7 @@ fun DigitInputBoxDisplay(clickableMeron: (Int) -> Unit, clickableDraw: (Int) -> 
                         ) {
                             Text(
                                 text = num.toString(),
-                                color = Color.Yellow,
+                                color = Color.Black,
                                 fontSize = 18.sp,
                                 textAlign = TextAlign.Center
                             )
