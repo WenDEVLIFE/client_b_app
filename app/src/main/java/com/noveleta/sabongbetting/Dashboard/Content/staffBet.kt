@@ -101,6 +101,7 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     
     val betResponse by viewModel.betResponse.collectAsState()
     val betResult by viewModel.betResult.collectAsState()
+    val betMessage by viewModel.betMessage.collectAsState()
     
     val isLoading by viewModel.isLoading.collectAsState()
     
@@ -138,7 +139,7 @@ if (betResponse != null) {
     }
 }else if (betResponse == null && betResult == -1) {
     
-    PrintBetErrorResults(betResult){
+    PrintBetErrorResults(betResult, betMessage){
     viewModel.clearBetState()
     }
     
