@@ -146,7 +146,7 @@ fun ReprintBetReceiptDialog(
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(Modifier.height(4.dp))
-                Text(text = "BET", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                Text(text = "RERPINT BET", fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = "AMOUNT: ${response.amount}",
@@ -210,7 +210,7 @@ fun PayoutReceiptDialog(
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(Modifier.height(4.dp))
-                Text(text = response.type, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                Text(text = "PAYOUT", fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = "Fight #: ${response.fightNumber}",
