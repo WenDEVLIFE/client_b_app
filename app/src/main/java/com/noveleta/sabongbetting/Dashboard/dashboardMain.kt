@@ -460,7 +460,7 @@ if (dashboardData != null) {
 
 composable(DrawerScreen.currentBetsLog.route) {
 if (dashboardData != null) {
-        testLayout()
+        currentBetListUI(dashboardData!!)
     } else {
         Box(
             modifier = Modifier
@@ -475,7 +475,7 @@ if (dashboardData != null) {
 
 composable(DrawerScreen.withdrawDepositTicket.route) {
 if (dashboardData != null) {
-        testLayout()
+        withdrawDepositUI()
     } else {
         Box(
             modifier = Modifier
