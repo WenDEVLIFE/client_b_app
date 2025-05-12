@@ -153,7 +153,13 @@ if(betResponse != null){
 
     val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
 var showScanner by remember { mutableStateOf(false) }
+
 if (showScanner) {
+Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.95f)) // Optional dim
+        ) {
   BarcodeScannerScreen(
     onScanResult = { code ->
       viewModelPayoutData.setTransactionCode(code)
@@ -169,6 +175,8 @@ if (showScanner) {
       showScanner = false
     }
   )
+  
+  }
 }
 
 
