@@ -11,6 +11,8 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
+import android.content.Context
+import android.widget.Toast
 
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -21,27 +23,28 @@ class SendCancelBetViewModel : ViewModel() {
 
     private val _betResponse = MutableStateFlow<CancelledBetResponse?>(null)
     val betResponse: StateFlow<CancelledBetResponse?> = _betResponse
-    
+
     private val _transactionCode = MutableStateFlow("")
     val transactionCode: StateFlow<String> = _transactionCode.asStateFlow()
 
     fun setTransactionCode(code: String) {
         _transactionCode.value = code
     }
-    
+
     private val _betResult = MutableStateFlow<Int?>(null)
     val betResult: StateFlow<Int?> = _betResult
-    
+
     private val _betErrorCode = MutableStateFlow<Int?>(null)
     val betErrorCode: StateFlow<Int?> = _betErrorCode
-    
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
     fun sendCancelBetBarcode(
+    context: Context,
         userID: String,
         roleID: String,
-        barcodeTxt: Int,
+        barcodeTxt: String
     ) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -58,7 +61,7 @@ class SendCancelBetViewModel : ViewModel() {
                 val jsonBody = JSONObject().apply {
                     put("userID", userID)
                     put("roleID", roleID)
-                    put("txtBarCode", barcodeTxt)
+                    put("txtBarCode", barcodeTxt.toLong())
                 }
 
                 withContext(Dispatchers.IO) {
@@ -69,38 +72,44 @@ class SendCancelBetViewModel : ViewModel() {
                     conn.inputStream.bufferedReader().use { it.readText() }
                 }
 
+                Log.d("CancelBetResponse", "Response: $responseText")
+
                 val json = JSONObject(responseText)
-                val success = json.getBoolean("success")
-                val resultInt = json.getInt("resultCode")
-                
-                if(success){
-                _betResult.value = 0
-                _betResult.value = resultInt
-                _betErrorCode.value = 0
-                }
+                val success = json.optBoolean("success", false)
+                val resultInt = json.optInt("resultCode", -1)
 
                 if (success) {
-                    _betResponse.value = CancelledBetResponse(
-    barcode = json.getString("barcode"),
-    dateTime = json.getString("dateTime"),
-    systemName = json.getString("systemName"),
-    cashier = json.getString("cashier"),
-    fightNumber = json.getString("fightNumber"),
-    side = json.getString("side"),
-    amount = json.getString("amount"),
-    logAction = json.getString("logAction")
-)
+                    val response = CancelledBetResponse(
+                        barcode = json.optString("barcode", ""),
+                        dateTime = json.optString("dateTime", ""),
+                        systemName = json.optString("systemName", ""),
+                        cashier = json.optString("cashier", ""),
+                        fightNumber = json.optString("fightNumber", ""),
+                        side = json.optString("side", ""),
+                        amount = json.optString("amount", ""),
+                        logAction = json.optString("logAction", "")
+                    )
+
+                    _betResponse.value = response
+                    _betResult.value = resultInt
+                    _betErrorCode.value = 0
+
+                    Toast.makeText(context, "Bet cancelled successfully", Toast.LENGTH_SHORT).show()
                 } else {
                     _betResponse.value = null
                     _betResult.value = resultInt
                     _betErrorCode.value = -1
+
+                    Toast.makeText(context, "Failed to cancel bet", Toast.LENGTH_SHORT).show()
                 }
 
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("CancelBetError", "Exception: ${e.message}", e)
                 _betResult.value = null
                 _betResponse.value = null
                 _betErrorCode.value = null
+
+                Toast.makeText(context, "Error: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
             }
 
             _isLoading.value = false
@@ -113,5 +122,3 @@ class SendCancelBetViewModel : ViewModel() {
         _betErrorCode.value = null
     }
 }
-
-

@@ -66,7 +66,7 @@ class BettingViewModel : ViewModel() {
                 val json = JSONObject(responseText)
                 val success = json.getBoolean("success")
                 val resultInt = json.getInt("result")
-                val resultString = json.getString("message")
+                val resultString = json.optString("message", "")
                 
                 if(success){
                 _betResult.value = 0
