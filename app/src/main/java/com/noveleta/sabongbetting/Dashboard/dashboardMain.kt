@@ -8,6 +8,7 @@ import com.noveleta.sabongbetting.Helper.*
 import com.noveleta.sabongbetting.widgets.*
 import com.noveleta.sabongbetting.Network.*
 import com.noveleta.sabongbetting.Dashboard.Content.*
+import com.noveleta.sabongbetting.*
 import com.noveleta.sabongbetting.Enter.*
 import com.noveleta.sabongbetting.Api.*
 import com.noveleta.sabongbetting.ui.Modifier.*
@@ -154,58 +155,28 @@ if(betResponse != null){
     val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
 var showScanner by remember { mutableStateOf(false) }
 
-if (showScanner) {
-Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.95f)) // Optional dim
-        ) {
-  BarcodeScannerScreen(
-    onScanResult = { code ->
-      viewModelPayoutData.setTransactionCode(code)
+// Scanner launcher with modern result API
+    val scannerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val intent = result.data
+            val code = intent?.getStringExtra("scanned_code") ?: ""
+
+            if (code.isNotEmpty()) {
+                try {
+                    viewModelPayoutData.setTransactionCode(code)
             viewModelPayoutData.claimPayout(
                 userID = companyId,
                 roleID = userRole,
                 barcodeResult = code
             )
-            viewModelPayoutData.setTransactionCode("")
-      showScanner = false
-    },
-    onCancel = {
-      showScanner = false
-    }
-  )
-  
-  }
-}
-
-
-  /*  val scannerLauncher = rememberLauncherForActivityResult(
-    ActivityResultContracts.StartActivityForResult()
-) { result ->
-    if (result.resultCode == Activity.RESULT_OK) {
-        val intent = result.data
-        val extras = intent?.extras
-
-        val code = intent?.getStringExtra("data")
-            ?: intent?.getStringExtra("barocode")
-            ?: extras?.keySet()?.let {
-                Log.d("ScanDebug", "keys=$it")
-                ""
-            } ?: ""
-
-        if (code.isNotEmpty()) {
-            viewModelPayoutData.setTransactionCode(code)
-            viewModelPayoutData.claimPayout(
-                userID = companyId,
-                roleID = userRole,
-                barcodeResult = code
-            )
-            viewModelPayoutData.setTransactionCode("")
+                } catch (e: NumberFormatException) {
+                    Toast.makeText(context, "Invalid barcode format", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
-}
-*/
     
     LaunchedEffect(Unit) {
         // Connect websockets and hide connecting dialog when done
@@ -254,7 +225,7 @@ Box(
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
     val isDarkTheme = isSystemInDarkTheme()
-    val iconTint = if (isDarkTheme) Color.White else Color.Black
+    
 
     // Connecting to server progress dialog
     if (showConnectingDialog) {
@@ -387,6 +358,7 @@ Box(
                 Icon(
                     imageVector = Icons.Filled.Menu,
                     contentDescription = "Open drawer",
+                    tint = Color.White,
                     modifier = Modifier.size(30.dp)
                 )
             }
@@ -396,6 +368,7 @@ Box(
             Text(
                 text = "Sabong Betting",
                 style = MaterialTheme.typography.titleMedium,
+                color = Color.White,
                 modifier = Modifier.weight(1f)
             )
 
@@ -406,11 +379,11 @@ Box(
                     painter = painterResource(id = R.drawable.ic_scan_barcode),
                     contentDescription = "Scan Barcode",
                     modifier = Modifier
-                        .size(24.dp)
+                        .size(30.dp)
                         .clickable {
-                           showScanner = true
-                        },
-                    colorFilter = ColorFilter.tint(iconTint)
+                           val intent = Intent(context, ScannerActivity::class.java)
+                           scannerLauncher.launch(intent)
+                        }
                 )
             }
         }
