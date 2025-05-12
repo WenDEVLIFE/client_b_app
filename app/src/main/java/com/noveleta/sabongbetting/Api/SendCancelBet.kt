@@ -100,7 +100,7 @@ class SendCancelBetViewModel : ViewModel() {
                 e.printStackTrace()
                 _betResult.value = null
                 _betResponse.value = null
-                _betErrorCode.value = -1
+                _betErrorCode.value = null
             }
 
             _isLoading.value = false

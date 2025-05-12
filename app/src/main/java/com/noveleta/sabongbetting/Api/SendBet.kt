@@ -22,6 +22,9 @@ class BettingViewModel : ViewModel() {
 
     private val _betResult = MutableStateFlow<Int?>(null)
     val betResult: StateFlow<Int?> = _betResult
+    
+    private val _betMessage = MutableStateFlow<String?>(null)
+    val betMessage: StateFlow<String?> = _betMessage
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
@@ -63,6 +66,7 @@ class BettingViewModel : ViewModel() {
                 val json = JSONObject(responseText)
                 val success = json.getBoolean("success")
                 val resultInt = json.getInt("result")
+                val resultString = json.getString("message")
                 
                 if(success){
                 _betResult.value = 0
@@ -81,6 +85,7 @@ class BettingViewModel : ViewModel() {
                     )
                 } else {
                     _betResponse.value = null
+                    _betMessage.value = resultString
                     _betResult.value = resultInt
                 }
 
