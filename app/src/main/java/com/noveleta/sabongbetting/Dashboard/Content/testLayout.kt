@@ -102,24 +102,6 @@ val activity = LocalContext.current as Activity
         }
     }
     
-    if (showScanner) {
-  BarcodeScannerScreen(
-    onScanResult = { code ->
-      viewModelPayoutData.setTransactionCode(code)
-      viewModelPayoutData.claimPayout(
-        userID = companyId,
-        roleID = userRole,
-        barcodeResult = code
-      )
-      showScanner = false
-    },
-    onCancel = {
-      showScanner = false
-    }
-  )
-}
-
-    
     val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
@@ -204,6 +186,7 @@ val activity = LocalContext.current as Activity
                         Button(
                             onClick = { /* handle payout */ 
                             viewModelPayoutData.claimPayout(userID = companyId, roleID = userRole, barcodeResult = transactionCode)
+                            showDialog = false
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -223,6 +206,30 @@ val activity = LocalContext.current as Activity
             }
         }
         
+        
+        if (showScanner) {
+       Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.95f)) // Optional dim
+        ) {
+  BarcodeScannerScreen(
+    onScanResult = { code ->
+      viewModelPayoutData.setTransactionCode(code)
+      viewModelPayoutData.claimPayout(
+        userID = companyId,
+        roleID = userRole,
+        barcodeResult = code
+      )
+      showScanner = false
+    },
+    onCancel = {
+      showScanner = false
+    }
+  )
+  }
+}
+
     }
 }
 

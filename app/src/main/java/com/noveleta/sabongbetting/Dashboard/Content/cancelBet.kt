@@ -74,8 +74,8 @@ fun cancelBetUI() {
     
     val viewModelCancelBetData: SendCancelBetViewModel = viewModel()
     val betResponse by viewModelCancelBetData.betResponse.collectAsState()
-    val betResult   by viewModelCancelBetData.betResult.collectAsState()
-    val betErrorCode   by viewModelCancelBetData.betErrorCode.collectAsState()
+    val betResult by viewModelCancelBetData.betResult.collectAsState()
+    val betErrorCode by viewModelCancelBetData.betErrorCode.collectAsState()
     
     // dialog state
     var showDialog by remember { mutableStateOf(false) }
@@ -101,23 +101,6 @@ fun cancelBetUI() {
     val transactionCode by viewModelCancelBetData.transactionCode.collectAsState()
 var showScanner by remember { mutableStateOf(false) }
 
-if (showScanner) {
-  BarcodeScannerScreen(
-    onScanResult = { code ->
-      viewModelCancelBetData.setTransactionCode(code)
-      viewModelCancelBetData.sendCancelBetBarcode(
-                userID = companyId,
-                roleID = userRole,
-                barcodeTxt = code.toInt()
-            )
-      viewModelCancelBetData.setTransactionCode("")
-      showScanner = false
-    },
-    onCancel = {
-      showScanner = false
-    }
-  )
-}
 
 /*val scannerLauncher = rememberLauncherForActivityResult(
     ActivityResultContracts.StartActivityForResult()
@@ -227,13 +210,14 @@ if (showScanner) {
                         Button(
                             onClick = { /* handle payout */ 
                             viewModelCancelBetData.sendCancelBetBarcode(userID = companyId, roleID = userRole, barcodeTxt = transactionCode.toInt())
+                            showDialog = false
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(48.dp),
                             shape = RoundedCornerShape(20.dp)
                         ) {
-                            Text("Claim Payout")
+                            Text("Confirm Cancel Bet")
                         }
 
                         Spacer(Modifier.height(8.dp))
@@ -245,6 +229,31 @@ if (showScanner) {
                 }
             }
         }
+        
+        if (showScanner) {
+       Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.95f)) // Optional dim
+        ) {
+  BarcodeScannerScreen(
+    onScanResult = { code ->
+      viewModelCancelBetData.setTransactionCode(code)
+      viewModelCancelBetData.sendCancelBetBarcode(
+                userID = companyId,
+                roleID = userRole,
+                barcodeTxt = code.toInt()
+            )
+      viewModelCancelBetData.setTransactionCode("")
+      showScanner = false
+    },
+    onCancel = {
+      showScanner = false
+    }
+  )
+  }
+}
+
         
     }
 }

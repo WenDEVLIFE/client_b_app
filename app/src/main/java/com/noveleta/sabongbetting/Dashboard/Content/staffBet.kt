@@ -268,13 +268,14 @@ Row(
              },
              
              clickableDraw = { betAmount ->
-             val drawMax = liveBetData?.drawMaxData?.toIntOrNull() ?: 0
+            /* val drawMax = liveBetData?.drawMaxData?.toIntOrNull() ?: 0
 
-if (betAmount != null && betAmount <= drawMax) {
-    viewModel.placeBet(userID = companyId, roleID = userRole, betType = 3, betAmount = betAmount)
+if (betAmount != null && betAmount >= drawMax) {
+    
 } else {
     showWarningBetDraw = true
-}
+}*/
+viewModel.placeBet(userID = companyId, roleID = userRole, betType = 3, betAmount = betAmount)
              },
              clickableWala = { betAmount ->
              viewModel.placeBet(userID = companyId, roleID = userRole, betType = 2, betAmount = betAmount)
@@ -342,7 +343,7 @@ if (showCashOutTellerDialog) {
     )
 }
 
-
+/*
 if (showWarningBetDraw) {
     AlertDialog(
         onDismissRequest = { showWarningBetDraw = false },
@@ -358,6 +359,6 @@ if (showWarningBetDraw) {
             Text("Your bet exceeds the allowed draw limit. Please enter a smaller amount.")
         }
     )
-}
+}*/
 
 }
