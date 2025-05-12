@@ -206,7 +206,7 @@ fun PayoutReceiptDialog(
                 Text(text = response.systemName, fontSize = 13.sp)
                 Text(
                     text = "Cashier: ${response.transactionCashier}",
-                    fontSize = 14.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(Modifier.height(4.dp))
@@ -214,31 +214,31 @@ fun PayoutReceiptDialog(
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = "Fight #: ${response.fightNumber}",
-                    fontSize = 15.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
                 )
                 if(response.betType == 1){
                 Text(
                     text = "SIDE: MERON",
-                    fontSize = 14.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
                 )
                 }else if(response.betType == 2){
                 Text(
                     text = "SIDE: WALA",
-                    fontSize = 14.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
                 )
                 }else{
                 Text(
                     text = "SIDE: DRAW",
-                    fontSize = 14.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
                 )
                 }
                 Text(
                     text = "AMOUNT: ${response.amount}",
-                    fontSize = 14.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(Modifier.height(4.dp))
