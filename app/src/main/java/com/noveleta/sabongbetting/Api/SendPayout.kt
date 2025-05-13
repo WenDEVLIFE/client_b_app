@@ -74,7 +74,6 @@ class SendPayoutViewModel : ViewModel() {
 
             val json = JSONObject(responseText)
             val success = json.getBoolean("success")
-            val message = json.getString("message")
             val resultInt = json.optInt("errorCode", 0)
 
             if(success){
@@ -83,7 +82,8 @@ class SendPayoutViewModel : ViewModel() {
                 }
                 
             if (success) {
-    Log.e("WebSocket", "Response: CLAIMED PAYOUT!, message = $message")
+
+                
     _betResponse.value = BetPayoutResponse(
     success = true,
     transactionCode        = json.safeGetString("transactionCode"),
