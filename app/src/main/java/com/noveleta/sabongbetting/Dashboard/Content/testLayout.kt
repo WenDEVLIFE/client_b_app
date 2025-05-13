@@ -87,7 +87,7 @@ val activity = LocalContext.current as Activity
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
     
-    if(betResponse != null){
+    if(betResponse != null && betErrorCode == 0){
         PayoutReceiptDialog(betResponse!!){
             viewModelPayoutData.clearBetState()
         }
@@ -112,16 +112,12 @@ val activity = LocalContext.current as Activity
             val code = intent?.getStringExtra("scanned_code") ?: ""
 
             if (code.isNotEmpty()) {
-                try {
                     viewModelPayoutData.setTransactionCode(code)
       viewModelPayoutData.claimPayout(
         userID = companyId,
         roleID = userRole,
         barcodeResult = code
       )
-                } catch (e: NumberFormatException) {
-                    Toast.makeText(context, "Invalid barcode format", Toast.LENGTH_SHORT).show()
-                }
             }
         }
     }

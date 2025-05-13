@@ -82,7 +82,7 @@ fun cancelBetUI() {
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
     
-    if(betResponse != null){
+    if(betResponse != null && betErrorCode == 0){
             CancelReceiptDialog(betResponse!!){
             viewModelCancelBetData.clearBetState()
             }
@@ -109,7 +109,6 @@ var showScanner by remember { mutableStateOf(false) }
             val code = intent?.getStringExtra("scanned_code") ?: ""
 
             if (code.isNotEmpty()) {
-                try {
                     viewModelCancelBetData.setTransactionCode(code)
             viewModelCancelBetData.sendCancelBetBarcode(
                 context,
@@ -117,9 +116,6 @@ var showScanner by remember { mutableStateOf(false) }
                 roleID = userRole,
                 barcodeTxt = code
             )
-                } catch (e: NumberFormatException) {
-                    Toast.makeText(context, "Invalid barcode format", Toast.LENGTH_SHORT).show()
-                }
             }
         }
     }
