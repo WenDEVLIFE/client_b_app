@@ -75,50 +75,53 @@ import kotlin.random.Random
 import androidx.compose.foundation.gestures.detectTapGestures
 
 class ScannerActivity : ComponentActivity() {
+  private val permissionGranted = mutableStateOf(false)
 
-    private val cameraPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                setContent {
-                    MyComposeApplicationTheme {
-                        BarcodeScannerScreen(
-                            onScanResult = { code ->
-                                val resultIntent = Intent().apply {
-                                    putExtra("scanned_code", code)
-                                }
-                                setResult(Activity.RESULT_OK, resultIntent)
-                                finish()
-                            },
-                            onCancel = {
-                                setResult(Activity.RESULT_CANCELED)
-                                finish()
-                            }
-                        )
-                    }
-                }
-            } else {
-                Toast.makeText(this, "Camera permission denied", Toast.LENGTH_LONG).show()
-                setResult(Activity.RESULT_CANCELED)
-                finish()
-            }
-        }
+  private val cameraPermissionLauncher = registerForActivityResult(
+    ActivityResultContracts.RequestPermission()
+  ) { isGranted ->
+    if (isGranted) {
+      permissionGranted.value = true
+    } else {
+      Toast.makeText(this, "Camera permission denied", Toast.LENGTH_LONG).show()
+      setResult(Activity.RESULT_CANCELED)
+      finish()
+    }
+  }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
-        if (ContextCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.CAMERA
+    // Launch permission request
+    cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+
+    setContent {
+      MyComposeApplicationTheme {
+        if (permissionGranted.value ||
+            ContextCompat.checkSelfPermission(
+              this,
+              android.Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            // Permission granted, proceed
-            cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA) // Optional re-check
-        } else {
-            // Request permission
-            cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+          BarcodeScannerScreen(
+            onScanResult = { code ->
+              val intent = Intent().apply {
+                putExtra("scanned_code", code)
+              }
+              setResult(Activity.RESULT_OK, intent)
+              finish()
+            },
+            onCancel = {
+              setResult(Activity.RESULT_CANCELED)
+              finish()
+            }
+          )
         }
+      }
     }
+  }
 }
+
 
 @Composable
 fun BarcodeScannerScreen(
