@@ -376,15 +376,16 @@ var showScanner by remember { mutableStateOf(false) }
 
             }) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_scan_barcode),
-                    contentDescription = "Scan Barcode",
-                    modifier = Modifier
-                        .size(30.dp)
-                        .clickable {
-                           val intent = Intent(context, ScannerActivity::class.java)
-                           scannerLauncher.launch(intent)
-                        }
-                )
+    painter = painterResource(id = R.drawable.ic_scan_barcode),
+    contentDescription = "Scan Barcode",
+    tint = Color(0xFFFFFFFF), // Opaque white
+    modifier = Modifier
+        .size(30.dp)
+        .clickable {
+            val intent = Intent(context, ScannerActivity::class.java)
+            scannerLauncher.launch(intent)
+        }
+)
             }
         }
     }
