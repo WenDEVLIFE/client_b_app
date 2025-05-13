@@ -61,7 +61,7 @@ class SendCancelBetViewModel : ViewModel() {
                 val jsonBody = JSONObject().apply {
                     put("userID", userID)
                     put("roleID", roleID)
-                    put("txtBarCode", barcodeTxt.toLong())
+                    put("txtBarCode", barcodeTxt.toInt())
                 }
 
                 withContext(Dispatchers.IO) {
