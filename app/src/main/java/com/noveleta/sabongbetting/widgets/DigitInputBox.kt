@@ -52,14 +52,14 @@ fun DigitInputBoxDisplay(clickableMeron: (Int) -> Unit, clickableDraw: (Int) -> 
                 text = digitDisplay.toString(),
                 style = TextStyle(fontSize = 32.sp),
                 modifier = Modifier.weight(1f),
-                color = Color.White,
+                color = Color(0xFFFFFFFF),
                 textAlign = TextAlign.Center
             )
             IconButton(onClick = {
                 digitDisplay = 0
                 numberCounts.clear()
             }) {
-                Icon(imageVector = Icons.Default.Close, contentDescription = "Clear", tint = Color.White)
+                Icon(imageVector = Icons.Default.Close, contentDescription = "Clear", tint = Color(0xFFFFFFFF))
             }
         }
 
