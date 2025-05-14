@@ -13,6 +13,10 @@ import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
 
+import android.content.Context
+import android.widget.Toast
+
+
 import kotlinx.coroutines.flow.asStateFlow
 
 
@@ -41,6 +45,7 @@ class SendPayoutViewModel : ViewModel() {
     val isLoading: StateFlow<Boolean> = _isLoading
 
     fun claimPayout(
+    context: Context,
     userID: String,
     roleID: String,
     barcodeResult: String
@@ -61,7 +66,7 @@ class SendPayoutViewModel : ViewModel() {
                 put("userID", userID)
                 put("roleID", roleID)
                 put("cname", SessionManager.cname ?: "N/A")
-                put("txtBarCode", barcodeResult.toLong())
+                put("txtBarCode", barcodeResult)
             }
 
             withContext(Dispatchers.IO) {
@@ -74,6 +79,7 @@ class SendPayoutViewModel : ViewModel() {
 
             val json = JSONObject(responseText)
             val success = json.getBoolean("success")
+            val message = json.getString("message")
             val resultInt = json.optInt("errorCode", 0)
 
             if(success){
@@ -82,8 +88,8 @@ class SendPayoutViewModel : ViewModel() {
                 }
                 
             if (success) {
-
-                
+    Log.e("WebSocket", "Response: CLAIMED PAYOUT!, message = $message")
+    Toast.makeText(context, "Response: SUCCESSFULLY CLAIMED PAYOUT!, message = $message", Toast.LENGTH_LONG).show()
     _betResponse.value = BetPayoutResponse(
     success = true,
     transactionCode        = json.safeGetString("transactionCode"),
@@ -114,11 +120,14 @@ class SendPayoutViewModel : ViewModel() {
     payout                 = json.safeGetString("payout", "0")
 )
     _betResult.value = 0
+        
 }  else {
                 _betResponse.value = null
                 _betResult.value = resultInt
                 _betErrorCode.value = -1
                 Log.e("WebSocket", "Response: $resultInt, $message")
+                
+                Toast.makeText(context, "Response: $resultInt, $message", Toast.LENGTH_LONG).show()
                 
             }
 
@@ -127,6 +136,8 @@ class SendPayoutViewModel : ViewModel() {
             _betResult.value = null
             _betErrorCode.value = null
             _betResponse.value = null
+            
+            Toast.makeText(context, "Error: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
         }
 
         _isLoading.value = false
