@@ -142,9 +142,9 @@ if(betResponse != null){
             PayoutReceiptDialog(betResponse!!){
             viewModelPayoutData.clearBetState()
             }
-            
+            LaunchedEffect(betResponse) {
              printPayout(context, betResponse!!)
-            
+            }
             }else if (betResponse == null && betResult == -1) {
             PrintBetPayoutErrorResults(betResult){
             viewModelPayoutData.clearBetState()
