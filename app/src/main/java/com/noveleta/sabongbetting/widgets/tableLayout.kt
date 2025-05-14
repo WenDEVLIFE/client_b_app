@@ -231,7 +231,7 @@ fun logHistoryTable(
     fightHistory: List<FightLogEntry>,
     onReprintClick: (String) -> Unit
 ) {
-    val columns = listOf("No", "Transaction", "Amount", "Date", "Reprint")
+    val columns = listOf("No", "Transaction", "Amount", "Reprint", "Date")
     val isDarkTheme = isSystemInDarkTheme()
     val iconTint = Color(0xFFFFFFFF)
 
