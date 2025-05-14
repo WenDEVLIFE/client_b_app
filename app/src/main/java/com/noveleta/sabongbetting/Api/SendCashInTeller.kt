@@ -49,7 +49,7 @@ class SendCashInTellerViewModel : ViewModel() {
                 }
 
                 val jsonBody = JSONObject().apply {
-                    put("userID", userID.toInt())
+                    put("userID", userID)
                     put("roleID", roleID)
                     put("cashInHandlerPassword", cashHandlerPassword)
                     put("generateCashInTeller", true)
