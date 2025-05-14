@@ -167,6 +167,7 @@ var showScanner by remember { mutableStateOf(false) }
                 try {
                     viewModelPayoutData.setTransactionCode(code)
             viewModelPayoutData.claimPayout(
+            context,
                 userID = companyId,
                 roleID = userRole,
                 barcodeResult = code
