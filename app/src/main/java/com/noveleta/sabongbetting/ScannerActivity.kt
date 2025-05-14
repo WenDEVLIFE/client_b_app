@@ -1,5 +1,8 @@
 package com.noveleta.sabongbetting
 
+import android.os.Build
+import android.util.Log
+
 import android.content.Context
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -92,7 +95,18 @@ class ScannerActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    // Launch permission request
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      Thread.setDefaultUncaughtExceptionHandler { _, ex ->
+        Toast.makeText(
+          this,
+          "Camera error: ${ex.localizedMessage ?: "unknown"}",
+          Toast.LENGTH_LONG
+        ).show()
+        setResult(Activity.RESULT_CANCELED)
+        finish()
+      }
+    }
+
     cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
 
     setContent {
@@ -105,10 +119,9 @@ class ScannerActivity : ComponentActivity() {
         ) {
           BarcodeScannerScreen(
             onScanResult = { code ->
-              val intent = Intent().apply {
+              setResult(Activity.RESULT_OK, Intent().apply {
                 putExtra("scanned_code", code)
-              }
-              setResult(Activity.RESULT_OK, intent)
+              })
               finish()
             },
             onCancel = {
@@ -121,7 +134,6 @@ class ScannerActivity : ComponentActivity() {
     }
   }
 }
-
 
 @Composable
 fun BarcodeScannerScreen(
@@ -145,95 +157,108 @@ fun BarcodeScannerScreen(
     var lastTipTime by remember { mutableStateOf(0L) }
 
     Box(
-        modifier = modifier
-            .pointerInput(Unit) {
-                detectTapGestures { offset ->
-                    // 1) Trigger focus at tap point
-                    previewRef.value
-                        ?.meteringPointFactory
-                        ?.createPoint(offset.x, offset.y)
-                        ?.let { point ->
-                            cameraControlRef.value
-                                ?.startFocusAndMetering(
-                                    FocusMeteringAction.Builder(point).build()
-                                )
-                        }
+        modifier = modifier.pointerInput(Unit) {
+            detectTapGestures { offset ->
+                previewRef.value?.meteringPointFactory?.createPoint(offset.x, offset.y)?.let { point ->
+                    cameraControlRef.value?.startFocusAndMetering(
+                        FocusMeteringAction.Builder(point).build()
+                    )
+                }
 
-                    // 2) Random tip if >5s since last
-                    val now = System.currentTimeMillis()
-                    if (now - lastTipTime > 5_000 && Random.nextInt(4) == 0) {
-                        lastTipTime = now
-                        Toast
-                            .makeText(context, focusTips.random(), Toast.LENGTH_SHORT)
-                            .show()
-                    }
+                val now = System.currentTimeMillis()
+                if (now - lastTipTime > 5_000 && Random.nextInt(4) == 0) {
+                    lastTipTime = now
+                    Toast.makeText(context, focusTips.random(), Toast.LENGTH_SHORT).show()
                 }
             }
+        }
     ) {
-        // Camera preview
+        // Camera preview with crash guard
         AndroidView(
             modifier = Modifier.fillMaxSize(),
             factory = { ctx ->
-                PreviewView(ctx).also { pv ->
-                    previewRef.value = pv
-                }.apply {
-                    scaleType = PreviewView.ScaleType.FILL_CENTER
-                    implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+                try {
+                    PreviewView(ctx).also { pv ->
+                        previewRef.value = pv
+                    }.apply {
+                        scaleType = PreviewView.ScaleType.FILL_CENTER
+                        implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(context, "Camera preview error: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                    onCancel()
+                    PreviewView(ctx) // fallback empty view
                 }
             },
             update = { previewView ->
-                val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-                cameraProviderFuture.addListener({
-                    val cameraProvider = cameraProviderFuture.get()
-                    val previewUseCase = Preview.Builder()
-                        .build()
-                        .also { it.setSurfaceProvider(previewView.surfaceProvider) }
+                try {
+                    val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+                    cameraProviderFuture.addListener({
+                        try {
+                            val cameraProvider = cameraProviderFuture.get()
+                            val previewUseCase = Preview.Builder()
+                                .build()
+                                .also { it.setSurfaceProvider(previewView.surfaceProvider) }
 
-                    val analysisUseCase = ImageAnalysis.Builder()
-                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                        .build()
-                        .also { useCase ->
-                            useCase.setAnalyzer(cameraExecutor) { imageProxy ->
-                                imageProxy.image
-                                    ?.let { mediaImage ->
-                                        InputImage.fromMediaImage(
-                                            mediaImage,
-                                            imageProxy.imageInfo.rotationDegrees
-                                        )
-                                    }
-                                    ?.let { inputImage ->
-                                        scanner.process(inputImage)
-                                            .addOnSuccessListener { barcodes ->
-                                                barcodes.firstOrNull()
-                                                    ?.rawValue
-                                                    ?.takeIf { it.isNotEmpty() }
-                                                    ?.also { code ->
-                                                        onScanResult(code)
-                                                    }
+                            val analysisUseCase = ImageAnalysis.Builder()
+                                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                                .build()
+                                .also { useCase ->
+                                    useCase.setAnalyzer(cameraExecutor) { imageProxy ->
+                                        try {
+                                            val mediaImage = imageProxy.image
+                                            val image = mediaImage?.let {
+                                                InputImage.fromMediaImage(it, imageProxy.imageInfo.rotationDegrees)
                                             }
-                                            .addOnCompleteListener {
+
+                                            if (image != null) {
+                                                scanner.process(image)
+                                                    .addOnSuccessListener { barcodes ->
+                                                        barcodes.firstOrNull()?.rawValue?.takeIf { it.isNotEmpty() }?.let { code ->
+                                                            onScanResult(code)
+                                                        }
+                                                    }
+                                                    .addOnFailureListener { e ->
+                                                        Toast.makeText(context, "ML Kit scan error: ${e.message}", Toast.LENGTH_LONG).show()
+                                                    }
+                                                    .addOnCompleteListener {
+                                                        imageProxy.close()
+                                                    }
+                                            } else {
                                                 imageProxy.close()
                                             }
-                                    } ?: imageProxy.close()
-                            }
-                        }
+                                        } catch (e: Exception) {
+                                        Toast.makeText(context, "Image processing error: ${e.message}", Toast.LENGTH_LONG).show()
+                                            Log.e("Scanner", "Image processing error: ${e.message}")
+                                            imageProxy.close()
+                                        }
+                                    }
+                                }
 
-                    cameraProvider.unbindAll()
-                    val camera = cameraProvider.bindToLifecycle(
-                        lifecycleOwner,
-                        CameraSelector.DEFAULT_BACK_CAMERA,
-                        previewUseCase,
-                        analysisUseCase
-                    )
-                    cameraControlRef.value = camera.cameraControl
-                }, ContextCompat.getMainExecutor(context))
+                            cameraProvider.unbindAll()
+                            val camera = cameraProvider.bindToLifecycle(
+                                lifecycleOwner,
+                                CameraSelector.DEFAULT_BACK_CAMERA,
+                                previewUseCase,
+                                analysisUseCase
+                            )
+                            cameraControlRef.value = camera.cameraControl
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "Failed to start camera: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                            onCancel()
+                        }
+                    }, ContextCompat.getMainExecutor(context))
+                } catch (e: Exception) {
+                    Toast.makeText(context, "Camera init failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                    onCancel()
+                }
             }
         )
-        
+
         // Scanner overlay
         ScannerOverlayBox()
 
-        // Top text and cancel
+        // Top info and cancel button
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -248,8 +273,11 @@ fun BarcodeScannerScreen(
 
             IconButton(
                 onClick = {
-                    scanner.close()
-                    cameraExecutor.shutdown()
+                    try {
+                        scanner.close()
+                        cameraExecutor.shutdown()
+                    } catch (_: Exception) {
+                    }
                     onCancel()
                 },
                 modifier = Modifier.align(Alignment.TopEnd)
@@ -263,6 +291,7 @@ fun BarcodeScannerScreen(
         }
     }
 }
+
 
 
 @Composable
