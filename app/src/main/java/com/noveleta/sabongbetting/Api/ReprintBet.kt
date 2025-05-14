@@ -32,7 +32,7 @@ class ReprintBetViewModel : ViewModel() {
     fun reprintBet(
         userID: String,
         roleID: String,
-        transactionCode: Int,
+        transactionCode: String,
     ) {
         viewModelScope.launch {
             _isLoading.value = true
