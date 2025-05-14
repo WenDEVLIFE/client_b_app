@@ -114,6 +114,7 @@ val activity = LocalContext.current as Activity
             if (code.isNotEmpty()) {
                     viewModelPayoutData.setTransactionCode(code)
       viewModelPayoutData.claimPayout(
+      context,
         userID = companyId,
         roleID = userRole,
         barcodeResult = code
@@ -203,7 +204,7 @@ val activity = LocalContext.current as Activity
 
                         Button(
                             onClick = { /* handle payout */ 
-                            viewModelPayoutData.claimPayout(userID = companyId, roleID = userRole, barcodeResult = transactionCode)
+                            viewModelPayoutData.claimPayout(context,userID = companyId, roleID = userRole, barcodeResult = transactionCode)
                             showDialog = false
                             },
                             modifier = Modifier
