@@ -231,9 +231,15 @@ fun logHistoryTable(
     fightHistory: List<FightLogEntry>,
     onReprintClick: (String) -> Unit
 ) {
-    val columns = listOf("No", "Transaction", "Amount", "Date", "Action")
+    val columns = listOf("No", "Transaction", "Amount", "Date", "Reprint")
     val isDarkTheme = isSystemInDarkTheme()
-    val iconTint = if (isDarkTheme) Color.White else Color.Black
+    val iconTint = Color(0xFFFFFFFF)
+
+    var currentPage by remember { mutableStateOf(0) }
+    var showAll by remember { mutableStateOf(false) }
+    val rowsPerPage = 5
+    val pageCount = (fightHistory.size + rowsPerPage - 1) / rowsPerPage
+    val paginatedList = if (showAll) fightHistory else fightHistory.drop(currentPage * rowsPerPage).take(rowsPerPage)
 
     Column(
         modifier = Modifier
@@ -241,81 +247,163 @@ fun logHistoryTable(
             .background(color = Color(0xFF313131), shape = RoundedCornerShape(20.dp))
             .padding(8.dp)
     ) {
-            Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-                Column {
-                    // Header
-                    Row(modifier = Modifier.height(40.dp)) {
-                        columns.forEach { label ->
-                            Box(
-                                modifier = Modifier
-                                    .width(80.dp)
-                                    .fillMaxHeight(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = label,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.White,
-                                    fontSize = 14.sp
-                                )
-                            }
-                        }
-                    }
-
-                    // Data rows
-                    fightHistory.forEachIndexed { index, entry ->
-                        runCatching {
-                            Row(modifier = Modifier.height(50.dp)) {
-                                val transaction = entry.transaction ?: "-"
-                                val amount = entry.amount ?: "0"
-                                val date = entry.eventDate ?: "-"
-
-                                listOf(
-                                    (index + 1).toString(),
-                                    transaction,
-                                    amount,
-                                    date
-                                ).forEach { cell ->
-                                    Box(
-                                        modifier = Modifier
-                                            .width(80.dp)
-                                            .fillMaxHeight(),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            text = cell,
-                                            color = Color.White,
-                                            fontSize = 13.sp
-                                        )
-                                    }
-                                }
-
-                                // QR Reprint Button
-                                Box(
-                                    modifier = Modifier
-                                        .width(80.dp)
-                                        .fillMaxHeight()
-                                        .clickable(enabled = !entry.transactionCode.isNullOrBlank()) {
-                                            entry.transactionCode?.let { onReprintClick(it) }
-                                        },
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Image(
-                                        painter = painterResource(id = R.drawable.ic_open),
-                                        contentDescription = "Reprint",
-                                        modifier = Modifier
-                                            .size(24.dp)
-                                            .padding(2.dp),
-                                        colorFilter = ColorFilter.tint(iconTint)
-                                    )
-                                }
-                            }
-                        }.onFailure { error ->
-                            Log.e("logHistoryTable", "Error rendering row $index: ${error.message}")
+        Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+            Column {
+                // Header
+                Row(modifier = Modifier.height(40.dp)) {
+                    columns.forEach { label ->
+                        Box(
+                            modifier = Modifier
+                                .width(80.dp)
+                                .fillMaxHeight(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = label,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFFFFFFFF),
+                                fontSize = 14.sp
+                            )
                         }
                     }
                 }
+
+                // Data rows
+                paginatedList.forEachIndexed { index, entry ->
+                    runCatching {
+                        Row(modifier = Modifier.height(50.dp)) {
+                            val transaction = entry.transaction ?: "-"
+                            val amount = entry.amount ?: "0"
+                            val date = entry.eventDate ?: "-"
+
+                            listOf(
+                                if (showAll) (index + 1).toString() else (currentPage * rowsPerPage + index + 1).toString(),
+                                transaction,
+                                amount,
+                                date
+                            ).forEach { cell ->
+                                Box(
+                                    modifier = Modifier
+                                        .width(80.dp)
+                                        .fillMaxHeight(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = cell,
+                                        color = Color(0xFFFFFFFF),
+                                        fontSize = 13.sp
+                                    )
+                                }
+                            }
+
+                            // QR Reprint Button
+                            Box(
+                                modifier = Modifier
+                                    .width(80.dp)
+                                    .fillMaxHeight()
+                                    .clickable(enabled = !entry.transactionCode.isNullOrBlank()) {
+                                        entry.transactionCode?.let { onReprintClick(it) }
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.ic_open),
+                                    contentDescription = "Reprint",
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .padding(2.dp),
+                                    colorFilter = ColorFilter.tint(iconTint)
+                                )
+                            }
+                        }
+                    }.onFailure { error ->
+                        Log.e("logHistoryTable", "Error rendering row $index: ${error.message}")
+                    }
+                }
             }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Pagination Controls Row
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            // Left: Prev + Page numbers + Next
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (!showAll) {
+                  if (currentPage > 0){
+                     TextButton(
+                        onClick = { if (currentPage > 0) currentPage-- },
+                        enabled = currentPage > 0
+                    ) {
+                        Text("< Prev",
+                        color = Color(0xFFFFFFFF),
+                        fontSize = 12.sp
+                        )
+                    }
+                  }
+ 
+
+                    for (i in 0 until pageCount) {
+                        TextButton(onClick = { currentPage = i }) {
+                            Text(
+                                text = "${i + 1}",
+                                color = if (i == currentPage) Color(0xFFFFFFFF) else Color.Gray,
+                                fontSize = 12.sp,
+                                modifier = if (i == currentPage) {
+                                    Modifier
+                                        .background(
+                                            color = Color(0xFF4A90E2),
+                                            shape = RoundedCornerShape(12.dp)
+                                        )
+                                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                                } else Modifier
+                            )
+                        }
+                    }
+                    
+                    if (currentPage < pageCount - 1){
+                       TextButton(
+                        onClick = { if (currentPage < pageCount - 1) currentPage++ },
+                        enabled = currentPage < pageCount - 1
+                    ) {
+                        Text("Next >",
+                        color = Color(0xFFFFFFFF),
+                        fontSize = 12.sp)
+                    }
+                    }
+                    
+                }
+            }
+
+            // Right: Total pages + Show All toggle
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (!showAll) {
+                    Text(
+                        text = "$pageCount",
+                        color = Color(0xFFFFFFFF),
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                }
+
+                TextButton(onClick = {
+                    showAll = !showAll
+                    currentPage = 0
+                }) {
+                    Text(
+                        text = if (showAll) "Hide All" else "Show All",
+                        fontSize = 12.sp,
+                        color = Color(0xFFFFFFFF)
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -326,7 +414,13 @@ fun currentBetTableUI(
 ) {
     val columns = listOf("No", "Date", "Teller", "Fight #", "Bettor", "Bet Under", "Ammount", "Status", "Result", "Is Claimed?", "Is Returned?")
     val isDarkTheme = isSystemInDarkTheme()
-    val iconTint = if (isDarkTheme) Color.White else Color.Black
+    val iconTint = Color(0xFFFFFFFF)
+
+    var currentPage by remember { mutableStateOf(0) }
+    var showAll by remember { mutableStateOf(false) }
+    val rowsPerPage = 5
+    val pageCount = (fightHistory.size + rowsPerPage - 1) / rowsPerPage
+    val paginatedList = if (showAll) fightHistory else fightHistory.drop(currentPage * rowsPerPage).take(rowsPerPage)
 
     Column(
         modifier = Modifier
@@ -348,7 +442,7 @@ fun currentBetTableUI(
                             Text(
                                 text = label,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White,
+                                color = Color(0xFFFFFFFF),
                                 fontSize = 14.sp
                             )
                         }
@@ -356,11 +450,11 @@ fun currentBetTableUI(
                 }
 
                 // Data Rows
-                fightHistory.forEachIndexed { index, entry ->
+                paginatedList.forEachIndexed { index, entry ->
                     runCatching {
                         Row(modifier = Modifier.height(50.dp)) {
                             val cells = listOf(
-                                (index + 1).toString(),
+                                if (showAll) (index + 1).toString() else (currentPage * rowsPerPage + index + 1).toString(),
                                 entry.date,
                                 entry.teller,
                                 entry.fightNumber,
@@ -382,39 +476,87 @@ fun currentBetTableUI(
                                 ) {
                                     Text(
                                         text = cell,
-                                        color = Color.White,
+                                        color = Color(0xFFFFFFFF),
                                         fontSize = 13.sp,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
                                 }
                             }
-
-                            // Optional QR Reprint button (if needed, uncomment below)
-                            /*
-                            Box(
-                                modifier = Modifier
-                                    .width(80.dp)
-                                    .fillMaxHeight()
-                                    .clickable(enabled = entry.transactionCode != null) {
-                                        entry.transactionCode?.let { onReprintClick(it) }
-                                    },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.ic_open),
-                                    contentDescription = "Reprint",
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                        .padding(2.dp),
-                                    colorFilter = ColorFilter.tint(iconTint)
-                                )
-                            }
-                            */
                         }
                     }.onFailure { error ->
-                        Log.e("logHistoryTable", "Error rendering row $index: ${error.message}")
+                        Log.e("currentBetTableUI", "Error rendering row $index: ${error.message}")
                     }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Pagination Controls
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            // Left: Prev + Page numbers + Next
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (!showAll) {
+                    if (currentPage > 0) {
+                        TextButton(onClick = { currentPage-- }) {
+                            Text("< Prev",
+                            fontSize = 12.sp,
+                        color = Color(0xFFFFFFFF))
+                        }
+                    }
+
+                    for (i in 0 until pageCount) {
+                        TextButton(onClick = { currentPage = i }) {
+                            Text(
+                                text = "${i + 1}",
+                                fontSize = 12.sp,
+                                color = if (i == currentPage) Color(0xFFFFFFFF) else Color.Gray,
+                                modifier = if (i == currentPage) {
+                                    Modifier
+                                        .background(Color(0xFF4A90E2), shape = RoundedCornerShape(12.dp))
+                                        .padding(horizontal = 12.dp, vertical = 4.dp)
+                                } else Modifier
+                            )
+                        }
+                    }
+
+                    if (currentPage < pageCount - 1) {
+                        TextButton(onClick = { currentPage++ }) {
+                            Text("Next >",
+                            fontSize = 12.sp,
+                        color = Color(0xFFFFFFFF))
+                        }
+                    }
+                }
+            }
+
+            // Right: Total Pages + Show All
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (!showAll) {
+                    Text(
+                        text = "$pageCount",
+                        color = Color(0xFFFFFFFF),
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                }
+
+                TextButton(onClick = {
+                    showAll = !showAll
+                    currentPage = 0
+                }) {
+                    Text(
+                        text = if (showAll) "Hide All" else "Show All",
+                        color = Color(0xFFFFFFFF),
+                        fontSize = 12.sp
+                    )
                 }
             }
         }
