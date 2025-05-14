@@ -75,6 +75,32 @@ fun transactionLogsUI(liveBetData: LiveBettingData) {
     
     val context = LocalContext.current
     
+    val viewModelReprintBet: ReprintBetViewModel = viewModel()
+    
+    val reprintResponse by viewModelReprintBet.betResponse.collectAsState()
+    val reprintErrorCode by viewModelReprintBet.betErrorCode.collectAsState()
+    val reprintResult by viewModelReprintBet.betResult.collectAsState()
+    
+    if (reprintResponse != null && reprintErrorCode == 0) {
+    ReprintBetReceiptDialog(
+        response = reprintResponse!!,
+        onDismiss = {
+            viewModelReprintBet.clearBetState()
+        }
+    )
+
+    LaunchedEffect(reprintResponse) {
+        delay(3000) // 3 seconds
+        rePrintBetResponse(context, reprintResponse!!)
+    }
+}else if (reprintErrorCode == -1) {
+    
+    RePrintBetErrorResults(reprintResult){
+    viewModelReprintBet.clearBetState()
+    }
+    
+}
+
     
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
         Column(
