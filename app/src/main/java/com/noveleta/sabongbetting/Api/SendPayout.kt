@@ -12,6 +12,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
+import java.io.IOException
 
 import android.content.Context
 import android.widget.Toast
@@ -44,7 +45,7 @@ class SendPayoutViewModel : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    fun claimPayout(
+fun claimPayout(
     context: Context,
     userID: String,
     roleID: String,
@@ -54,43 +55,56 @@ class SendPayoutViewModel : ViewModel() {
         _isLoading.value = true
 
         try {
-            val ip = SessionManager.ipAddress.orEmpty().takeIf { it.isNotBlank() } ?: "192.168.8.100"
+            // build URL/connection
+            val ip = SessionManager.ipAddress
+                .orEmpty()
+                .takeIf { it.isNotBlank() }
+                ?: "192.168.8.100"
             val url = URL("http://$ip/main/print/printBetPayoutAndroid.php")
             val conn = (url.openConnection() as HttpURLConnection).apply {
                 requestMethod = "POST"
                 setRequestProperty("Content-Type", "application/json")
                 doOutput = true
+                connectTimeout = 5000
+                readTimeout = 5000
             }
 
+            // write JSON body
             val jsonBody = JSONObject().apply {
                 put("userID", userID)
                 put("roleID", roleID)
                 put("cname", SessionManager.cname ?: "N/A")
                 put("txtBarCode", barcodeResult)
             }
-
             withContext(Dispatchers.IO) {
                 conn.outputStream.bufferedWriter().use { it.write(jsonBody.toString()) }
             }
 
-            val responseText = withContext(Dispatchers.IO) {
-                conn.inputStream.bufferedReader().use { it.readText() }
+            // get status & choose the right stream
+            val status = conn.responseCode
+            val rawResponse = withContext(Dispatchers.IO) {
+                val stream = if (status == HttpURLConnection.HTTP_OK)
+                    conn.inputStream
+                else
+                    conn.errorStream
+                stream.bufferedReader().use { it.readText() }
             }
 
-            val json = JSONObject(responseText)
-            val success = json.getBoolean("success")
-            val message = json.getString("message")
+            if (status != HttpURLConnection.HTTP_OK) {
+                // For debugging: show the raw HTML or PHP error
+                throw IOException("Server returned HTTP $status: $rawResponse")
+            }
+
+            // parse the JSON we know is valid
+            val json = JSONObject(rawResponse)
+            val success   = json.getBoolean("success")
+            val message   = json.getString("message")
             val resultInt = json.optInt("errorCode", 0)
 
-            if(success){
-                _betResult.value = 0
-                _betErrorCode.value = 0
-                }
-                
             if (success) {
-    Log.e("WebSocket", "Response: CLAIMED PAYOUT!, message = $message")
-    Toast.makeText(context, "Response: SUCCESSFULLY CLAIMED PAYOUT!, message = $message", Toast.LENGTH_LONG).show()
-    _betResponse.value = BetPayoutResponse(
+                _betResult.value    = 0
+                _betErrorCode.value = 0
+                _betResponse.value = BetPayoutResponse(
     success = true,
     transactionCode        = json.safeGetString("transactionCode"),
     transactionFightNumber = json.safeGetInt("transactionFightNumber"),
@@ -119,28 +133,41 @@ class SendPayoutViewModel : ViewModel() {
     odds                   = json.safeGetString("odds", "0"),
     payout                 = json.safeGetString("payout", "0")
 )
-    _betResult.value = 0
-        
-}  else {
-                _betResponse.value = null
-                _betResult.value = resultInt
+
+                Toast
+                    .makeText(context,
+                              "Successfully claimed payout: $message",
+                              Toast.LENGTH_LONG)
+                    .show()
+            } else {
+                _betResponse.value  = null
+                _betResult.value    = resultInt
                 _betErrorCode.value = -1
-                Log.e("WebSocket", "Response: $resultInt, $message")
-                
-                Toast.makeText(context, "Response: $resultInt, $message", Toast.LENGTH_LONG).show()
-                
+
+                Toast
+                    .makeText(context,
+                              "Error $resultInt: $message",
+                              Toast.LENGTH_LONG)
+                    .show()
             }
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-            _betResult.value = null
-            _betErrorCode.value = null
-            _betResponse.value = null
-            
-            Toast.makeText(context, "Error: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
         }
+        catch (e: Exception) {
+            // Now you'll see either your IOException with the HTML body,
+            // or the real parsing error if something else blew up.
+            Log.e("claimPayout", "failed", e)
+            _betResult.value    = -1
+            _betErrorCode.value = -1
+            _betResponse.value  = null
 
-        _isLoading.value = false
+            Toast
+                .makeText(context,
+                          "Network/parse error: ${e.localizedMessage}",
+                          Toast.LENGTH_LONG)
+                .show()
+        }
+        finally {
+            _isLoading.value = false
+        }
     }
 }
 
