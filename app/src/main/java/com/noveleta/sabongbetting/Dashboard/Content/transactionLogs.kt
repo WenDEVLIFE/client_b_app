@@ -88,11 +88,7 @@ fun transactionLogsUI(liveBetData: LiveBettingData) {
             viewModelReprintBet.clearBetState()
         }
     )
-
-    LaunchedEffect(reprintResponse) {
-        delay(3000) // 3 seconds
         rePrintBetResponse(context, reprintResponse!!)
-    }
 }else if (reprintErrorCode == -1) {
     
     RePrintBetErrorResults(reprintResult){
@@ -123,8 +119,7 @@ fun transactionLogsUI(liveBetData: LiveBettingData) {
             tableLayout.logHistoryTable(
             fightHistory = liveBetData.userTransactionLogs ?: emptyList(),
             onReprintClick = { transactionCode ->
-                   Log.d("Reprint", "Clicked reprint for: $transactionCode")
-                   viewModelReprintBet.reprintBet(companyId,userRole,transactionCode.toInt())
+                   viewModelReprintBet.reprintBet(companyId,userRole,transactionCode)
                 }
             )
              

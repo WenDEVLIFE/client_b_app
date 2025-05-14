@@ -87,10 +87,7 @@ fun cancelBetUI() {
             viewModelCancelBetData.clearBetState()
             }
             
-            LaunchedEffect(betResponse) {
-        delay(3000) // 3 seconds
         printCancelledBetting(context, betResponse!!)
-    }
             }else if (betErrorCode == -1) {
             PrintCancelBetErrorResults(betResult){
             viewModelCancelBetData.clearBetState()

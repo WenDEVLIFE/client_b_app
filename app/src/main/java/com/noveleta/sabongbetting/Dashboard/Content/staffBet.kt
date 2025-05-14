@@ -133,10 +133,8 @@ if (betResponse != null) {
         }
     )
 
-    LaunchedEffect(betResponse) {
-        delay(3000) // 3 seconds
         printBetResponse(context, betResponse!!)
-    }
+    
 }else if (betResponse == null && betResult == -1) {
     
     PrintBetErrorResults(betResult, betMessage){
@@ -153,10 +151,8 @@ if (reprintResponse != null) {
         }
     )
 
-    LaunchedEffect(reprintResponse) {
-        delay(3000) // 3 seconds
         rePrintBetResponse(context, reprintResponse!!)
-    }
+    
 }else if (reprintResponse == null && reprintErrorCode == -1) {
     
     RePrintBetErrorResults(reprintResult){
@@ -172,10 +168,8 @@ TellerFundCashOutReceiptDialog(
             viewModelCashOutData.clearBetState()
         }
     )
-LaunchedEffect(cashOutResponse) {
-        delay(3000) // 3 seconds
         printTellerCashoutResponse(context, cashOutResponse!!)
-    }
+    
 }else if (cashOutErrorCode == -1) {
     PrintTellerCashOutErrorResults(cashOutResult){
     viewModelCashOutData.clearBetState()
@@ -189,10 +183,9 @@ TellerFundCashInReceiptDialog(
             viewModel.clearBetState()
         }
     )
-LaunchedEffect(cashInResponse) {
-        delay(3000) // 3 seconds
+
         printTellerCashinResponse(context, cashInResponse!!)
-    }
+    
 }else if (cashInErrorCode == -1) {
 
     PrintTellerCashInErrorResults(cashInResult){
@@ -298,7 +291,7 @@ viewModel.placeBet(userID = companyId, roleID = userRole, betType = 3, betAmount
             fightHistory = liveBetData.userTransactionLogs ?: emptyList(),
             onReprintClick = { transactionCode ->
                Log.d("Reprint", "Clicked reprint for: $transactionCode")
-               viewModelReprintBet.reprintBet(companyId,userRole,transactionCode.toInt())
+               viewModelReprintBet.reprintBet(companyId,userRole,transactionCode)
             }
         )
              
