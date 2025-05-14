@@ -2,6 +2,7 @@ package com.noveleta.sabongbetting
 
 import android.os.Build
 import android.util.Log
+import android.util.Size
 
 import android.content.Context
 import androidx.compose.runtime.*
@@ -141,100 +142,76 @@ fun BarcodeScannerScreen(
     onScanResult: (String) -> Unit,
     onCancel: () -> Unit
 ) {
-    val context = LocalContext.current
+   val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val scanner = remember { BarcodeScanning.getClient() }
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
     val previewRef = remember { mutableStateOf<PreviewView?>(null) }
     val cameraControlRef = remember { mutableStateOf<CameraControl?>(null) }
 
-    val focusTips = listOf(
-        "Tip: Tap on the screen to focus",
-        "Tip: Hold your phone steady",
-        "Tip: Move the code closer or farther",
-        "Tip: Ensure good lighting"
-    )
-    var lastTipTime by remember { mutableStateOf(0L) }
+    // throttle scanning
+    var lastAnalyzedTimestamp by remember { mutableStateOf(0L) }
 
     Box(
-        modifier = modifier.pointerInput(Unit) {
-            detectTapGestures { offset ->
-                previewRef.value?.meteringPointFactory?.createPoint(offset.x, offset.y)?.let { point ->
-                    cameraControlRef.value?.startFocusAndMetering(
-                        FocusMeteringAction.Builder(point).build()
-                    )
-                }
-
-                val now = System.currentTimeMillis()
-                if (now - lastTipTime > 5_000 && Random.nextInt(4) == 0) {
-                    lastTipTime = now
-                    Toast.makeText(context, focusTips.random(), Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+        modifier = modifier
     ) {
-        // Camera preview with crash guard
         AndroidView(
             modifier = Modifier.fillMaxSize(),
             factory = { ctx ->
-                try {
-                    PreviewView(ctx).also { pv ->
-                        previewRef.value = pv
-                    }.apply {
-                        scaleType = PreviewView.ScaleType.FILL_CENTER
-                        implementationMode = PreviewView.ImplementationMode.COMPATIBLE
-                    }
-                } catch (e: Exception) {
-                    Toast.makeText(context, "Camera preview error: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
-                    onCancel()
-                    PreviewView(ctx) // fallback empty view
+                PreviewView(ctx).apply {
+                    scaleType = PreviewView.ScaleType.FILL_CENTER
+                    implementationMode = PreviewView.ImplementationMode.PERFORMANCE
+                    previewRef.value = this
                 }
             },
-            update = { previewView ->
-                try {
+            update = {
+                // bind only once
+                if (previewRef.value != null && cameraControlRef.value == null) {
                     val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
                     cameraProviderFuture.addListener({
-                        try {
-                            val cameraProvider = cameraProviderFuture.get()
-                            val previewUseCase = Preview.Builder()
-                                .build()
-                                .also { it.setSurfaceProvider(previewView.surfaceProvider) }
+                        val cameraProvider = cameraProviderFuture.get()
 
-                            val analysisUseCase = ImageAnalysis.Builder()
-                                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                                .build()
-                                .also { useCase ->
-                                    useCase.setAnalyzer(cameraExecutor) { imageProxy ->
-                                        try {
-                                            val mediaImage = imageProxy.image
-                                            val image = mediaImage?.let {
-                                                InputImage.fromMediaImage(it, imageProxy.imageInfo.rotationDegrees)
-                                            }
+                        // Preview
+                        val previewUseCase = Preview.Builder()
+                            .build()
+                            .also { it.setSurfaceProvider(previewRef.value!!.surfaceProvider) }
 
-                                            if (image != null) {
-                                                scanner.process(image)
-                                                    .addOnSuccessListener { barcodes ->
-                                                        barcodes.firstOrNull()?.rawValue?.takeIf { it.isNotEmpty() }?.let { code ->
-                                                            onScanResult(code)
-                                                        }
-                                                    }
-                                                    .addOnFailureListener { e ->
-                                                        Toast.makeText(context, "ML Kit scan error: ${e.message}", Toast.LENGTH_LONG).show()
-                                                    }
-                                                    .addOnCompleteListener {
-                                                        imageProxy.close()
-                                                    }
-                                            } else {
-                                                imageProxy.close()
-                                            }
-                                        } catch (e: Exception) {
-                                        Toast.makeText(context, "Image processing error: ${e.message}", Toast.LENGTH_LONG).show()
-                                            Log.e("Scanner", "Image processing error: ${e.message}")
+                        // Analysis
+                        val analysisUseCase = ImageAnalysis.Builder()
+                            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                            .setTargetResolution(Size(640, 480))
+                            .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_YUV_420_888)
+                            .build()
+                            .also { useCase ->
+                                useCase.setAnalyzer(cameraExecutor) { imageProxy ->
+                                    val now = System.currentTimeMillis()
+                                    if (now - lastAnalyzedTimestamp >= 200) {
+                                        lastAnalyzedTimestamp = now
+                                        val mediaImage = imageProxy.image
+                                        if (mediaImage != null) {
+                                            val inputImage = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+                                            scanner.process(inputImage)
+                                                .addOnSuccessListener { barcodes ->
+                                                    barcodes.firstOrNull()?.rawValue
+                                                        ?.takeIf { it.isNotEmpty() }
+                                                        ?.let(onScanResult)
+                                                }
+                                                .addOnFailureListener { e ->
+                                                    Toast.makeText(context, "Scan error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                                                }
+                                                .addOnCompleteListener {
+                                                    imageProxy.close()
+                                                }
+                                        } else {
                                             imageProxy.close()
                                         }
+                                    } else {
+                                        imageProxy.close()
                                     }
                                 }
+                            }
 
+                        try {
                             cameraProvider.unbindAll()
                             val camera = cameraProvider.bindToLifecycle(
                                 lifecycleOwner,
@@ -244,13 +221,10 @@ fun BarcodeScannerScreen(
                             )
                             cameraControlRef.value = camera.cameraControl
                         } catch (e: Exception) {
-                            Toast.makeText(context, "Failed to start camera: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, "Camera start failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
                             onCancel()
                         }
                     }, ContextCompat.getMainExecutor(context))
-                } catch (e: Exception) {
-                    Toast.makeText(context, "Camera init failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
-                    onCancel()
                 }
             }
         )
