@@ -375,10 +375,10 @@ var showScanner by remember { mutableStateOf(false) }
             IconButton(onClick = { /* Do something for the end icon */ 
 
             }) {
-                Image(
+Image(
     painter = painterResource(id = R.drawable.ic_scan_barcode),
     contentDescription = "Scan Barcode",
-    tint = Color(0xFFFFFFFF), // Opaque white
+    colorFilter = ColorFilter.tint(Color(0xFFFFFFFF)),
     modifier = Modifier
         .size(30.dp)
         .clickable {
@@ -386,6 +386,7 @@ var showScanner by remember { mutableStateOf(false) }
             scannerLauncher.launch(intent)
         }
 )
+
             }
         }
     }
