@@ -86,8 +86,9 @@ fun cancelBetUI() {
             CancelReceiptDialog(betResponse!!){
             viewModelCancelBetData.clearBetState()
             }
-            
+            LaunchedEffect(betResponse) {
         printCancelledBetting(context, betResponse!!)
+        }
             }else if (betErrorCode == -1) {
             PrintCancelBetErrorResults(betResult){
             viewModelCancelBetData.clearBetState()

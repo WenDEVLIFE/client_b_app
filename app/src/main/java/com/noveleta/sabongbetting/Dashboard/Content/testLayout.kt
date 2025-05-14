@@ -91,8 +91,9 @@ val activity = LocalContext.current as Activity
         PayoutReceiptDialog(betResponse!!){
             viewModelPayoutData.clearBetState()
         }
-    
+    LaunchedEffect(betResponse) {
              printPayout(context, betResponse!!)
+             }
     }else if (betErrorCode == -1) {
       PrintBetPayoutErrorResults(betResult){
             viewModelPayoutData.clearBetState()

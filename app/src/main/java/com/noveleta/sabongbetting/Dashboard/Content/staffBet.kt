@@ -133,7 +133,10 @@ if (betResponse != null) {
         }
     )
 
-        printBetResponse(context, betResponse!!)
+        LaunchedEffect(betResponse) {
+            // only runs a single time per distinct betResponse
+            printBetResponse(context, betResponse!!)
+        }
     
 }else if (betResponse == null && betResult == -1) {
     
@@ -150,8 +153,9 @@ if (reprintResponse != null) {
             viewModelReprintBet.clearBetState()
         }
     )
-
+LaunchedEffect(reprintResponse) {
         rePrintBetResponse(context, reprintResponse!!)
+        }
     
 }else if (reprintResponse == null && reprintErrorCode == -1) {
     
@@ -168,7 +172,9 @@ TellerFundCashOutReceiptDialog(
             viewModelCashOutData.clearBetState()
         }
     )
+    LaunchedEffect(cashOutResponse) {
         printTellerCashoutResponse(context, cashOutResponse!!)
+        }
     
 }else if (cashOutErrorCode == -1) {
     PrintTellerCashOutErrorResults(cashOutResult){
@@ -183,9 +189,9 @@ TellerFundCashInReceiptDialog(
             viewModel.clearBetState()
         }
     )
-
+LaunchedEffect(cashInResponse) {
         printTellerCashinResponse(context, cashInResponse!!)
-    
+    }
 }else if (cashInErrorCode == -1) {
 
     PrintTellerCashInErrorResults(cashInResult){

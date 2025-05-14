@@ -88,7 +88,9 @@ fun transactionLogsUI(liveBetData: LiveBettingData) {
             viewModelReprintBet.clearBetState()
         }
     )
+    LaunchedEffect(reprintResponse) {
         rePrintBetResponse(context, reprintResponse!!)
+        }
 }else if (reprintErrorCode == -1) {
     
     RePrintBetErrorResults(reprintResult){

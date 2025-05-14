@@ -85,9 +85,9 @@ val context = LocalContext.current
       MobileDepositReceiptDialog(mobileDepositResponse!!){
         viewModelMobileDepositData.clearBetState()
       }
-      
+      LaunchedEffect(mobileDepositResponse) {
         printMobileDeposit(context, mobileDepositResponse!!)
-    
+    }
     } else if (mobileDepositErrorCode == -1) {
       PrintDepositErrorResults(mobileDepositResult){
         viewModelMobileDepositData.clearBetState()
@@ -98,9 +98,9 @@ val context = LocalContext.current
       MobileWithdrawReceiptDialog(mobileWithdrawResponse!!){
         viewModelMobileWithdrawData.clearBetState()
       }
-      
+      LaunchedEffect(mobileWithdrawResponse) {
         printMobileWithdraw(context, mobileWithdrawResponse!!)
-    
+    }
     } else if (mobileWithdrawErrorCode == -1) {
       PrintWithdrawErrorResults(mobileWithdrawResult){
         viewModelMobileWithdrawData.clearBetState()
