@@ -150,6 +150,7 @@ var showScanner by remember { mutableStateOf(false) }
                 Image(
                     painter = painterResource(id = R.drawable.ic_scan_barcode),
                     contentDescription = "Scan Barcode",
+                    colorFilter = ColorFilter.tint(Color(0xFFFFFFFF)),
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
