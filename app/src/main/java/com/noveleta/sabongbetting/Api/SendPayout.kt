@@ -85,46 +85,48 @@ fun claimPayout(
             val resultInt = json.optInt("errorCode", 0)
 
                 if (success) {
-                    val response = BetPayoutResponse(
-    success = true,
-    transactionCode        = json.safeGetString("transactionCode"),
-    transactionFightNumber = json.safeGetInt("transactionFightNumber"),
-    transactionSide        = json.safeGetString("transactionSide"),
-    transactionAmount      = json.safeGetString("transactionAmount"),
-    transactionType        = json.safeGetString("transactionType"),
-    transactionDate        = json.safeGetString("transactionDate"),
-    transactionCashier     = json.safeGetString("transactionCashier"),
-    transactionSystemName  = json.safeGetString("transactionSystemName"),
-    transactionOddsMeron   = json.safeGetString("transactionOddsMeron", "0"),
-    transactionOddsWala    = json.safeGetString("transactionOddsWala", "0"),
-    transactionPayout      = json.safeGetString("transactionPayout", "0"),
-    betType                = json.safeGetInt("betType", 0),
-    type                   = json.safeGetString("type"),
-    roleID                 = json.safeGetString("roleID"),
-    userID                 = json.safeGetString("userID"),
-    ticketLogo             = json.safeGetString("ticketLogo"),
-    barcode                = json.safeGetString("barcode"),
-    dateTime               = json.safeGetString("dateTime"),
-    systemName             = json.safeGetString("systemName"),
-    cashier                = json.safeGetString("cashier"),
-    status                 = json.safeGetString("status"),
-    fightNumber            = json.safeGetInt("fightNumber", 0),
-    side                   = json.safeGetString("side"),
-    amount                 = json.safeGetString("amount", "0"),
-    odds                   = json.safeGetString("odds", "0"),
-    payout                 = json.safeGetString("payout", "0")
-)
+    val response = BetPayoutResponse(
+        success                 = true,
+        transactionCode         = json.optString("transactionCode", ""),
+        transactionFightNumber  = json.optInt("transactionFightNumber", 0),
+        transactionSide         = json.optString("transactionSide", ""),
+        transactionAmount       = json.optString("transactionAmount", "0"),
+        transactionType         = json.optString("transactionType", ""),
+        transactionDate         = json.optString("transactionDate", ""),
+        transactionCashier      = json.optString("transactionCashier", ""),
+        transactionSystemName   = json.optString("transactionSystemName", ""),
+        transactionOddsMeron    = json.optString("transactionOddsMeron", "0"),
+        transactionOddsWala     = json.optString("transactionOddsWala", "0"),
+        transactionPayout       = json.optString("transactionPayout", "0"),
+        betType                 = json.optInt("betType", 0),
+        type                    = json.optString("type", ""),
+        roleID                  = json.optString("roleID", ""),
+        userID                  = json.optString("userID", ""),
+        ticketLogo              = json.optString("ticketLogo", ""),
+        barcode                 = json.optString("barcode", ""),
+        dateTime                = json.optString("dateTime", ""),
+        systemName              = json.optString("systemName", ""),
+        cashier                 = json.optString("cashier", ""),
+        status                  = json.optString("status", ""),
+        fightNumber             = json.optInt("fightNumber", 0),
+        side                    = json.optString("side", ""),
+        amount                  = json.optString("amount", "0"),
+        odds                    = json.optString("odds", "0"),
+        payout                  = json.optString("payout", "0")
+    )
 
-                    _betResponse.value = response
-                    _betResult.value = resultInt
-                    _betErrorCode.value = 0
+    _betResponse.value   = response
+    _betResult.value     = resultInt
+    _betErrorCode.value  = 0
 
-                    Toast
-                    .makeText(context,
-                              "Successfully claimed payout: $message",
-                              Toast.LENGTH_LONG)
-                    .show()
-                } else {
+    Toast
+        .makeText(
+            context,
+            "Successfully claimed payout: $message",
+            Toast.LENGTH_LONG
+        )
+        .show()
+} else {
                        _betResponse.value  = null
                 _betResult.value    = resultInt
                 _betErrorCode.value = -1
@@ -137,13 +139,19 @@ fun claimPayout(
                 }
 
             } catch (e: Exception) {
-                Log.e("CancelBetError", "Exception: ${e.message}", e)
-                _betResult.value = null
-                _betResponse.value = null
-                _betErrorCode.value = null
+    Log.e("CancelBetError", "Exception: ${e.message}", e)
+    _betResult.value   = null
+    _betResponse.value = null
+    _betErrorCode.value= null
 
-                Toast.makeText(context, "Error: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
-            }
+    
+    val fullError = Log.getStackTraceString(e)
+    Toast.makeText(
+        context,
+        "Payout Error:\n$fullError",
+        Toast.LENGTH_LONG
+    ).show()
+}
 
             _isLoading.value = false
         }

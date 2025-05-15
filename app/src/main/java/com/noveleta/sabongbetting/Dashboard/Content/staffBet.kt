@@ -313,6 +313,7 @@ if (showCashInTellerDialog) {
         onConfirm = { cashAmount, selectedHandlerId, password ->
             // handle the result (cashAmount, selectedHandlerId, password, cashInOrOut)
             viewModelCashInData.sendCashInTeller(
+            context,
         userID = companyId,
          roleID = userRole, 
          cashAmount.toInt(),

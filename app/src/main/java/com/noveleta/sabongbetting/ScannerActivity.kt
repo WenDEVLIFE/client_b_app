@@ -142,118 +142,118 @@ fun BarcodeScannerScreen(
     onScanResult: (String) -> Unit,
     onCancel: () -> Unit
 ) {
-   val context = LocalContext.current
+    val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val scanner = remember { BarcodeScanning.getClient() }
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
-    val previewRef = remember { mutableStateOf<PreviewView?>(null) }
-    val cameraControlRef = remember { mutableStateOf<CameraControl?>(null) }
+    val scanner = remember { BarcodeScanning.getClient() }
 
     // throttle scanning
-    var lastAnalyzedTimestamp by remember { mutableStateOf(0L) }
+    var lastAnalyzedMs by remember { mutableStateOf(0L) }
 
-    Box(
-        modifier = modifier
-    ) {
+    // Hold a ref to the PreviewView
+    var previewView by remember<PreviewView?>(mutableStateOf(null))
+
+    Box(modifier = modifier) {
         AndroidView(
-            modifier = Modifier.fillMaxSize(),
             factory = { ctx ->
                 PreviewView(ctx).apply {
+                    // switch to COMPATIBLE so we’re less likely to get a black screen on older devices
+                    implementationMode = PreviewView.ImplementationMode.COMPATIBLE
                     scaleType = PreviewView.ScaleType.FILL_CENTER
-                    implementationMode = PreviewView.ImplementationMode.PERFORMANCE
-                    previewRef.value = this
+                    previewView = this
                 }
             },
-            update = {
-                // bind only once
-                if (previewRef.value != null && cameraControlRef.value == null) {
-                    val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-                    cameraProviderFuture.addListener({
-                        val cameraProvider = cameraProviderFuture.get()
-
-                        // Preview
-                        val previewUseCase = Preview.Builder()
-                            .build()
-                            .also { it.setSurfaceProvider(previewRef.value!!.surfaceProvider) }
-
-                        // Analysis
-                        val analysisUseCase = ImageAnalysis.Builder()
-                            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                            .setTargetResolution(Size(640, 480))
-                            .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_YUV_420_888)
-                            .build()
-                            .also { useCase ->
-                                useCase.setAnalyzer(cameraExecutor) { imageProxy ->
-                                    val now = System.currentTimeMillis()
-                                    if (now - lastAnalyzedTimestamp >= 200) {
-                                        lastAnalyzedTimestamp = now
-                                        val mediaImage = imageProxy.image
-                                        if (mediaImage != null) {
-                                            val inputImage = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-                                            scanner.process(inputImage)
-                                                .addOnSuccessListener { barcodes ->
-                                                    barcodes.firstOrNull()?.rawValue
-                                                        ?.takeIf { it.isNotEmpty() }
-                                                        ?.let(onScanResult)
-                                                }
-                                                .addOnFailureListener { e ->
-                                                    Toast.makeText(context, "Scan error: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
-                                                }
-                                                .addOnCompleteListener {
-                                                    imageProxy.close()
-                                                }
-                                        } else {
-                                            imageProxy.close()
-                                        }
-                                    } else {
-                                        imageProxy.close()
-                                    }
-                                }
-                            }
-
-                        try {
-                            cameraProvider.unbindAll()
-                            val camera = cameraProvider.bindToLifecycle(
-                                lifecycleOwner,
-                                CameraSelector.DEFAULT_BACK_CAMERA,
-                                previewUseCase,
-                                analysisUseCase
-                            )
-                            cameraControlRef.value = camera.cameraControl
-                        } catch (e: Exception) {
-                            Toast.makeText(context, "Camera start failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
-                            onCancel()
-                        }
-                    }, ContextCompat.getMainExecutor(context))
-                }
-            }
+            modifier = Modifier.fillMaxSize()
         )
 
-        // Scanner overlay
+        // Once previewView is non-null, set up CameraX binding exactly once
+        DisposableEffect(previewView) {
+            val providerFuture = ProcessCameraProvider.getInstance(context)
+            var cameraProvider: ProcessCameraProvider? = null
+
+            val listener = Runnable {
+                cameraProvider = providerFuture.get()
+
+                // Preview use‑case
+                val previewUseCase = Preview.Builder()
+                    .build()
+                    .also { it.setSurfaceProvider(previewView!!.surfaceProvider) }
+
+                // Analysis use‑case
+                val analysisUseCase = ImageAnalysis.Builder()
+                    .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                    .setTargetResolution(Size(640, 480))
+                    .build()
+                    .also { analysis ->
+                        analysis.setAnalyzer(cameraExecutor) { imageProxy ->
+                            val now = System.currentTimeMillis()
+                            if (now - lastAnalyzedMs >= 200) {
+                                lastAnalyzedMs = now
+                                imageProxy.image?.let { mediaImage ->
+                                    val inputImage = InputImage.fromMediaImage(
+                                        mediaImage, imageProxy.imageInfo.rotationDegrees
+                                    )
+                                    scanner.process(inputImage)
+                                        .addOnSuccessListener { barcodes ->
+                                            barcodes.firstOrNull()
+                                                ?.rawValue
+                                                ?.takeIf { it.isNotEmpty() }
+                                                ?.let(onScanResult)
+                                        }
+                                        .addOnCompleteListener {
+                                            imageProxy.close()
+                                        }
+                                } ?: imageProxy.close()
+                            } else {
+                                imageProxy.close()
+                            }
+                        }
+                    }
+
+                try {
+                    cameraProvider!!.unbindAll()
+                    cameraProvider!!.bindToLifecycle(
+                        lifecycleOwner,
+                        CameraSelector.DEFAULT_BACK_CAMERA,
+                        previewUseCase,
+                        analysisUseCase
+                    )
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        context,
+                        "Camera start failed: ${e.localizedMessage}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    onCancel()
+                }
+            }
+
+            providerFuture.addListener(listener, ContextCompat.getMainExecutor(context))
+
+            onDispose {
+                // clean up
+                cameraProvider?.unbindAll()
+                scanner.close()
+                cameraExecutor.shutdown()
+            }
+        }
+
+        // Overlay + controls
         ScannerOverlayBox()
 
-        // Top info and cancel button
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
             Text(
-                text = "Scan QRCode Receipt",
+                "Scan QRCode Receipt",
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.align(Alignment.TopStart)
             )
-
             IconButton(
-                onClick = {
-                    try {
-                        scanner.close()
-                        cameraExecutor.shutdown()
-                    } catch (_: Exception) {
-                    }
-                    onCancel()
-                },
+                onClick = onCancel,
                 modifier = Modifier.align(Alignment.TopEnd)
             ) {
                 Icon(
@@ -265,8 +265,6 @@ fun BarcodeScannerScreen(
         }
     }
 }
-
-
 
 @Composable
 fun ScannerOverlayBox(
