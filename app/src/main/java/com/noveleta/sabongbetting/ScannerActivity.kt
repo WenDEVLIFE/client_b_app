@@ -151,7 +151,7 @@ fun BarcodeScannerScreen(
     var lastAnalyzedMs by remember { mutableStateOf(0L) }
 
     // Hold a ref to the PreviewView
-    var previewView by remember<PreviewView?>(mutableStateOf(null))
+    var previewView by remember { mutableStateOf<PreviewView?>(null) }
 
     Box(modifier = modifier) {
         AndroidView(
