@@ -4,14 +4,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/Sabong Betting/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/cancelBet.kt",
       "selection": {
         "end": {
-          "column": 11,
-          "index": 6769,
-          "line": 185
+          "column": 9,
+          "index": 6779,
+          "line": 186
         },
         "start": {
-          "column": 11,
-          "index": 6769,
-          "line": 185
+          "column": 7,
+          "index": 6310,
+          "line": 171
         }
       }
     },
@@ -79,14 +79,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/ScannerActivity.kt",
       "selection": {
         "end": {
-          "column": 70,
-          "index": 4798,
-          "line": 153
+          "column": 9,
+          "index": 8419,
+          "line": 245
         },
         "start": {
-          "column": 70,
-          "index": 4798,
-          "line": 153
+          "column": 9,
+          "index": 8419,
+          "line": 245
         }
       }
     },
@@ -149,7 +149,37 @@
           "line": 402
         }
       }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/testLayout.kt",
+      "selection": {
+        "end": {
+          "column": 52,
+          "index": 5927,
+          "line": 159
+        },
+        "start": {
+          "column": 52,
+          "index": 5927,
+          "line": 159
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/dashboardMain.kt",
+      "selection": {
+        "end": {
+          "column": 13,
+          "index": 9299,
+          "line": 249
+        },
+        "start": {
+          "column": 13,
+          "index": 9299,
+          "line": 249
+        }
+      }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/PrintBetErrors.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/dashboardMain.kt"
 }

@@ -133,6 +133,7 @@ fun MainWithDrawer() {
     var showExitDialog by remember { mutableStateOf(false) }
     // State for connection progress dialog
     var showConnectingDialog by remember { mutableStateOf(true) }
+    var showScannerDialog by remember { mutableStateOf(false) }
     
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
@@ -236,6 +237,23 @@ var showScanner by remember { mutableStateOf(false) }
             confirmButton = {}
         )
     }
+    
+     if(showScannerDialog){
+        BarcodeScannerScreen(
+            onScanResult = { code ->
+              viewModelPayoutData.setTransactionCode(code)
+            viewModelPayoutData.claimPayout(
+            context,
+                userID = companyId,
+                roleID = userRole,
+                barcodeResult = code
+            )
+            },
+            onCancel = {
+              showScannerDialog = false
+            }
+          )
+        }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -372,8 +390,8 @@ var showScanner by remember { mutableStateOf(false) }
                 modifier = Modifier.weight(1f)
             )
 
-            IconButton(onClick = { /* Do something for the end icon */ 
-
+            IconButton(onClick = { /* Do something for the end icon */
+             showScannerDialog = true
             }) {
 Image(
     painter = painterResource(id = R.drawable.ic_scan_barcode),
@@ -382,8 +400,7 @@ Image(
     modifier = Modifier
         .size(30.dp)
         .clickable {
-            val intent = Intent(context, ScannerActivity::class.java)
-            scannerLauncher.launch(intent)
+            showScannerDialog = true
         }
 )
 

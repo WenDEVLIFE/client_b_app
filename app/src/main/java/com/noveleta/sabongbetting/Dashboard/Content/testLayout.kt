@@ -83,7 +83,8 @@ val activity = LocalContext.current as Activity
     // dialog state
     var showDialog by remember { mutableStateOf(false) }
     var showScanner by remember { mutableStateOf(false) }
-
+    var showScannerDialog by remember { mutableStateOf(false) }
+    
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
     
@@ -156,8 +157,7 @@ val activity = LocalContext.current as Activity
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            val intent = Intent(context, ScannerActivity::class.java)
-                            scannerLauncher.launch(intent)
+                            showScannerDialog = true
                          }
                 )
             }
@@ -171,6 +171,23 @@ val activity = LocalContext.current as Activity
         }
 
         // --- DIALOG ---
+        if(showScannerDialog){
+        BarcodeScannerScreen(
+            onScanResult = { code ->
+              viewModelPayoutData.setTransactionCode(code)
+      viewModelPayoutData.claimPayout(
+      context,
+        userID = companyId,
+        roleID = userRole,
+        barcodeResult = code
+      )
+            },
+            onCancel = {
+              showScannerDialog = false
+            }
+          )
+        }
+        
         if (showDialog) {
             AlertDialog(onDismissRequest = { showDialog = false }) {
                 Surface(
