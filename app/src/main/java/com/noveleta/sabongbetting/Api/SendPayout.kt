@@ -83,17 +83,19 @@ fun claimPayout(
             // get status & choose the right stream
             val status = conn.responseCode
             val rawResponse = withContext(Dispatchers.IO) {
-                val stream = if (status == HttpURLConnection.HTTP_OK)
-                    conn.inputStream
-                else
-                    conn.errorStream
-                stream.bufferedReader().use { it.readText() }
-            }
+    val stream = if (status == HttpURLConnection.HTTP_OK)
+        conn.inputStream
+    else
+        conn.errorStream ?: throw IOException("No error stream available for HTTP $status")
+    stream.bufferedReader().use { it.readText() }
+}
 
-            if (status != HttpURLConnection.HTTP_OK) {
-                // For debugging: show the raw HTML or PHP error
-                throw IOException("Server returned HTTP $status: $rawResponse")
-            }
+Log.d("claimPayout", "Server response: $rawResponse")
+
+if (!rawResponse.trim().startsWith("{")) {
+    throw IOException("Invalid JSON response: $rawResponse")
+}
+
 
             // parse the JSON we know is valid
             val json = JSONObject(rawResponse)
@@ -161,7 +163,7 @@ fun claimPayout(
 
             Toast
                 .makeText(context,
-                          "Network/parse error: ${e.localizedMessage}",
+                          "Network/parse error: ${e}",
                           Toast.LENGTH_LONG)
                 .show()
         }
