@@ -72,7 +72,7 @@ class SendCashInTellerViewModel : ViewModel() {
 
                 val json = JSONObject(responseText)
                 val success = json.getBoolean("success")
-                val resultInt = json.getInt("resultCode")
+                val resultInt = json.optInt("resultCode", 0)
                 val message = json.getString("message")
                 
                 if(success){
