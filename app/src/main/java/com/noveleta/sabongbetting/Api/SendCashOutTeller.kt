@@ -12,6 +12,9 @@ import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
 
+import android.content.Context
+import android.widget.Toast
+
 import com.noveleta.sabongbetting.Model.*
 import com.noveleta.sabongbetting.SharedPreference.*
 
@@ -30,6 +33,7 @@ class SendCashOutTellerViewModel : ViewModel() {
     val isLoading: StateFlow<Boolean> = _isLoading
 
     fun sendCashOutTeller(
+    context: Context,
         userID: String,
         roleID: String,
         cashOutAmmount: Int,
@@ -68,7 +72,8 @@ class SendCashOutTellerViewModel : ViewModel() {
 
                 val json = JSONObject(responseText)
                 val success = json.getBoolean("success")
-                val resultInt = json.getInt("resultCode")
+                val resultInt = json.optInt("resultCode", 0)
+                val message = json.getString("message")
                 
                 if(success){
                 _betResult.value = 0
@@ -90,6 +95,7 @@ class SendCashOutTellerViewModel : ViewModel() {
                     _betResponse.value = null
                     _betErrorCode.value = -1
                     _betResult.value = resultInt
+                    Toast.makeText(context, "Response: $resultInt, $message", Toast.LENGTH_LONG).show()
                 }
 
             } catch (e: Exception) {
@@ -97,6 +103,14 @@ class SendCashOutTellerViewModel : ViewModel() {
                 _betResult.value = null
                 _betErrorCode.value = 0
                 _betResponse.value = null
+                
+                val fullError = Log.getStackTraceString(e)
+    Toast.makeText(
+        context,
+        "Payout Error:\n$fullError",
+        Toast.LENGTH_LONG
+    ).show()
+            
             }
 
             _isLoading.value = false
