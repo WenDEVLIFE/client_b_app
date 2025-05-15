@@ -80,7 +80,12 @@ fun claimPayout(
 
             Log.d("CancelBetResponse", "Response: $responseText")
 
-            val json = JSONObject(responseText)
+            if (!responseText.trim().startsWith("{")) {
+    throw JSONException("Invalid JSON: $responseText")
+}
+
+val json = JSONObject(responseText)
+
             val success = json.getBoolean("success")
             val message = json.getString("message")
             val resultInt = json.optInt("errorCode", 0)
