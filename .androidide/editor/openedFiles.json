@@ -49,14 +49,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendPayout.kt",
       "selection": {
         "end": {
-          "column": 57,
-          "index": 3188,
-          "line": 96
+          "column": 0,
+          "index": 583,
+          "line": 22
         },
         "start": {
-          "column": 51,
-          "index": 3182,
-          "line": 96
+          "column": 0,
+          "index": 583,
+          "line": 22
         }
       }
     },
@@ -136,5 +136,5 @@
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendCashInTeller.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendPayout.kt"
 }
