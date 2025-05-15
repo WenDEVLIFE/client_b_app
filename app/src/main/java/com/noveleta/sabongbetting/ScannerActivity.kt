@@ -136,7 +136,6 @@ class ScannerActivity : ComponentActivity() {
   }
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun BarcodeScannerScreen(
     modifier: Modifier = Modifier.fillMaxSize(),
