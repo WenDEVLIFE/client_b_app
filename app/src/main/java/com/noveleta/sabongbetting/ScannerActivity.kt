@@ -47,6 +47,7 @@ import androidx.compose.runtime.Composable
 
 import com.noveleta.sabongbetting.ui.theme.MyComposeApplicationTheme
 import com.noveleta.sabongbetting.*
+import com.noveleta.sabongbetting.Helper.*
 import android.app.Activity
 import android.content.Intent
 
@@ -77,6 +78,7 @@ import androidx.compose.ui.input.pointer.pointerInteropFilter
 import kotlin.random.Random
 
 import androidx.compose.foundation.gestures.detectTapGestures
+
 
 class ScannerActivity : ComponentActivity() {
   private val permissionGranted = mutableStateOf(false)
@@ -246,63 +248,4 @@ fun BarcodeScannerScreen(
 }
 
 
-@Composable
-fun ScannerOverlayBox(
-    modifier: Modifier = Modifier,
-    boxWidth: Dp = 250.dp,
-    boxHeight: Dp = 250.dp
-) {
-    // blinking state
-    var showLine by remember { mutableStateOf(true) }
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(500)
-            showLine = !showLine
-        }
-    }
 
-    // Convert Dp to pixels inside Canvas
-    Box(
-        modifier
-            .fillMaxSize()
-            .drawWithContent {
-                // 1) draw what’s underneath (camera)
-                drawContent()
-
-                val canvasWidth = size.width
-                val canvasHeight = size.height
-                val boxW = boxWidth.toPx()
-                val boxH = boxHeight.toPx()
-                val left = (canvasWidth - boxW) / 2f
-                val top = (canvasHeight - boxH) / 2f
-                val right = left + boxW
-                val bottom = top + boxH
-                val centerY = top + boxH / 2f
-
-                // 2) darken the whole screen
-                drawRect(
-                    color = Color(0x99000000),
-                    size = size
-                )
-
-                // 3) cut out the transparent window
-                drawRect(
-                    color = Color.Transparent,
-                    topLeft = Offset(left, top),
-                    size = Size(boxW, boxH),
-                    blendMode = BlendMode.Clear
-                )
-
-                // 4) optional red scan line
-                if (showLine) {
-                    drawLine(
-                        color = Color.Red,
-                        start = Offset(left, centerY),
-                        end = Offset(right, centerY),
-                        strokeWidth = 3.dp.toPx(),
-                        blendMode = BlendMode.SrcOver
-                    )
-                }
-            }
-    )
-}
