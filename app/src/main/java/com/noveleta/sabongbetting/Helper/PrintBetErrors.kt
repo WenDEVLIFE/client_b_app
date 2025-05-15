@@ -365,7 +365,7 @@ AlertDialog(
       onDismissRequest = confirmButton,
       title = {
         Text(
-          text = "Mobile Withdraw Failed",
+          text = "Teller Cashout Failed",
           style = MaterialTheme.typography.headlineLarge
         )
       },
@@ -400,13 +400,15 @@ when (result) {
     7 -> resultText = "ERROR! No active event available!"
     9 -> resultText = "ERROR! No event found!"
     4 -> resultText = "ERROR! Cash handler password is incorrect!"
+    10 -> resultText = "ERROR! No System Name Found. Please contact the system administrator."
+    20 -> resultText = "ERROR! Invalid Json Input!"
 }
 
 AlertDialog(
       onDismissRequest = confirmButton,
       title = {
         Text(
-          text = "Mobile Deposit Failed",
+          text = "Teller Cash In Failed",
           style = MaterialTheme.typography.headlineLarge
         )
       },
