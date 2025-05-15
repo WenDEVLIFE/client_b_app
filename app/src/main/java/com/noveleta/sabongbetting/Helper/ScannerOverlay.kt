@@ -59,14 +59,8 @@ fun ScannerOverlayBox(
                     size = size
                 )
 
-                // 3) cut out the transparent window
-                drawRect(
-                    color = Color.Transparent,
-                    topLeft = Offset(left, top),
-                    size = Size(boxW, boxH),
-                    blendMode = BlendMode.Clear
-                )
-
+                // Skip step 3 cut out center box not working in android 7
+                
                 // 4) optional red scan line
                 if (showLine) {
                     drawLine(
