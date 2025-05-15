@@ -249,60 +249,60 @@ fun BarcodeScannerScreen(
 @Composable
 fun ScannerOverlayBox(
     modifier: Modifier = Modifier,
-    boxWidth: Float = 500f,
-    boxHeight: Float = 500f
+    boxWidth: Dp = 250.dp,
+    boxHeight: Dp = 250.dp
 ) {
+    // blinking state
     var showLine by remember { mutableStateOf(true) }
-
-    // Blinking effect: toggle every 500ms
     LaunchedEffect(Unit) {
         while (true) {
-            showLine = !showLine
             delay(500)
+            showLine = !showLine
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val canvasWidth = size.width
-            val canvasHeight = size.height
+    // Convert Dp to pixels inside Canvas
+    Box(
+        modifier
+            .fillMaxSize()
+            .drawWithContent {
+                // 1) draw what’s underneath (camera)
+                drawContent()
 
-            val left = (canvasWidth - boxWidth) / 2f
-            val top = (canvasHeight - boxHeight) / 2f
-            val right = left + boxWidth
-            val bottom = top + boxHeight
+                val canvasWidth = size.width
+                val canvasHeight = size.height
+                val boxW = boxWidth.toPx()
+                val boxH = boxHeight.toPx()
+                val left = (canvasWidth - boxW) / 2f
+                val top = (canvasHeight - boxH) / 2f
+                val right = left + boxW
+                val bottom = top + boxH
+                val centerY = top + boxH / 2f
 
-            val overlayPaint = android.graphics.Paint().apply {
-                color = android.graphics.Color.parseColor("#99000000") // semi-transparent black
-            }
+                // 2) darken the whole screen
+                drawRect(
+                    color = Color(0x99000000),
+                    size = size
+                )
 
-            drawIntoCanvas { canvas ->
-                val nativeCanvas = canvas.nativeCanvas
+                // 3) cut out the transparent window
+                drawRect(
+                    color = Color.Transparent,
+                    topLeft = Offset(left, top),
+                    size = Size(boxW, boxH),
+                    blendMode = BlendMode.Clear
+                )
 
-                // Save layer
-                val saveLayer = nativeCanvas.saveLayer(null, null)
-
-                // Draw full dark overlay
-                nativeCanvas.drawRect(0f, 0f, canvasWidth, canvasHeight, overlayPaint)
-
-                // Transparent cutout
-                val clearPaint = android.graphics.Paint().apply {
-                    xfermode = android.graphics.PorterDuffXfermode(android.graphics.PorterDuff.Mode.CLEAR)
-                }
-                nativeCanvas.drawRect(left, top, right, bottom, clearPaint)
-
-                // Blinking red line in the center
+                // 4) optional red scan line
                 if (showLine) {
-                    val redLinePaint = android.graphics.Paint().apply {
-                        color = android.graphics.Color.RED
-                        strokeWidth = 3f
-                    }
-                    val centerY = top + (boxHeight / 2f)
-                    nativeCanvas.drawLine(left, centerY, right, centerY, redLinePaint)
+                    drawLine(
+                        color = Color.Red,
+                        start = Offset(left, centerY),
+                        end = Offset(right, centerY),
+                        strokeWidth = 3.dp.toPx(),
+                        blendMode = BlendMode.SrcOver
+                    )
                 }
-
-                nativeCanvas.restoreToCount(saveLayer)
             }
-        }
-    }
+    )
 }

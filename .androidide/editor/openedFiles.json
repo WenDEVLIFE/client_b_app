@@ -4,14 +4,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendCashOutTeller.kt",
       "selection": {
         "end": {
-          "column": 1,
-          "index": 2742,
-          "line": 74
+          "column": 42,
+          "index": 553,
+          "line": 18
         },
         "start": {
-          "column": 1,
-          "index": 2742,
-          "line": 74
+          "column": 0,
+          "index": 481,
+          "line": 17
         }
       }
     },
@@ -20,13 +20,13 @@
       "selection": {
         "end": {
           "column": 0,
-          "index": 2716,
-          "line": 75
+          "index": 554,
+          "line": 19
         },
         "start": {
           "column": 0,
-          "index": 2716,
-          "line": 75
+          "index": 554,
+          "line": 19
         }
       }
     },
@@ -49,17 +49,32 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendPayout.kt",
       "selection": {
         "end": {
-          "column": 0,
-          "index": 2747,
-          "line": 86
+          "column": 42,
+          "index": 552,
+          "line": 20
         },
         "start": {
-          "column": 12,
-          "index": 2646,
-          "line": 83
+          "column": 0,
+          "index": 510,
+          "line": 20
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/ScannerActivity.kt",
+      "selection": {
+        "end": {
+          "column": 0,
+          "index": 10215,
+          "line": 308
+        },
+        "start": {
+          "column": 0,
+          "index": 10215,
+          "line": 308
         }
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendCashInTeller.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/ScannerActivity.kt"
 }
