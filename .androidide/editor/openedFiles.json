@@ -64,14 +64,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/ScannerActivity.kt",
       "selection": {
         "end": {
-          "column": 40,
-          "index": 1693,
-          "line": 49
+          "column": 31,
+          "index": 2292,
+          "line": 68
         },
         "start": {
-          "column": 40,
-          "index": 1693,
-          "line": 49
+          "column": 0,
+          "index": 2261,
+          "line": 68
         }
       }
     },
@@ -79,14 +79,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/ScannerOverlay.kt",
       "selection": {
         "end": {
-          "column": 35,
-          "index": 530,
-          "line": 14
+          "column": 0,
+          "index": 684,
+          "line": 21
         },
         "start": {
-          "column": 35,
-          "index": 530,
-          "line": 14
+          "column": 0,
+          "index": 684,
+          "line": 21
         }
       }
     },
