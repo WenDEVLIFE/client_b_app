@@ -69,6 +69,10 @@ class SendCashOutTellerViewModel : ViewModel() {
                 val responseText = withContext(Dispatchers.IO) {
                     conn.inputStream.bufferedReader().use { it.readText() }
                 }
+                
+                if (!responseText.trim().startsWith("{")) {
+    throw JSONException("Invalid JSON: $responseText")
+}
 
                 val json = JSONObject(responseText)
                 val success = json.getBoolean("success")
