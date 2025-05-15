@@ -36,7 +36,7 @@ class SendCashInTellerViewModel : ViewModel() {
     context: Context,
         userID: String,
         roleID: String,
-        cashOutAmmount: Int,
+        cashOutAmmount: String,
         cashHandlerId: Int,
         cashHandlerPassword: String,
     ) {
