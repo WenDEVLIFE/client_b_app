@@ -217,13 +217,13 @@ fun PayoutReceiptDialog(
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
                 )
-                if(response.betType == 1){
+                if(response.betType == "1"){
                 Text(
                     text = "SIDE: MERON",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
                 )
-                }else if(response.betType == 2){
+                }else if(response.betType == "2"){
                 Text(
                     text = "SIDE: WALA",
                     fontSize = 13.sp,

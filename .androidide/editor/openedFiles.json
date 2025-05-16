@@ -34,17 +34,17 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/ReceiptDialog.kt",
       "selection": {
         "end": {
-          "column": 3,
-          "index": 6466,
-          "line": 180
+          "column": 47,
+          "index": 8365,
+          "line": 225
         },
         "start": {
-          "column": 3,
-          "index": 6466,
-          "line": 180
+          "column": 47,
+          "index": 8365,
+          "line": 225
         }
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/testLayout.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/ReceiptDialog.kt"
 }
