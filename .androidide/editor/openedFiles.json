@@ -1,32 +1,17 @@
 {
   "allFiles": [
     {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendCashOutTeller.kt",
-      "selection": {
-        "end": {
-          "column": 42,
-          "index": 553,
-          "line": 18
-        },
-        "start": {
-          "column": 0,
-          "index": 481,
-          "line": 17
-        }
-      }
-    },
-    {
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendCashInTeller.kt",
       "selection": {
         "end": {
           "column": 0,
-          "index": 554,
-          "line": 19
+          "index": 0,
+          "line": 0
         },
         "start": {
           "column": 0,
-          "index": 554,
-          "line": 19
+          "index": 0,
+          "line": 0
         }
       }
     },
@@ -34,14 +19,29 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/staffBet.kt",
       "selection": {
         "end": {
-          "column": 19,
-          "index": 11082,
-          "line": 318
+          "column": 31,
+          "index": 6557,
+          "line": 188
         },
         "start": {
-          "column": 19,
-          "index": 11082,
-          "line": 318
+          "column": 31,
+          "index": 6557,
+          "line": 188
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/.github/workflows/android-build.yml",
+      "selection": {
+        "end": {
+          "column": 24,
+          "index": 65,
+          "line": 4
+        },
+        "start": {
+          "column": 24,
+          "index": 65,
+          "line": 4
         }
       }
     },
@@ -49,62 +49,32 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendPayout.kt",
       "selection": {
         "end": {
-          "column": 42,
-          "index": 552,
-          "line": 20
-        },
-        "start": {
-          "column": 0,
-          "index": 510,
-          "line": 20
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/ScannerActivity.kt",
-      "selection": {
-        "end": {
-          "column": 31,
-          "index": 2292,
-          "line": 68
-        },
-        "start": {
-          "column": 0,
-          "index": 2261,
-          "line": 68
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/ScannerOverlay.kt",
-      "selection": {
-        "end": {
-          "column": 0,
-          "index": 684,
-          "line": 21
-        },
-        "start": {
-          "column": 0,
-          "index": 684,
-          "line": 21
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/build.gradle",
-      "selection": {
-        "end": {
-          "column": 4,
-          "index": 1919,
-          "line": 70
+          "column": 15,
+          "index": 1445,
+          "line": 48
         },
         "start": {
           "column": 4,
-          "index": 1919,
-          "line": 70
+          "index": 1434,
+          "line": 48
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/testLayout.kt",
+      "selection": {
+        "end": {
+          "column": 21,
+          "index": 8548,
+          "line": 239
+        },
+        "start": {
+          "column": 21,
+          "index": 8548,
+          "line": 239
         }
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/ScannerOverlay.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/.github/workflows/android-build.yml"
 }

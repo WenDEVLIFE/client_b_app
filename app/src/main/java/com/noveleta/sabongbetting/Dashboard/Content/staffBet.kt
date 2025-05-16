@@ -186,7 +186,7 @@ if (cashInResponse != null) {
 TellerFundCashInReceiptDialog(
         response = cashInResponse!!,
         onDismiss = {
-            viewModel.clearBetState()
+            viewModelCashInData.clearBetState()
         }
     )
 LaunchedEffect(cashInResponse) {
