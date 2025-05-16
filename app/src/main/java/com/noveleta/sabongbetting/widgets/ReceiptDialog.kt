@@ -189,70 +189,91 @@ fun PayoutReceiptDialog(
                 modifier = Modifier
                     .size(width = 320.dp, height = 380.dp)
             ) {
-            // Barcode display
-                AndroidView(
-                    factory = { context ->
-                        ImageView(context).apply {
-                            val bitmap = generateBarcodeBitmap(response.barcode, 300, 100)
-                            setImageBitmap(bitmap)
-                        }
-                    },
-                    modifier = Modifier.size(200.dp)
-                )
+                // Safe barcode display
+                if (!response.barcode.isNullOrBlank()) {
+                    AndroidView(
+                        factory = { context ->
+                            ImageView(context).apply {
+                                try {
+                                    val bitmap = generateBarcodeBitmap(response.barcode, 300, 100)
+                                    setImageBitmap(bitmap)
+                                } catch (e: Exception) {
+                                    Log.e("BarcodeGen", "Error generating barcode", e)
+                                }
+                            }
+                        },
+                        modifier = Modifier.size(200.dp)
+                    )
+                }
 
                 Spacer(Modifier.height(8.dp))
-                Text(text = response.transactionCode, fontSize = 15.sp)
-                Text(text = response.transactionDate, fontSize = 13.sp)
-                Text(text = response.systemName, fontSize = 13.sp)
-                Text(
-                    text = "Cashier: ${response.transactionCashier}",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                if (response.transactionCode.isNotBlank()) {
+                    Text(text = response.transactionCode, fontSize = 15.sp)
+                }
+
+                if (response.transactionDate.isNotBlank()) {
+                    Text(text = response.transactionDate, fontSize = 13.sp)
+                }
+
+                if (response.systemName.isNotBlank()) {
+                    Text(text = response.systemName, fontSize = 13.sp)
+                }
+
+                if (response.transactionCashier.isNotBlank()) {
+                    Text(
+                        text = "Cashier: ${response.transactionCashier}",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
                 Spacer(Modifier.height(4.dp))
                 Text(text = "PAYOUT", fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(4.dp))
+
                 Text(
                     text = "Fight #: ${response.fightNumber}",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
                 )
-                if(response.betType == 1){
-                Text(
-                    text = "SIDE: MERON",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                }else if(response.betType == 2){
-                Text(
-                    text = "SIDE: WALA",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                }else{
-                Text(
-                    text = "SIDE: DRAW",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Bold
-                )
+
+                val side = when (response.betType) {
+                    1 -> "MERON"
+                    2 -> "WALA"
+                    else -> "DRAW"
                 }
                 Text(
-                    text = "AMOUNT: ${response.amount}",
+                    text = "SIDE: $side",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
                 )
+
+                if (response.amount.isNotBlank()) {
+                    Text(
+                        text = "AMOUNT: ${response.amount}",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
                 Spacer(Modifier.height(4.dp))
-                Text(
-                    text = "ODDS: ${response.odds}",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                if (response.odds.isNotBlank()) {
+                    Text(
+                        text = "ODDS: ${response.odds}",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
                 Spacer(Modifier.height(4.dp))
-                Text(
-                    text = "PAYOUT: ${response.payout}",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                if (response.payout.isNotBlank()) {
+                    Text(
+                        text = "PAYOUT: ${response.payout}",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
                 Spacer(Modifier.height(4.dp))
             }
         },
