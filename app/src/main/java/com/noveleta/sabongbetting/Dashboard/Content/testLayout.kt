@@ -88,7 +88,7 @@ val activity = LocalContext.current as Activity
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
     
-    if(betResponse != null && betErrorCode == 0){
+    if(betResponse != null){
         PayoutReceiptDialog(betResponse!!){
             viewModelPayoutData.clearBetState()
         }
