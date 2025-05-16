@@ -1,80 +1,20 @@
 {
   "allFiles": [
     {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendCashInTeller.kt",
-      "selection": {
-        "end": {
-          "column": 0,
-          "index": 0,
-          "line": 0
-        },
-        "start": {
-          "column": 0,
-          "index": 0,
-          "line": 0
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/staffBet.kt",
-      "selection": {
-        "end": {
-          "column": 31,
-          "index": 6557,
-          "line": 188
-        },
-        "start": {
-          "column": 31,
-          "index": 6557,
-          "line": 188
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/.github/workflows/android-build.yml",
-      "selection": {
-        "end": {
-          "column": 24,
-          "index": 65,
-          "line": 4
-        },
-        "start": {
-          "column": 24,
-          "index": 65,
-          "line": 4
-        }
-      }
-    },
-    {
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendPayout.kt",
       "selection": {
         "end": {
-          "column": 15,
-          "index": 1445,
-          "line": 48
+          "column": 55,
+          "index": 2893,
+          "line": 90
         },
         "start": {
-          "column": 4,
-          "index": 1434,
-          "line": 48
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/testLayout.kt",
-      "selection": {
-        "end": {
-          "column": 21,
-          "index": 8548,
-          "line": 239
-        },
-        "start": {
-          "column": 21,
-          "index": 8548,
-          "line": 239
+          "column": 55,
+          "index": 2893,
+          "line": 90
         }
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/.github/workflows/android-build.yml"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendPayout.kt"
 }

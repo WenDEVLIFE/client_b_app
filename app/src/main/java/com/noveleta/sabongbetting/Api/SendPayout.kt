@@ -88,7 +88,7 @@ fun claimPayout(
 val json = JSONObject(responseText)
 
             val success = json.getBoolean("success")
-            val message = json.getString("message")
+            val message = json.optString("message", "")
             val resultInt = json.optInt("errorCode", 0)
 
             if (success) {
