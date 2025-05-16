@@ -4,14 +4,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendPayout.kt",
       "selection": {
         "end": {
-          "column": 0,
-          "index": 6092,
-          "line": 150
+          "column": 66,
+          "index": 3750,
+          "line": 103
         },
         "start": {
-          "column": 0,
-          "index": 6092,
-          "line": 150
+          "column": 66,
+          "index": 3750,
+          "line": 103
         }
       }
     },
@@ -19,14 +19,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/testLayout.kt",
       "selection": {
         "end": {
-          "column": 41,
-          "index": 3850,
-          "line": 99
+          "column": 6,
+          "index": 3534,
+          "line": 91
         },
         "start": {
-          "column": 41,
-          "index": 3850,
-          "line": 99
+          "column": 6,
+          "index": 3534,
+          "line": 91
         }
       }
     },
@@ -34,17 +34,32 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/ReceiptDialog.kt",
       "selection": {
         "end": {
-          "column": 47,
-          "index": 8365,
-          "line": 225
+          "column": 40,
+          "index": 8144,
+          "line": 219
         },
         "start": {
-          "column": 47,
-          "index": 8365,
-          "line": 225
+          "column": 40,
+          "index": 8144,
+          "line": 219
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Model/BetPayoutResponse.kt",
+      "selection": {
+        "end": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        },
+        "start": {
+          "column": 0,
+          "index": 0,
+          "line": 0
         }
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/ReceiptDialog.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/testLayout.kt"
 }

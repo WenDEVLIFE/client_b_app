@@ -89,9 +89,9 @@ val activity = LocalContext.current as Activity
     val companyId = SessionManager.accountID ?: "500"
     
     if(betResponse != null){
-        PayoutReceiptDialog(betResponse!!){
+    /*    PayoutReceiptDialog(betResponse!!){
             viewModelPayoutData.clearBetState()
-        }
+        }*/
     LaunchedEffect(betResponse) {
              printPayout(context, betResponse!!)
              }
