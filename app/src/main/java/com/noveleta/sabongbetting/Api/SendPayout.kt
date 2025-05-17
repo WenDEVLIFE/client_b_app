@@ -119,7 +119,7 @@ val json = JSONObject(responseText)
                     fightNumber             = json.optInt("fightNumber", 0),
                     side                    = json.optString("side", ""),
                     amount                  = json.optString("amount", "0"),
-                    odds                    = json.optString("odds", "0"),
+                    odds                    = json.optString("odds", ""),
                     payout                  = json.optString("payout", "0")
                 )
 

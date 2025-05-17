@@ -34,14 +34,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendPayout.kt",
       "selection": {
         "end": {
-          "column": 51,
-          "index": 5510,
-          "line": 131
+          "column": 76,
+          "index": 5088,
+          "line": 120
         },
         "start": {
-          "column": 51,
-          "index": 5510,
-          "line": 131
+          "column": 76,
+          "index": 5088,
+          "line": 120
         }
       }
     }
