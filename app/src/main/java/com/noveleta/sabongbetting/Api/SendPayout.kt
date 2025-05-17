@@ -89,6 +89,7 @@ val json = JSONObject(responseText)
 
             val success = json.getBoolean("success")
             val message = json.optString("message", "")
+            val type = json.optString("type", "")
             val resultInt = json.optInt("errorCode", 0)
 
             if (success) {
@@ -128,7 +129,7 @@ val json = JSONObject(responseText)
 
                 Toast.makeText(
                     context,
-                    "Successfully claimed payout: $message",
+                    "Successfully claimed payout: $type",
                     Toast.LENGTH_LONG
                 ).show()
             } else {
