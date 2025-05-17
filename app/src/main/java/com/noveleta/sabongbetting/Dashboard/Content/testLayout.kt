@@ -181,6 +181,7 @@ val activity = LocalContext.current as Activity
         roleID = userRole,
         barcodeResult = code
       )
+      viewModelPayoutData.setTransactionCode("")
             },
             onCancel = {
               showScannerDialog = false
@@ -222,6 +223,7 @@ val activity = LocalContext.current as Activity
                         Button(
                             onClick = { /* handle payout */ 
                             viewModelPayoutData.claimPayout(context,userID = companyId, roleID = userRole, barcodeResult = transactionCode)
+                            viewModelPayoutData.setTransactionCode("")
                             showDialog = false
                             },
                             modifier = Modifier
