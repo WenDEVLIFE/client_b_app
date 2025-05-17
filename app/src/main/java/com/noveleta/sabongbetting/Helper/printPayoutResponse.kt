@@ -66,7 +66,11 @@ fun printPayout(context: Context, betResponse: BetPayoutResponse) {
     }
 
     SunmiPrinterHelper.setAlign(1) // 0 = Left, 1 = Center, 2 = Right
-
+SunmiPrinterHelper.printQr(
+           data = betResponse.transactionCode,
+           modulesize = 8,    // size of each QR “dot” (1–16)
+           errorlevel = 2     // error correction level (0=L, 1=M, 2=Q, 3=H)
+        )
         // Print Details
         SunmiPrinterHelper.printLabelValue("${betResponse.transactionCode}","")
         SunmiPrinterHelper.print3Line()
