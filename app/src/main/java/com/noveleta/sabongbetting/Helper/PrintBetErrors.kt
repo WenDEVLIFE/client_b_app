@@ -166,6 +166,7 @@ when (result) {
     25 -> resultText = "ERROR! Bet status not updated, please contact system developer."
     55 -> resultText = "ERROR! There is an issue with claiming a bet, please contact system developer."
     28 -> resultText = "ERROR! Bet is already Claimed."
+    18 -> resultText = "ERROR! Bet is already Claimed."
     24 -> resultText = "ERROR! Bet status not updated."
     23 -> resultText = "ERROR! Bet is already returned."
     22 -> resultText = "ERROR! Payout unsuccessful, please contact system developer."
