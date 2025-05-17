@@ -227,9 +227,14 @@ fun PayoutReceiptDialog(
                         fontWeight = FontWeight.Bold
                     )
                 }
+                val status = when (response.status) {
+                    "REFUNDED" -> "REFUNDED"
+                    "CLAIMED" -> "CLAIMED"
+                    else -> "CLAIMED"
+                }
 
                 Spacer(Modifier.height(4.dp))
-                Text(text = "PAYOUT", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                Text(text =status, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(4.dp))
 
                 Text(

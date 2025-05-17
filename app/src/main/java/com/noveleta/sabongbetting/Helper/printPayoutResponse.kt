@@ -79,14 +79,27 @@ SunmiPrinterHelper.printQr(
         SunmiPrinterHelper.printLabelValue("${betResponse.systemName}","")
         
         SunmiPrinterHelper.printLabelValue("Cashier: ", betResponse.transactionCashier)
-        SunmiPrinterHelper.printLabelValue("Payout", "")
+        SunmiPrinterHelper.printLabelValue( when (betResponse.status) {
+                      "REFUNDED" -> "REFUNDED"
+                    "CLAIMED" -> "CLAIMED"
+                    else -> "CLAIMED"
+        }, "")
         
-        // Print Title
-SunmiPrinterHelper.printLabelValue("FIGHT #: ", betResponse.fightNumber.toString())
+        if(betResponse.status == "REFUNDED"){
+        SunmiPrinterHelper.printLabelValue("FIGHT #: ", betResponse.fightNumber.toString())
+SunmiPrinterHelper.printLabelValue("SIDE: ", betResponse.side)
+SunmiPrinterHelper.printLabelValue("AMOUNT: ", betResponse.amount)
+        }else if (betResponse.status == "CLAIMED"){
+        SunmiPrinterHelper.printLabelValue("FIGHT #: ", betResponse.fightNumber.toString())
 SunmiPrinterHelper.printLabelValue("SIDE: ", betResponse.side)
 SunmiPrinterHelper.printLabelValue("AMOUNT: ", betResponse.amount)
 SunmiPrinterHelper.printLabelValue("ODDS: ", betResponse.odds)
 SunmiPrinterHelper.printLabelValue("PAYOUT: ", betResponse.payout)
+        }
+        // Print Title
+
+
+
 
 SunmiPrinterHelper.print3Line()
         
