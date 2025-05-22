@@ -134,6 +134,7 @@ fun MainWithDrawer() {
     // State for connection progress dialog
     var showConnectingDialog by remember { mutableStateOf(true) }
     var showScannerDialog by remember { mutableStateOf(false) }
+    var scanFinish by remember { mutableStateOf(false) }
     
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
@@ -143,6 +144,8 @@ if(betResponse != null){
             PayoutReceiptDialog(betResponse!!){
             viewModelPayoutData.clearBetState()
             }
+            viewModelPayoutData.setTransactionCode("")
+        scanFinish = false
             LaunchedEffect(betResponse) {
              printPayout(context, betResponse!!)
             }
@@ -177,6 +180,15 @@ var showScanner by remember { mutableStateOf(false) }
                 }
             }
         }
+    }
+    
+    if(scanFinish){
+    viewModelPayoutData.claimPayout(
+      context,
+        userID = companyId,
+        roleID = userRole,
+        barcodeResult = transactionCode
+      )
     }
     
     LaunchedEffect(Unit) {
@@ -391,7 +403,7 @@ var showScanner by remember { mutableStateOf(false) }
             )
 
             IconButton(onClick = { /* Do something for the end icon */
-             showScannerDialog = true
+             navController.navigate("barcode_scanner")
             }) {
 Image(
     painter = painterResource(id = R.drawable.ic_scan_barcode),
@@ -400,7 +412,7 @@ Image(
     modifier = Modifier
         .size(30.dp)
         .clickable {
-            showScannerDialog = true
+            navController.navigate("barcode_scanner")
         }
 )
 
@@ -413,7 +425,22 @@ Image(
                 startDestination = DrawerScreen.placeBet.route,
                 modifier = Modifier.padding(innerPadding)
             ) {
-                composable(DrawerScreen.liveBet.route) {
+            
+            composable("barcode_scanner") {
+        BarcodeScannerScreen(
+            onScanResult = { code ->
+                viewModelPayoutData.setTransactionCode(code)
+                scanFinish = true
+                // When done scanning, navigate back
+                navController.popBackStack()
+            },
+            onCancel = {
+                navController.popBackStack()
+            }
+        )
+    }
+    
+    composable(DrawerScreen.liveBet.route) {
     if (dashboardData != null) {
         liveBetting(dashboardData!!)
     } else {
@@ -427,6 +454,7 @@ Image(
         }
     }
 }
+
     composable(DrawerScreen.placeBet.route) {
     val staffData = staffLiveBetData
     val logs = historyTransactionLogs

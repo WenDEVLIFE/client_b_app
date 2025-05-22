@@ -25,13 +25,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 
+import androidx.compose.ui.text.input.*
+import androidx.compose.ui.text.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.foundation.text.KeyboardOptions
+
 
 object DigitInputBox {
 
-    @Composable
-fun DigitInputBoxDisplay(clickableMeron: (Int) -> Unit, clickableDraw: (Int) -> Unit, clickableWala: (Int) -> Unit) {
-    var digitDisplay by remember { mutableStateOf(0) }
+@Composable
+fun DigitInputBoxDisplay(
+    clickableMeron: (Int) -> Unit,
+    clickableDraw: (Int) -> Unit,
+    clickableWala: (Int) -> Unit
+) {
+    var digitDisplay by remember { mutableStateOf("") }
     val numberCounts = remember { mutableStateMapOf<Int, Int>() }
+
+    // To show numeric keyboard and allow user input
+    val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    // Fixed width for buttons and cards for alignment
+    val buttonWidth = 100.dp
+    val buttonHeight = 50.dp
 
     Column(
         modifier = Modifier
@@ -40,7 +58,7 @@ fun DigitInputBoxDisplay(clickableMeron: (Int) -> Unit, clickableDraw: (Int) -> 
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Digit display and clear button
+        // Digit display with editable TextField
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -48,26 +66,45 @@ fun DigitInputBoxDisplay(clickableMeron: (Int) -> Unit, clickableDraw: (Int) -> 
                 .padding(bottom = 16.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = digitDisplay.toString(),
-                style = TextStyle(fontSize = 32.sp),
-                modifier = Modifier.weight(1f),
-                color = Color(0xFFFFFFFF),
-                textAlign = TextAlign.Center
+            OutlinedTextField(
+                value = digitDisplay,
+                onValueChange = { newValue ->
+                    // Allow only digits, no leading zeros unless single zero
+                    if (newValue.all { it.isDigit() }) {
+                        digitDisplay = newValue.trimStart('0')
+                        if (digitDisplay.isEmpty()) digitDisplay = "0"
+                    }
+                },
+                modifier = Modifier
+                    .weight(1f)
+                    .focusRequester(focusRequester)
+                    .clickable {
+                        focusRequester.requestFocus()
+                        keyboardController?.show()
+                    },
+                textStyle = LocalTextStyle.current.copy(fontSize = 32.sp, textAlign = TextAlign.Center),
+                singleLine = true,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    textColor = Color.White,
+                    backgroundColor = Color.Transparent,
+                    focusedBorderColor = Color.White,
+                    unfocusedBorderColor = Color.Gray
+                ),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             )
             IconButton(onClick = {
-                digitDisplay = 0
+                digitDisplay = "0"
                 numberCounts.clear()
+                keyboardController?.hide()
             }) {
-                Icon(imageVector = Icons.Default.Close, contentDescription = "Clear", tint = Color(0xFFFFFFFF))
+                Icon(Icons.Default.Close, contentDescription = "Clear", tint = Color(0xFFFFFFFF))
             }
         }
 
-        // Number list: 100, 200, ..., 1000, 2000, 3000
+        // Number list cards
         val numbers = (1..10).map { it * 100 } + listOf(2000, 3000)
-
-        // Manual Grid layout using Column + Rows
         val rows = numbers.chunked(3)
+
         rows.forEach { row ->
             Row(
                 modifier = Modifier
@@ -79,13 +116,13 @@ fun DigitInputBoxDisplay(clickableMeron: (Int) -> Unit, clickableDraw: (Int) -> 
                     Card(
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
-                            .padding(4.dp)
-                            .width(90.dp)
-                            .height(50.dp)
+                            .width(buttonWidth)
+                            .height(buttonHeight)
                             .clickable {
+                                val currentDigit = digitDisplay.toIntOrNull() ?: 0
                                 val count = numberCounts.getOrDefault(num, 0) + 1
                                 numberCounts[num] = count
-                                digitDisplay += num
+                                digitDisplay = (currentDigit + num).toString()
                             },
                         elevation = CardDefaults.cardElevation(4.dp)
                     ) {
@@ -112,29 +149,33 @@ fun DigitInputBoxDisplay(clickableMeron: (Int) -> Unit, clickableDraw: (Int) -> 
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            
-           BetButton("Bet Meron", Color(0xFFB12D36)) { clickableMeron(digitDisplay) }
-           BetButton("Bet Draw", Color(0xFF2EB132)) { clickableDraw(digitDisplay) }
-           BetButton("Bet Wala", Color(0xFF2070E1)) { clickableWala(digitDisplay) }
-
+            BetButton("Bet Meron", Color(0xFFB12D36), buttonWidth, buttonHeight) {
+                clickableMeron(digitDisplay.toIntOrNull() ?: 0)
+            }
+            BetButton("Bet Draw", Color(0xFF2EB132), buttonWidth, buttonHeight) {
+                clickableDraw(digitDisplay.toIntOrNull() ?: 0)
+            }
+            BetButton("Bet Wala", Color(0xFF2070E1), buttonWidth, buttonHeight) {
+                clickableWala(digitDisplay.toIntOrNull() ?: 0)
+            }
         }
-        
     }
 }
 
-    @Composable
-    fun BetButton(text: String, color: Color, clickableBet: () -> Unit) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(width = 90.dp, height = 50.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(color)
-                .clickable { clickableBet() }
-        ) {
-            Text(text = text, color = Color.White, fontWeight = FontWeight.Bold)
-        }
+@Composable
+fun BetButton(text: String, color: Color, width: Dp, height: Dp, clickableBet: () -> Unit) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .size(width = width, height = height)
+            .clip(RoundedCornerShape(12.dp))
+            .background(color)
+            .clickable { clickableBet() }
+    ) {
+        Text(text = text, color = Color(0xFFFFFFFF), fontWeight = FontWeight.Bold)
     }
+}
+
     
     @Composable
     fun TellerButton(text: String, color: Color, clickableBet: () -> Unit) {

@@ -151,6 +151,7 @@ fun BarcodeScannerScreen(
     val scanner = remember { BarcodeScanning.getClient() }
     // Camera executor
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
+    var scanCompleted by remember { mutableStateOf(false) }
 
     // PreviewView to show camera feed
     AndroidView(
@@ -176,30 +177,35 @@ fun BarcodeScannerScreen(
                     .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                     .build()
                     .also { useCase ->
-                        useCase.setAnalyzer(cameraExecutor) { imageProxy ->
-                            // Convert to ML Kit's InputImage
-                            imageProxy.image
-                                ?.let { mediaImage ->
-                                    InputImage.fromMediaImage(
-                                        mediaImage,
-                                        imageProxy.imageInfo.rotationDegrees
-                                    )
-                                }
-                                ?.let { inputImage ->
-                                    scanner.process(inputImage)
-                                        .addOnSuccessListener { barcodes ->
-                                            barcodes.firstOrNull()
-                                                ?.rawValue
-                                                ?.takeIf { it.isNotEmpty() }
-                                                ?.also { code ->
-                                                    onScanResult(code)
-                                                }
-                                        }
-                                        .addOnCompleteListener {
-                                            imageProxy.close()
-                                        }
-                                } ?: imageProxy.close()
-                        }
+useCase.setAnalyzer(cameraExecutor) { imageProxy ->
+    val mediaImage = imageProxy.image
+    val inputImage = mediaImage?.let {
+        InputImage.fromMediaImage(it, imageProxy.imageInfo.rotationDegrees)
+    }
+
+    if (inputImage != null && !scanCompleted) {
+        scanner.process(inputImage)
+            .addOnSuccessListener { barcodes ->
+                barcodes.firstOrNull()
+                    ?.rawValue
+                    ?.takeIf { it.isNotEmpty() }
+                    ?.also { code ->
+                        scanCompleted = true
+                        onScanResult(code)
+                        
+                        scope.launch {
+                    delay(3000)
+                    scanCompleted = false
+                }
+                    }
+            }
+            .addOnCompleteListener {
+                imageProxy.close()
+            }
+    } else {
+        imageProxy.close()
+    }
+}
                     }
 
                 // 3) Bind to lifecycle

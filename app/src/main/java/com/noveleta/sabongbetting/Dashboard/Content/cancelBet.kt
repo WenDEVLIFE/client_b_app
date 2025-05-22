@@ -78,6 +78,7 @@ fun cancelBetUI() {
     
     // dialog state
     var showDialog by remember { mutableStateOf(false) }
+    var scanFinish by remember { mutableStateOf(false) }
     
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
@@ -86,6 +87,8 @@ fun cancelBetUI() {
             CancelReceiptDialog(betResponse!!){
             viewModelCancelBetData.clearBetState()
             }
+            viewModelCancelBetData.setTransactionCode("")
+        scanFinish = false
             LaunchedEffect(betResponse) {
         printCancelledBetting(context, betResponse!!)
         }
@@ -117,6 +120,15 @@ fun cancelBetUI() {
             )
             }
         }
+    }
+    
+    if(scanFinish){
+    viewModelCancelBetData.sendCancelBetBarcode(
+                context,
+                userID = companyId,
+                roleID = userRole,
+                barcodeTxt = transactionCode
+            )
     }
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
@@ -170,12 +182,7 @@ fun cancelBetUI() {
         BarcodeScannerScreen(
             onScanResult = { code ->
               viewModelCancelBetData.setTransactionCode(code)
-              viewModelCancelBetData.sendCancelBetBarcode(
-                context,
-                userID = companyId,
-                roleID = userRole,
-                barcodeTxt = transactionCode
-            )
+              scanFinish = true
             showScannerDialog = false
             },
             onCancel = {

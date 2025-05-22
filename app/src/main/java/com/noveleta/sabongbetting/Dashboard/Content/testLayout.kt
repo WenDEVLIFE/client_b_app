@@ -83,6 +83,7 @@ val activity = LocalContext.current as Activity
     // dialog state
     var showDialog by remember { mutableStateOf(false) }
     var showScanner by remember { mutableStateOf(false) }
+    var scanFinish by remember { mutableStateOf(false) }
     var showScannerDialog by remember { mutableStateOf(false) }
     
     val userRole = SessionManager.roleID ?: "2"
@@ -92,6 +93,8 @@ val activity = LocalContext.current as Activity
         PayoutReceiptDialog(betResponse!!){
             viewModelPayoutData.clearBetState()
         }
+        viewModelPayoutData.setTransactionCode("")
+        scanFinish = false
     LaunchedEffect(betResponse) {
              printPayout(context, betResponse!!)
              }
@@ -103,6 +106,14 @@ val activity = LocalContext.current as Activity
     
     val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
     
+    if(scanFinish){
+    viewModelPayoutData.claimPayout(
+      context,
+        userID = companyId,
+        roleID = userRole,
+        barcodeResult = transactionCode
+      )
+    }
     // Scanner launcher with modern result API
     val scannerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -175,12 +186,7 @@ val activity = LocalContext.current as Activity
         BarcodeScannerScreen(
             onScanResult = { code ->
               viewModelPayoutData.setTransactionCode(code)
-      viewModelPayoutData.claimPayout(
-      context,
-        userID = companyId,
-        roleID = userRole,
-        barcodeResult = transactionCode
-      )
+              scanFinish = true
       showScannerDialog = false
             },
             onCancel = {
@@ -223,7 +229,6 @@ val activity = LocalContext.current as Activity
                         Button(
                             onClick = { /* handle payout */ 
                             viewModelPayoutData.claimPayout(context,userID = companyId, roleID = userRole, barcodeResult = transactionCode)
-                            viewModelPayoutData.setTransactionCode("")
                             showDialog = false
                             },
                             modifier = Modifier
