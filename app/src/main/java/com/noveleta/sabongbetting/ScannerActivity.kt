@@ -71,6 +71,7 @@ import androidx.compose.ui.text.font.FontWeight
 
 import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.MeteringPointFactory
+import kotlinx.coroutines.*
 
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.pointerInteropFilter
@@ -152,6 +153,7 @@ fun BarcodeScannerScreen(
     // Camera executor
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
     var scanCompleted by remember { mutableStateOf(false) }
+val scope = CoroutineScope(Dispatchers.Main)
 
     // PreviewView to show camera feed
     AndroidView(

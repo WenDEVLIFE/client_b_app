@@ -19,14 +19,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/testLayout.kt",
       "selection": {
         "end": {
-          "column": 42,
-          "index": 2524,
-          "line": 64
+          "column": 35,
+          "index": 2657,
+          "line": 67
         },
         "start": {
-          "column": 42,
-          "index": 2524,
-          "line": 64
+          "column": 35,
+          "index": 2657,
+          "line": 67
         }
       }
     },
@@ -49,14 +49,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/dashboardMain.kt",
       "selection": {
         "end": {
-          "column": 26,
-          "index": 5648,
-          "line": 147
+          "column": 39,
+          "index": 4107,
+          "line": 111
         },
         "start": {
-          "column": 26,
-          "index": 5648,
-          "line": 147
+          "column": 0,
+          "index": 4068,
+          "line": 111
         }
       }
     },
@@ -79,14 +79,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/ScannerActivity.kt",
       "selection": {
         "end": {
-          "column": 17,
-          "index": 6489,
-          "line": 198
+          "column": 0,
+          "index": 4829,
+          "line": 156
         },
         "start": {
-          "column": 17,
-          "index": 6489,
-          "line": 198
+          "column": 0,
+          "index": 4829,
+          "line": 156
         }
       }
     },
@@ -109,14 +109,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/DigitInputBox.kt",
       "selection": {
         "end": {
-          "column": 55,
-          "index": 1340,
-          "line": 31
+          "column": 48,
+          "index": 1204,
+          "line": 27
         },
         "start": {
-          "column": 55,
-          "index": 1340,
-          "line": 31
+          "column": 48,
+          "index": 1204,
+          "line": 27
         }
       }
     }
