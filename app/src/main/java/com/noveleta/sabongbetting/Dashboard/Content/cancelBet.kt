@@ -96,7 +96,8 @@ fun cancelBetUI() {
             }
     
     val transactionCode by viewModelCancelBetData.transactionCode.collectAsState()
-var showScanner by remember { mutableStateOf(false) }
+    var showScanner by remember { mutableStateOf(false) }
+    var showScannerDialog by remember { mutableStateOf(false) }
 
 // Scanner launcher with modern result API
     val scannerLauncher = rememberLauncherForActivityResult(
@@ -152,8 +153,7 @@ var showScanner by remember { mutableStateOf(false) }
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            val intent = Intent(context, ScannerActivity::class.java)
-            scannerLauncher.launch(intent)
+                            showScannerDialog = true
                         }
                 )
             }
@@ -166,6 +166,24 @@ var showScanner by remember { mutableStateOf(false) }
         }
 
         // --- DIALOG ---
+        if(showScannerDialog){
+        BarcodeScannerScreen(
+            onScanResult = { code ->
+              viewModelCancelBetData.setTransactionCode(code)
+              viewModelCancelBetData.sendCancelBetBarcode(
+                context,
+                userID = companyId,
+                roleID = userRole,
+                barcodeTxt = transactionCode
+            )
+            showScannerDialog = false
+            },
+            onCancel = {
+              showScannerDialog = false
+            }
+          )
+        }
+        
         if (showDialog) {
             AlertDialog(onDismissRequest = { showDialog = false }) {
                 Surface(

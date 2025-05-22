@@ -449,7 +449,7 @@ Image(
 
 composable(DrawerScreen.claimPayout.route) {
     if (dashboardData != null) {
-        testLayout()
+        payoutUI()
     } else {
         Box(
             modifier = Modifier

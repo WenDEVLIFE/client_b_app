@@ -159,7 +159,7 @@ AlertDialog(
 @Composable
 fun PrintBetPayoutErrorResults(result: Int?, confirmButton: () -> Unit){
 
-var resultText by remember { mutableStateOf("") }
+var resultText by remember { mutableStateOf("Backend Error") }
 
 when (result) {
     35 -> resultText = "ERROR! Invalid Barcode number."
@@ -168,13 +168,18 @@ when (result) {
     28 -> resultText = "ERROR! Bet is already Claimed."
     18 -> resultText = "ERROR! Bet is already Claimed."
     24 -> resultText = "ERROR! Bet status not updated."
+    27 -> resultText = "ERROR! Barcode too Short."
+    26 -> resultText = "ERROR! Bet Unable to Update, Error(26)."
+    0 -> resultText = "ERROR! Bet Failed to Refund, Error(0)."
     23 -> resultText = "ERROR! Bet is already returned."
     22 -> resultText = "ERROR! Payout unsuccessful, please contact system developer."
     21 -> resultText = "ERROR! Barcode is not the winning type, check it again and make sure it is the right one."
     20 -> resultText = "ERROR! Payout is not yet released."
     19 -> resultText = "ERROR! Result or Winner is not yet declared."
     16 -> resultText = "ERROR! Payout does not exist."
-    7   -> resultText = "ERROR! Event is already closed."
+    17 -> resultText = "ERROR! Payout Bet is already Returned."
+    7   -> resultText = "ERROR! Event is already closed. Error(7)"
+    8   -> resultText = "ERROR! Event is already closed. Error(8)"
 }
 
 

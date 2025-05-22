@@ -82,6 +82,7 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     var cashInOrOut by remember { mutableStateOf("Cash In") } 
     
     val viewModel: BettingViewModel = viewModel()
+    val viewModelCallWebsocket: CallWebsocketDashboard = viewModel()
     val viewModelStaffBetData: PlaceBetsViewModel = viewModel()
     val viewModelCashInData: SendCashInTellerViewModel = viewModel()
     val viewModelCashOutData: SendCashOutTellerViewModel = viewModel()
@@ -126,6 +127,16 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     val companyId = SessionManager.accountID ?: "500"
     
 if (betResponse != null) {
+
+    //--------------------- 
+    //
+    // TODO:: Call Live Dashboard on PC Side after Betting
+    //
+    //---------------------
+    
+    viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
+
     BetReceiptDialog(
         response = betResponse!!,
         onDismiss = {
@@ -133,7 +144,7 @@ if (betResponse != null) {
         }
     )
 
-        LaunchedEffect(betResponse) {
+    LaunchedEffect(betResponse) {
             // only runs a single time per distinct betResponse
             printBetResponse(context, betResponse!!)
         }

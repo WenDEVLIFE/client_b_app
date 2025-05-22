@@ -70,7 +70,7 @@ import com.noveleta.sabongbetting.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun testLayout() {
+fun payoutUI() {
 val activity = LocalContext.current as Activity
     val context = LocalContext.current
     val isDarkTheme = isSystemInDarkTheme()
@@ -179,9 +179,9 @@ val activity = LocalContext.current as Activity
       context,
         userID = companyId,
         roleID = userRole,
-        barcodeResult = code
+        barcodeResult = transactionCodea
       )
-      viewModelPayoutData.setTransactionCode("")
+      showScannerDialog = false
             },
             onCancel = {
               showScannerDialog = false
