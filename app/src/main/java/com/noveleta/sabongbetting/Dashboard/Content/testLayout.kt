@@ -179,7 +179,7 @@ val activity = LocalContext.current as Activity
       context,
         userID = companyId,
         roleID = userRole,
-        barcodeResult = transactionCodea
+        barcodeResult = transactionCode
       )
       showScannerDialog = false
             },

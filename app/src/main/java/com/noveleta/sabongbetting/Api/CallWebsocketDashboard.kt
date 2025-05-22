@@ -61,7 +61,7 @@ class CallWebsocketDashboard : ViewModel() {
         val port = SessionManager.portAddress?.takeIf { it.isNotBlank() } ?: "8080"
         val sessionId = SessionManager.sessionId
         val roleId = SessionManager.roleID?.toIntOrNull() ?: 2
-        val userId = SessionManager.userID?.toIntOrNull() ?: 0
+        val userId = SessionManager.accountID?.toIntOrNull() ?: 0
 
         val request = Request.Builder()
             .url("ws://$ip:$port")
