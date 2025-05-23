@@ -293,11 +293,10 @@ LaunchedEffect(cashInResponse) {
                 tint = Color(0xFFFFFFFF)
             )
         }
-        
-    }
+ }   
     
     
-             Spacer(modifier = Modifier.height(8.dp))
+             Spacer(modifier = Modifier.height(4.dp))
 Row(
     modifier = Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp),
     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -351,7 +350,7 @@ viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 3, b
              })
              
              Spacer(modifier = Modifier.height(16.dp))
-           
+             }
              
              Spacer(modifier = Modifier.height(8.dp))
              Divider()
