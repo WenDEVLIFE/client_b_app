@@ -158,7 +158,7 @@ if (betResponse != null) {
     
 }
 
-if (reprintResponse != null) {
+if (reprintResponse != null && reprintErrorCode == 0) {
     ReprintBetReceiptDialog(
         response = reprintResponse!!,
         onDismiss = {
