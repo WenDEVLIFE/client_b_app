@@ -388,7 +388,7 @@ Row(
              if (liveBetData?.meronClosed == "LOCKED" ?: "0"){
              showMeronClosed = true
              }else{
-             viewModel.placeBet(userID = companyId, roleID = userRole, betType = 1, betAmount = betAmount)
+             viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 1, betAmount = betAmount)
              }
              
              },
@@ -401,13 +401,13 @@ if (betAmount != null && betAmount >= drawMax) {
 } else {
     showWarningBetDraw = true
 }*/
-viewModel.placeBet(userID = companyId, roleID = userRole, betType = 3, betAmount = betAmount)
+viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 3, betAmount = betAmount)
              },
              clickableWala = { betAmount ->
              if (liveBetData?.walaClosed == "LOCKED" ?: "0"){
              showWalaClosed = true
              }else{
-                viewModel.placeBet(userID = companyId, roleID = userRole, betType = 2, betAmount = betAmount)
+                viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 2, betAmount = betAmount)
              }
           
              })

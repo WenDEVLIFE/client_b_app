@@ -12,6 +12,13 @@ import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
 
+import android.content.Context
+import android.widget.Toast
+
+
+import kotlinx.coroutines.flow.asStateFlow
+import org.json.JSONException
+
 import com.noveleta.sabongbetting.Model.*
 import com.noveleta.sabongbetting.SharedPreference.*
 
@@ -30,6 +37,7 @@ class BettingViewModel : ViewModel() {
     val isLoading: StateFlow<Boolean> = _isLoading
 
     fun placeBet(
+    context: Context,
         userID: String,
         roleID: String,
         betType: Int,
@@ -62,6 +70,11 @@ class BettingViewModel : ViewModel() {
                 val responseText = withContext(Dispatchers.IO) {
                     conn.inputStream.bufferedReader().use { it.readText() }
                 }
+                
+                
+                if (!responseText.trim().startsWith("{")) {
+    throw JSONException("Invalid JSON: $responseText")
+}
 
                 val json = JSONObject(responseText)
                 val success = json.getBoolean("success")
@@ -87,12 +100,26 @@ class BettingViewModel : ViewModel() {
                     _betResponse.value = null
                     _betMessage.value = resultString
                     _betResult.value = resultInt
+                    
+                    Toast.makeText(
+                    context,
+                    "Error $resultInt: $message",
+                    Toast.LENGTH_LONG
+                ).show()
+                
                 }
 
             } catch (e: Exception) {
                 e.printStackTrace()
                 _betResult.value = -1
                 _betResponse.value = null
+                
+                val fullError = Log.getStackTraceString(e)
+            Toast.makeText(
+                context,
+                "Payout Error:\n$fullError",
+                Toast.LENGTH_LONG
+            ).show()
             }
 
             _isLoading.value = false
