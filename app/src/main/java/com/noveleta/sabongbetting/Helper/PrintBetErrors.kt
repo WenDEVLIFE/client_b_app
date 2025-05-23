@@ -90,7 +90,7 @@ AlertDialog(
       onDismissRequest = confirmButton,
       title = {
         Text(
-          text = "Bet Failed",
+          text = "Mobile App Transaction",
           style = MaterialTheme.typography.headlineLarge
         )
       },
@@ -131,7 +131,7 @@ AlertDialog(
       onDismissRequest = confirmButton,
       title = {
         Text(
-          text = "Bet Failed",
+          text = "Mobile App Transaction",
           style = MaterialTheme.typography.headlineLarge
         )
       },
@@ -188,7 +188,7 @@ AlertDialog(
       onDismissRequest = confirmButton,
       title = {
         Text(
-          text = "Payout Bet Failed",
+          text = "Mobile App Transaction",
           style = MaterialTheme.typography.headlineLarge
         )
       },
@@ -230,7 +230,7 @@ AlertDialog(
       onDismissRequest = confirmButton,
       title = {
         Text(
-          text = "Cancel Bet Failed",
+          text = "Mobile App Transaction",
           style = MaterialTheme.typography.headlineLarge
         )
       },
@@ -276,7 +276,7 @@ AlertDialog(
       onDismissRequest = confirmButton,
       title = {
         Text(
-          text = "Mobile Withdraw Failed",
+          text = "Mobile App Transaction",
           style = MaterialTheme.typography.headlineLarge
         )
       },
@@ -318,7 +318,7 @@ AlertDialog(
       onDismissRequest = confirmButton,
       title = {
         Text(
-          text = "Mobile Deposit Failed",
+          text = "Mobile App Transaction",
           style = MaterialTheme.typography.headlineLarge
         )
       },
@@ -371,7 +371,7 @@ AlertDialog(
       onDismissRequest = confirmButton,
       title = {
         Text(
-          text = "Teller Cashout Failed",
+          text = "Mobile App Transaction",
           style = MaterialTheme.typography.headlineLarge
         )
       },
@@ -414,7 +414,7 @@ AlertDialog(
       onDismissRequest = confirmButton,
       title = {
         Text(
-          text = "Teller Cash In Failed",
+          text = "Mobile App Transaction",
           style = MaterialTheme.typography.headlineLarge
         )
       },

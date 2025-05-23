@@ -65,7 +65,7 @@ fun rePrintBetResponse(context: Context, betResponse: ReprintBetResponse) {
         SunmiPrinterHelper.printLabelValue("${betResponse.systemName}","")
         
         SunmiPrinterHelper.printLabelValue("Cashier: ", betResponse.cashier)
-        SunmiPrinterHelper.printLabelValue("Reprint Bet", "")
+        SunmiPrinterHelper.printLabelValue("REPRINT BET", "")
         SunmiPrinterHelper.printLabelValue("AMOUNT: ", betResponse.betType)
         SunmiPrinterHelper.printLabelValue("FIGHT #: ", betResponse.fightNumber)
         SunmiPrinterHelper.printLabelValue("SIDE: ", betResponse.fightNumber)

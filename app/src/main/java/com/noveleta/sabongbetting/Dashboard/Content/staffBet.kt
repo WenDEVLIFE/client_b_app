@@ -265,15 +265,14 @@ Row(
     }
 }
 
-             if (liveBetData?.fightStatus == "CLOSED" ?: ""){
+             if (liveBetData?.fightNumber == "" ?: ""){
              Spacer(modifier = Modifier.height(16.dp))
              Text(
-                    text = "No Fight",
+                    text = "No Fight Started.",
                     fontSize = 20.sp,
                     color = Color.White
                 )
              }else{
-             
              DigitInputBox.DigitInputBoxDisplay(
              digitDisplayState = digitDisplayState,
              clickableMeron = { betAmount ->

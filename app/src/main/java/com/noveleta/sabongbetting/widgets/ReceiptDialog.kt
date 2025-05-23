@@ -41,7 +41,7 @@ fun BetReceiptDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-        title = { Text("Print Bet Receipt") },
+        title = { Text("Mobile App Transaction") },
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -119,7 +119,7 @@ fun ReprintBetReceiptDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-        title = { Text("Print Bet Receipt") },
+        title = { Text("Mobile App Transaction") },
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -147,7 +147,7 @@ fun ReprintBetReceiptDialog(
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(Modifier.height(4.dp))
-                Text(text = "RERPINT BET", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                Text(text = "REPRINT BET", fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(4.dp))
                 Text(
                     text = "AMOUNT: ${response.amount}",
@@ -183,7 +183,7 @@ fun PayoutReceiptDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-        title = { Text("Print Payout Receipt") },
+        title = { Text("Mobile App Transaction") },
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -299,7 +299,7 @@ fun TellerFundCashOutReceiptDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-        title = { Text("Print Cash Out Receipt") },
+        title = { Text("Mobile App Transaction") },
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -347,7 +347,7 @@ fun TellerFundCashInReceiptDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-        title = { Text("Print Cash In Receipt") },
+        title = { Text("Mobile App Transaction") },
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -395,7 +395,7 @@ fun CancelReceiptDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-        title = { Text("Print Cancel Receipt") },
+        title = { Text("Mobile App Transaction") },
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -465,7 +465,7 @@ fun MobileWithdrawReceiptDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-        title = { Text("Print Mobile Deposit Receipt") },
+        title = { Text("Mobile App Transaction") },
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -542,7 +542,7 @@ fun MobileDepositReceiptDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-        title = { Text("Print Mobile Deposit Receipt") },
+        title = { Text("Mobile App Transaction") },
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
