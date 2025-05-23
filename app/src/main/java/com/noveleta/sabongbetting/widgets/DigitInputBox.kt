@@ -60,7 +60,7 @@ fun DigitInputBoxDisplay(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     // Fixed width for buttons and cards for alignment
-    val buttonWidth = 60.dp
+    val buttonWidth = 100.dp
     val buttonHeight = 50.dp
 
     Column(

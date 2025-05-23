@@ -267,14 +267,14 @@ Row(
     }
 }
 
-             if (liveBetData?.fightNumber == "" ?: ""){
+             if (liveBetData?.isBetting == 2 ?: ""){
              Spacer(modifier = Modifier.height(16.dp))
              Text(
-                    text = "No Fight Started.",
+                    text = "Fight is Already Closed.",
                     fontSize = 20.sp,
                     color = Color.White
                 )
-             }else{
+             }else if (liveBetData?.isBetting == 1 ?: ""){
              DigitInputBox.DigitInputBoxDisplay(
              digitDisplayState = digitDisplayState,
              clickableMeron = { betAmount ->
@@ -306,7 +306,16 @@ viewModel.placeBet(userID = companyId, roleID = userRole, betType = 3, betAmount
              })
              
              Spacer(modifier = Modifier.height(16.dp))
+             }else{
+             Spacer(modifier = Modifier.height(16.dp))
+             Text(
+                    text = "Fight is Already Closed.",
+                    fontSize = 20.sp,
+                    color = Color.White
+                )
              }
+             
+             
              Spacer(modifier = Modifier.height(8.dp))
              Divider()
              Spacer(modifier = Modifier.height(8.dp))
