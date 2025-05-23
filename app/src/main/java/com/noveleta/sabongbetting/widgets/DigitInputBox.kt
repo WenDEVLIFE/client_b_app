@@ -105,7 +105,6 @@ fun DigitInputBoxDisplay(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             )
             IconButton(onClick = {
-                digitDisplay = "0"
                 digitDisplayState.value = "0"
                 numberCounts.clear()
                 keyboardController?.hide()
