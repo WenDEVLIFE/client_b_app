@@ -245,69 +245,6 @@ LaunchedEffect(cashInResponse) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Show LEFT arrow if not at start
-        if (scrollState.value > 0) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Scroll Left",
-                modifier = Modifier
-                    .size(40.dp)
-                    .clickable {
-                        coroutineScope.launch {
-                            scrollState.animateScrollTo(max(scrollState.value - 300, 0))
-                        }
-                    },
-                tint = Color.Black
-            )
-        }
-
-        // Bet Info Cards
-        BetInfoCards.InfoCard(
-            title = "Meron",
-            payout = liveBetData?.meronText ?: "0",
-            totalBets = liveBetData?.meronTotalBetAmount ?: "0",
-            backgroundColor = Color(0xFFB12D36),
-            modifier = Modifier.width(300.dp)
-        )
-        BetInfoCards.InfoCard(
-            title = "Draw",
-            payout = liveBetData?.drawText ?: "0",
-            totalBets = liveBetData?.drawTotalBetAmount ?: "0",
-            backgroundColor = Color(0xFF2EB132),
-            modifier = Modifier.width(300.dp)
-        )
-        BetInfoCards.InfoCard(
-            title = "Wala",
-            payout = liveBetData?.walaText ?: "0",
-            totalBets = liveBetData?.walaTotalBetAmount ?: "0",
-            backgroundColor = Color(0xFF2070E1),
-            modifier = Modifier.width(300.dp)
-        )
-
-        // Show RIGHT arrow if not at end
-        if (scrollState.value < scrollState.maxValue) {
-            Icon(
-                imageVector = Icons.Default.ArrowForward,
-                contentDescription = "Scroll Right",
-                modifier = Modifier
-                    .size(40.dp)
-                    .clickable {
-                        coroutineScope.launch {
-                            scrollState.animateScrollTo(min(scrollState.value + 300, scrollState.maxValue))
-                        }
-                    },
-                tint = Color.Black
-            )
-        }
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .horizontalScroll(scrollState),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
         // LEFT Arrow
         if (scrollState.value > 0) {
             Icon(
@@ -356,6 +293,7 @@ LaunchedEffect(cashInResponse) {
                 tint = Color(0xFFFFFFFF)
             )
         }
+        
     }
     
     
