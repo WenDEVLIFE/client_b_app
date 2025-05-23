@@ -121,7 +121,7 @@ fun transactionLogsUI(liveBetData: LiveBettingData) {
             tableLayout.logHistoryTable(
             fightHistory = liveBetData.userTransactionLogs ?: emptyList(),
             onReprintClick = { transactionCode ->
-                   viewModelReprintBet.reprintBet(companyId,userRole,transactionCode)
+                   viewModelReprintBet.reprintBet(context,companyId,userRole,transactionCode)
                 }
             )
              

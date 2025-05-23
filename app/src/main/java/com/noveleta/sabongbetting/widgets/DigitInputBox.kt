@@ -83,7 +83,6 @@ fun DigitInputBoxDisplay(
                 onValueChange = { newValue ->
                     // Allow only digits, no leading zeros unless single zero
                     if (newValue.all { it.isDigit() }) {
-                        digitDisplay = newValue.trimStart('0')
                         digitDisplayState.value = newValue.trimStart('0').ifEmpty { "0" }
                         if (digitDisplay.isEmpty()) digitDisplay = "0"
                     }
