@@ -57,7 +57,7 @@ fun claimPayout(
 
         try {
             val ip = SessionManager.ipAddress.orEmpty().takeIf { it.isNotBlank() } ?: "192.168.8.100"
-            val url = URL("http://$ip/main/print/printBetPayoutAndroid.php")
+            val url = URL("http://$ip/main/Android/printBetPayoutAndroid.php")
             val conn = (url.openConnection() as HttpURLConnection).apply {
                 requestMethod = "POST"
                 setRequestProperty("Content-Type", "application/json")

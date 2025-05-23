@@ -72,6 +72,7 @@ fun cancelBetUI() {
     val isDarkTheme = isSystemInDarkTheme()
     
     val viewModelCancelBetData: SendCancelBetViewModel = viewModel()
+    val viewModelCallWebsocket: CallWebsocketDashboard = viewModel()
     val betResponse by viewModelCancelBetData.betResponse.collectAsState()
     val betResult by viewModelCancelBetData.betResult.collectAsState()
     val betErrorCode by viewModelCancelBetData.betErrorCode.collectAsState()
@@ -87,6 +88,8 @@ fun cancelBetUI() {
             CancelReceiptDialog(betResponse!!){
             viewModelCancelBetData.clearBetState()
             }
+            viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
             viewModelCancelBetData.setTransactionCode("")
         scanFinish = false
             LaunchedEffect(betResponse) {
