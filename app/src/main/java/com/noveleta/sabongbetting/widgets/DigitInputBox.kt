@@ -79,12 +79,12 @@ fun DigitInputBoxDisplay(
             horizontalArrangement = Arrangement.Center
         ) {
             OutlinedTextField(
-                value = digitDisplay,
+                value = digitDisplayState.value,
                 onValueChange = { newValue ->
                     // Allow only digits, no leading zeros unless single zero
                     if (newValue.all { it.isDigit() }) {
                         digitDisplayState.value = newValue.trimStart('0').ifEmpty { "0" }
-                        if (digitDisplay.isEmpty()) digitDisplay = "0"
+                        if (digitDisplayState.value.isEmpty()) digitDisplayState.value = "0"
                     }
                 },
                 modifier = Modifier

@@ -19,7 +19,6 @@ data class LiveBettingData(
     val drawText: String?,
     val drawTotalBetAmount1: String?,
     val meronClosed: String?,
-    val meronOpen: String?,
     val walaClosed: String?,
     val fights: List<Fight>?,
     val fightHistory: List<FightHistoryEntry>?,

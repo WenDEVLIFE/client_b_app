@@ -78,6 +78,8 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     
     var showCashInTellerDialog by remember { mutableStateOf(false) }
     var showCashOutTellerDialog by remember { mutableStateOf(false) }
+    var showMeronClosed by remember { mutableStateOf(false) }
+    var showWalaClosed by remember { mutableStateOf(false) }
     var showWarningBetDraw by remember { mutableStateOf(false) }
     var cashInOrOut by remember { mutableStateOf("Cash In") } 
     
@@ -276,7 +278,12 @@ Row(
              DigitInputBox.DigitInputBoxDisplay(
              digitDisplayState = digitDisplayState,
              clickableMeron = { betAmount ->
+             if (liveBetData?.meronClosed == "LOCKED" ?: "0"){
+             showMeronClosed = true
+             }else{
              viewModel.placeBet(userID = companyId, roleID = userRole, betType = 1, betAmount = betAmount)
+             }
+             
              },
              
              clickableDraw = { betAmount ->
@@ -290,7 +297,12 @@ if (betAmount != null && betAmount >= drawMax) {
 viewModel.placeBet(userID = companyId, roleID = userRole, betType = 3, betAmount = betAmount)
              },
              clickableWala = { betAmount ->
-             viewModel.placeBet(userID = companyId, roleID = userRole, betType = 2, betAmount = betAmount)
+             if (liveBetData?.walaClosed == "LOCKED" ?: "0"){
+             showWalaClosed = true
+             }else{
+                viewModel.placeBet(userID = companyId, roleID = userRole, betType = 2, betAmount = betAmount)
+             }
+          
              })
              
              Spacer(modifier = Modifier.height(16.dp))
@@ -335,6 +347,22 @@ if (showCashInTellerDialog) {
             showCashInTellerDialog = false
         }
     )
+}
+
+if(showWalaClosed){
+
+WalaClosed(){
+showWalaClosed = false
+}
+
+}
+
+if(showMeronClosed){
+
+MeronClosed(){
+showMeronClosed = false
+}
+
 }
 
 if (showCashOutTellerDialog) {
