@@ -11,6 +11,11 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlinx.coroutines.flow.asStateFlow
+import org.json.JSONException
+
+import android.content.Context
+import android.widget.Toast
 
 import com.noveleta.sabongbetting.Model.*
 import com.noveleta.sabongbetting.SharedPreference.*
@@ -30,6 +35,7 @@ class ReprintBetViewModel : ViewModel() {
     val isLoading: StateFlow<Boolean> = _isLoading
 
     fun reprintBet(
+    context: Context,
         userID: String,
         roleID: String,
         transactionCode: String,
@@ -59,6 +65,10 @@ class ReprintBetViewModel : ViewModel() {
                 val responseText = withContext(Dispatchers.IO) {
                     conn.inputStream.bufferedReader().use { it.readText() }
                 }
+                
+                if (!responseText.trim().startsWith("{")) {
+    throw JSONException("Invalid JSON: $responseText")
+}
 
                 val json = JSONObject(responseText)
                 val success = json.getBoolean("success")
@@ -79,10 +89,22 @@ class ReprintBetViewModel : ViewModel() {
         cashier = json.getString("cashier"),
         systemName = json.getString("systemName")
     )
+    
+    Toast.makeText(
+                    context,
+                    "Successfull Reprint",
+                    Toast.LENGTH_LONG
+                ).show()
                 } else {
                     _betResponse.value = null
                     _betErrorCode.value = -1
                     _betResult.value = resultInt
+                    
+                    Toast.makeText(
+                    context,
+                    "Error $resultInt",
+                    Toast.LENGTH_LONG
+                ).show()
                 }
 
             } catch (e: Exception) {
@@ -90,6 +112,13 @@ class ReprintBetViewModel : ViewModel() {
                 _betResult.value = null
                 _betErrorCode.value = null
                 _betResponse.value = null
+                
+                val fullError = Log.getStackTraceString(e)
+            Toast.makeText(
+                context,
+                "Payout Error:\n$fullError",
+                Toast.LENGTH_LONG
+            ).show()
             }
 
             _isLoading.value = false

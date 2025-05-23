@@ -310,7 +310,7 @@ viewModel.placeBet(userID = companyId, roleID = userRole, betType = 3, betAmount
             fightHistory = liveBetData.userTransactionLogs ?: emptyList(),
             onReprintClick = { transactionCode ->
                Log.d("Reprint", "Clicked reprint for: $transactionCode")
-               viewModelReprintBet.reprintBet(companyId,userRole,transactionCode)
+               viewModelReprintBet.reprintBet(context,companyId,userRole,transactionCode)
             }
         )
              
