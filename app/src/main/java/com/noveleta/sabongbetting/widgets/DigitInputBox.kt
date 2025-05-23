@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.TextFieldDefaults
+
+
 
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextFieldDefaults
@@ -95,8 +95,9 @@ fun DigitInputBoxDisplay(
                 textStyle = LocalTextStyle.current.copy(fontSize = 32.sp, textAlign = TextAlign.Center),
                 singleLine = true,
                 colors = TextFieldDefaults.outlinedTextFieldColors(
+                    cursorColor = Color(0xFFFFFFFF),
                     textColor = Color(0xFFFFFFFF),
-                    backgroundColor = Color.Transparent,
+                    containerColor = Color.Transparent,
                     focusedBorderColor = Color(0xFFFFFFFF),
                     unfocusedBorderColor = Color.Gray
                 ),
