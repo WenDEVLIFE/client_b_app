@@ -92,9 +92,8 @@ fun DigitInputBoxDisplay(
                         focusRequester.requestFocus()
                         keyboardController?.show()
                     },
-                textStyle = LocalTextStyle.current.copy(fontSize = 32.sp, textAlign = TextAlign.Center),
+                textStyle = LocalTextStyle.current.copy(fontSize = 32.sp, textAlign = TextAlign.Center, color = Color(0xFFFFFFFF))),
                 singleLine = true,
-                textStyle = TextStyle(color = Color(0xFFFFFFFF)),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     cursorColor = Color(0xFFFFFFFF),
                     containerColor = Color.Transparent,

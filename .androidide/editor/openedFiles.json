@@ -109,14 +109,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/DigitInputBox.kt",
       "selection": {
         "end": {
-          "column": 0,
-          "index": 1701,
-          "line": 42
+          "column": 34,
+          "index": 3699,
+          "line": 95
         },
         "start": {
-          "column": 0,
-          "index": 1701,
-          "line": 42
+          "column": 34,
+          "index": 3699,
+          "line": 95
         }
       }
     },
@@ -124,14 +124,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/EditTextWidgets.kt",
       "selection": {
         "end": {
-          "column": 41,
-          "index": 1218,
-          "line": 25
+          "column": 31,
+          "index": 4441,
+          "line": 112
         },
         "start": {
-          "column": 0,
-          "index": 1177,
-          "line": 25
+          "column": 31,
+          "index": 4441,
+          "line": 112
         }
       }
     }
