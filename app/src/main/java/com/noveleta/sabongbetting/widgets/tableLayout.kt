@@ -250,23 +250,91 @@ fun logHistoryTable(
         Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
             Column {
                 // Header
-                Row(modifier = Modifier.height(40.dp)) {
-                    columns.forEach { label ->
-                        Box(
-                            modifier = Modifier
-                                .width(80.dp)
-                                .fillMaxHeight(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = label,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFFFFFFFF),
-                                fontSize = 14.sp
-                            )
-                        }
-                    }
-                }
+                
+                Row(modifier = Modifier.height(50.dp)) {
+    val transaction = entry.transaction ?: "-"
+    val amount = entry.amount ?: "0"
+    val date = entry.eventDate ?: "-"
+    val transactionCode = entry.transactionCode
+
+    // No. # 1 2...
+    Box(
+        modifier = Modifier
+            .width(80.dp)
+            .fillMaxHeight(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = if (showAll) (index + 1).toString() else (currentPage * rowsPerPage + index + 1).toString(),
+            color = Color(0xFFFFFFFF),
+            fontSize = 13.sp
+        )
+    }
+
+    // Transaction
+    Box(
+        modifier = Modifier
+            .width(80.dp)
+            .fillMaxHeight(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = transaction,
+            color = Color(0xFFFFFFFF),
+            fontSize = 13.sp
+        )
+    }
+
+    // Amount
+    Box(
+        modifier = Modifier
+            .width(80.dp)
+            .fillMaxHeight(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = amount,
+            color = Color(0xFFFFFFFF),
+            fontSize = 13.sp
+        )
+    }
+
+    // Reprint Icon Column (2nd to last)
+    Box(
+        modifier = Modifier
+            .width(80.dp)
+            .fillMaxHeight()
+            .clickable(enabled = !transactionCode.isNullOrBlank()) {
+                transactionCode?.let { onReprintClick(it) }
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        if (!transactionCode.isNullOrBlank()) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_open),
+                contentDescription = "Reprint",
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(2.dp),
+                colorFilter = ColorFilter.tint(iconTint)
+            )
+        }
+    }
+
+    // Date
+    Box(
+        modifier = Modifier
+            .width(80.dp)
+            .fillMaxHeight(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = date,
+            color = Color(0xFFFFFFFF),
+            fontSize = 13.sp
+        )
+    }
+}
 
                 // Data rows
                 paginatedList.forEachIndexed { index, entry ->
@@ -413,7 +481,7 @@ fun currentBetTableUI(
     fightHistory: List<CurrentBetLogs>,
     onReprintClick: (String) -> Unit
 ) {
-    val columns = listOf("No", "Date", "Teller", "Fight #", "Bettor", "Bet Under", "Ammount", "Status", "Result", "Is Claimed?", "Is Returned?")
+    val columns = listOf("No", "Date", "Teller", "Fight #", "Bettor", "Bet Under", "Ammount", "Status", "Is Returned?")
     val isDarkTheme = isSystemInDarkTheme()
     val iconTint = Color(0xFFFFFFFF)
 
@@ -463,8 +531,6 @@ fun currentBetTableUI(
                                 entry.betUnder,
                                 entry.amount,
                                 entry.status,
-                                entry.result,
-                                entry.isClaimed,
                                 entry.isReturned
                             )
 

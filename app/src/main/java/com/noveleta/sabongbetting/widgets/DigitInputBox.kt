@@ -46,10 +46,12 @@ object DigitInputBox {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DigitInputBoxDisplay(
+    digitDisplayState: MutableState<String>,
     clickableMeron: (Int) -> Unit,
     clickableDraw: (Int) -> Unit,
     clickableWala: (Int) -> Unit
 ) {
+    val digitDisplay by digitDisplayState
     var digitDisplay by remember { mutableStateOf("") }
     val numberCounts = remember { mutableStateMapOf<Int, Int>() }
 
@@ -58,14 +60,14 @@ fun DigitInputBoxDisplay(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     // Fixed width for buttons and cards for alignment
-    val buttonWidth = 100.dp
+    val buttonWidth = 60.dp
     val buttonHeight = 50.dp
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Transparent)
-            .padding(16.dp),
+            .padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Digit display with editable TextField
@@ -82,6 +84,7 @@ fun DigitInputBoxDisplay(
                     // Allow only digits, no leading zeros unless single zero
                     if (newValue.all { it.isDigit() }) {
                         digitDisplay = newValue.trimStart('0')
+                        digitDisplayState.value = newValue.trimStart('0').ifEmpty { "0" }
                         if (digitDisplay.isEmpty()) digitDisplay = "0"
                     }
                 },
@@ -104,6 +107,7 @@ fun DigitInputBoxDisplay(
             )
             IconButton(onClick = {
                 digitDisplay = "0"
+                digitDisplayState.value = "0"
                 numberCounts.clear()
                 keyboardController?.hide()
             }) {
@@ -133,6 +137,7 @@ fun DigitInputBoxDisplay(
                                 val count = numberCounts.getOrDefault(num, 0) + 1
                                 numberCounts[num] = count
                                 digitDisplay = (currentDigit + num).toString()
+                                digitDisplayState.value = (current + num).toString()
                             },
                         elevation = CardDefaults.cardElevation(4.dp)
                     ) {
@@ -160,13 +165,13 @@ fun DigitInputBoxDisplay(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             BetButton("Bet Meron", Color(0xFFB12D36), buttonWidth, buttonHeight) {
-                clickableMeron(digitDisplay.toIntOrNull() ?: 0)
+                clickableMeron(digitDisplayState.value.toIntOrNull() ?: 0)
             }
             BetButton("Bet Draw", Color(0xFF2EB132), buttonWidth, buttonHeight) {
-                clickableDraw(digitDisplay.toIntOrNull() ?: 0)
+                clickableDraw(digitDisplayState.value.toIntOrNull() ?: 0)
             }
             BetButton("Bet Wala", Color(0xFF2070E1), buttonWidth, buttonHeight) {
-                clickableWala(digitDisplay.toIntOrNull() ?: 0)
+                clickableWala(digitDisplayState.value.toIntOrNull() ?: 0)
             }
         }
     }

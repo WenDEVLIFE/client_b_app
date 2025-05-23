@@ -125,7 +125,8 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
 
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
-    
+    val digitDisplayState = remember { mutableStateOf("0") }
+
 if (betResponse != null) {
 
     //--------------------- 
@@ -143,7 +144,7 @@ if (betResponse != null) {
             viewModel.clearBetState()
         }
     )
-
+    digitDisplayState.value = "0"
     LaunchedEffect(betResponse) {
             // only runs a single time per distinct betResponse
             printBetResponse(context, betResponse!!)
@@ -211,7 +212,6 @@ LaunchedEffect(cashInResponse) {
     
 }
 
-
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
         Column(
             modifier = Modifier
@@ -252,7 +252,7 @@ LaunchedEffect(cashInResponse) {
              }
              Spacer(modifier = Modifier.height(8.dp))
 Row(
-    modifier = Modifier.fillMaxWidth(),
+    modifier = Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp),
     horizontalArrangement = Arrangement.spacedBy(8.dp)
 ) {
     DigitInputBox.TellerButton("Teller CashIn", Color(0xFFB12D36)) {
@@ -274,7 +274,9 @@ Row(
                 )
              }else{
              
-             DigitInputBox.DigitInputBoxDisplay(clickableMeron = { betAmount ->
+             DigitInputBox.DigitInputBoxDisplay(
+             digitDisplayState = digitDisplayState,
+             clickableMeron = { betAmount ->
              viewModel.placeBet(userID = companyId, roleID = userRole, betType = 1, betAmount = betAmount)
              },
              
@@ -298,7 +300,7 @@ viewModel.placeBet(userID = companyId, roleID = userRole, betType = 3, betAmount
              Divider()
              Spacer(modifier = Modifier.height(8.dp))
              Text(
-                    text = "Transaction Logs History",
+                    text = "Current Bet List",
                     fontSize = 20.sp,
                     color = Color.White
                 )

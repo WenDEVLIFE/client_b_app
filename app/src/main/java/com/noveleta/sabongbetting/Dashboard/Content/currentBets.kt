@@ -80,7 +80,7 @@ fun currentBetListUI(liveBetData: LiveBettingData) {
         ) {
             
             Text(
-                    text = "Current Bets History",
+                    text = "Transaction Logs History",
                     fontSize = 20.sp,
                     color = Color.White
                 )

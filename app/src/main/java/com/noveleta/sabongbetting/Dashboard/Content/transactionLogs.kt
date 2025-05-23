@@ -111,7 +111,7 @@ fun transactionLogsUI(liveBetData: LiveBettingData) {
         ) {
             
             Text(
-                    text = "Transaction Logs History",
+                    text = "Current Bet List",
                     fontSize = 20.sp,
                     color = Color.White
                 )
