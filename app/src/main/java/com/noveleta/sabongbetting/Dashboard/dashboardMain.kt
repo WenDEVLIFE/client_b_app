@@ -283,12 +283,27 @@ var showScanner by remember { mutableStateOf(false) }
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    Text(
-                        text = "Dashboard",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.White,
-                        modifier = Modifier.padding(bottom = 24.dp)
-                    )
+                    Row(
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(bottom = 24.dp),
+    horizontalArrangement = Arrangement.SpaceBetween,
+    verticalAlignment = Alignment.CenterVertically
+) {
+    Text(
+        text = "Dashboard",
+        style = MaterialTheme.typography.titleMedium,
+        color = Color.White
+    )
+    Text(
+        text = "Log Out",
+        modifier = Modifier.clickable{
+        showExitDialog = true
+        },
+        style = MaterialTheme.typography.titleMedium,
+        color = Color.Red
+    )
+}
 
                     Image(
                         painter = painterResource(id = R.drawable.user),
@@ -360,16 +375,6 @@ var showScanner by remember { mutableStateOf(false) }
                             )
                         }
                     }
-                }
-
-                // Bottom section: Log Out button
-                TextButton(
-                    onClick = { showExitDialog = true },
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(16.dp)
-                ) {
-                    Text(text = "Log Out", color = Color.White)
                 }
             }
         }

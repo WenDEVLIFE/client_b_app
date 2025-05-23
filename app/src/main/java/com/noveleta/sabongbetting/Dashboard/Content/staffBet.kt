@@ -56,6 +56,15 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 import kotlinx.coroutines.*
 
+import androidx.compose.foundation.horizontalScroll
+
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import kotlin.math.max
+import kotlin.math.min
+
 
 import com.noveleta.sabongbetting.ui.theme.*
 import com.noveleta.sabongbetting.Factory.*
@@ -109,6 +118,10 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     val isLoading by viewModel.isLoading.collectAsState()
     
     val context = LocalContext.current
+    
+    val scrollState = rememberScrollState()
+    val coroutineScope = rememberCoroutineScope()
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     
     val isDarkTheme = isSystemInDarkTheme()
     val iconTint = if (isDarkTheme) Color.White else Color.Black
@@ -224,34 +237,128 @@ LaunchedEffect(cashInResponse) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            Row(
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(scrollState),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        // Show LEFT arrow if not at start
+        if (scrollState.value > 0) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Scroll Left",
                 modifier = Modifier
-                  .fillMaxWidth()
-                  .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-    BetInfoCards.InfoCard(
-        title = "Meron",
-        payout = liveBetData?.meronText ?: "0",
-        totalBets = liveBetData?.meronTotalBetAmount ?: "0",
-        backgroundColor = Color(0xFFB12D36),
-        modifier = Modifier.width(300.dp)
-    )
-    BetInfoCards.InfoCard(
-        title = "Draw",
-        payout = liveBetData?.drawText ?: "0",
-        totalBets = liveBetData?.drawTotalBetAmount ?: "0",
-        backgroundColor = Color(0xFF2EB132),
-        modifier = Modifier.width(300.dp)
-    )
-    BetInfoCards.InfoCard(
-        title = "Wala",
-        payout = liveBetData?.walaText ?: "0",
-        totalBets = liveBetData?.walaTotalBetAmount ?: "0",
-        backgroundColor = Color(0xFF2070E1),
-        modifier = Modifier.width(300.dp)
-    )
-             }
+                    .size(40.dp)
+                    .clickable {
+                        coroutineScope.launch {
+                            scrollState.animateScrollTo(max(scrollState.value - 300, 0))
+                        }
+                    },
+                tint = Color.Black
+            )
+        }
+
+        // Bet Info Cards
+        BetInfoCards.InfoCard(
+            title = "Meron",
+            payout = liveBetData?.meronText ?: "0",
+            totalBets = liveBetData?.meronTotalBetAmount ?: "0",
+            backgroundColor = Color(0xFFB12D36),
+            modifier = Modifier.width(300.dp)
+        )
+        BetInfoCards.InfoCard(
+            title = "Draw",
+            payout = liveBetData?.drawText ?: "0",
+            totalBets = liveBetData?.drawTotalBetAmount ?: "0",
+            backgroundColor = Color(0xFF2EB132),
+            modifier = Modifier.width(300.dp)
+        )
+        BetInfoCards.InfoCard(
+            title = "Wala",
+            payout = liveBetData?.walaText ?: "0",
+            totalBets = liveBetData?.walaTotalBetAmount ?: "0",
+            backgroundColor = Color(0xFF2070E1),
+            modifier = Modifier.width(300.dp)
+        )
+
+        // Show RIGHT arrow if not at end
+        if (scrollState.value < scrollState.maxValue) {
+            Icon(
+                imageVector = Icons.Default.ArrowForward,
+                contentDescription = "Scroll Right",
+                modifier = Modifier
+                    .size(40.dp)
+                    .clickable {
+                        coroutineScope.launch {
+                            scrollState.animateScrollTo(min(scrollState.value + 300, scrollState.maxValue))
+                        }
+                    },
+                tint = Color.Black
+            )
+        }
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(scrollState),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        // LEFT Arrow
+        if (scrollState.value > 0) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Scroll Left",
+                modifier = Modifier
+                    .size(48.dp)
+                    .clickable {
+                        coroutineScope.launch {
+                            scrollState.animateScrollTo(max(scrollState.value - screenWidth.roundToPx(), 0))
+                        }
+                    },
+                tint = Color(0xFFFFFFFF)
+            )
+        }
+
+        // Full-Width Cards
+        listOf(
+            Triple("Meron", liveBetData?.meronText ?: "0", Color(0xFFB12D36)),
+            Triple("Draw", liveBetData?.drawText ?: "0", Color(0xFF2EB132)),
+            Triple("Wala", liveBetData?.walaText ?: "0", Color(0xFF2070E1))
+        ).forEach { (title, payout, color) ->
+            BetInfoCards.InfoCard(
+                title = title,
+                payout = payout,
+                totalBets = "0", // You can change this per card
+                backgroundColor = color,
+                modifier = Modifier
+                    .width(screenWidth)
+                    .padding(vertical = 8.dp)
+            )
+        }
+
+        // RIGHT Arrow
+        if (scrollState.value < scrollState.maxValue) {
+            Icon(
+                imageVector = Icons.Default.ArrowForward,
+                contentDescription = "Scroll Right",
+                modifier = Modifier
+                    .size(48.dp)
+                    .clickable {
+                        coroutineScope.launch {
+                            scrollState.animateScrollTo(min(scrollState.value + screenWidth.roundToPx(), scrollState.maxValue))
+                        }
+                    },
+                tint = Color(0xFFFFFFFF)
+            )
+        }
+    }
+    
+    
              Spacer(modifier = Modifier.height(8.dp))
 Row(
     modifier = Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp),
@@ -267,14 +374,14 @@ Row(
     }
 }
 
-             if (liveBetData?.isBetting == 2 ?: ""){
+             if (liveBetData?.isBetting == 1 ?: "" || liveBetData?.isBetting == 4 ?: ""){
              Spacer(modifier = Modifier.height(16.dp))
              Text(
-                    text = "Fight is Already Closed.",
+                    text = "No Fight Started, Come Back Later.",
                     fontSize = 20.sp,
                     color = Color.White
                 )
-             }else if (liveBetData?.isBetting == 1 ?: ""){
+             }else{
              DigitInputBox.DigitInputBoxDisplay(
              digitDisplayState = digitDisplayState,
              clickableMeron = { betAmount ->
@@ -306,15 +413,7 @@ viewModel.placeBet(userID = companyId, roleID = userRole, betType = 3, betAmount
              })
              
              Spacer(modifier = Modifier.height(16.dp))
-             }else{
-             Spacer(modifier = Modifier.height(16.dp))
-             Text(
-                    text = "Fight is Already Closed.",
-                    fontSize = 20.sp,
-                    color = Color.White
-                )
-             }
-             
+           
              
              Spacer(modifier = Modifier.height(8.dp))
              Divider()

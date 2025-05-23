@@ -61,7 +61,7 @@ fun DigitInputBoxDisplay(
 
     // Fixed width for buttons and cards for alignment
     val buttonWidth = 100.dp
-    val buttonHeight = 50.dp
+    val buttonHeight = 30.dp
 
     Column(
         modifier = Modifier

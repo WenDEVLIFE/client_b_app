@@ -54,7 +54,7 @@ fun InfoCard(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Payout row
             Box(modifier = Modifier.fillMaxWidth()) {
@@ -72,7 +72,7 @@ fun InfoCard(
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             // Total Bets row
             Box(modifier = Modifier.fillMaxWidth()) {

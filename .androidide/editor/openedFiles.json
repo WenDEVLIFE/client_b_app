@@ -34,14 +34,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/DigitInputBox.kt",
       "selection": {
         "end": {
-          "column": 25,
-          "index": 2327,
-          "line": 62
+          "column": 96,
+          "index": 4479,
+          "line": 111
         },
         "start": {
-          "column": 25,
-          "index": 2327,
-          "line": 62
+          "column": 72,
+          "index": 4455,
+          "line": 111
         }
       }
     },
@@ -49,14 +49,74 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/staffBet.kt",
       "selection": {
         "end": {
-          "column": 45,
-          "index": 10894,
-          "line": 311
+          "column": 40,
+          "index": 11246,
+          "line": 322
         },
         "start": {
-          "column": 45,
-          "index": 10894,
-          "line": 311
+          "column": 40,
+          "index": 11246,
+          "line": 322
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/LiveBettingViewModel.kt",
+      "selection": {
+        "end": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        },
+        "start": {
+          "column": 0,
+          "index": 0,
+          "line": 0
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/PrintBetErrors.kt",
+      "selection": {
+        "end": {
+          "column": 50,
+          "index": 2966,
+          "line": 74
+        },
+        "start": {
+          "column": 50,
+          "index": 2966,
+          "line": 74
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/BetInfoCards.kt",
+      "selection": {
+        "end": {
+          "column": 50,
+          "index": 3342,
+          "line": 88
+        },
+        "start": {
+          "column": 50,
+          "index": 3342,
+          "line": 88
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/dashboardMain.kt",
+      "selection": {
+        "end": {
+          "column": 10,
+          "index": 10740,
+          "line": 301
+        },
+        "start": {
+          "column": 10,
+          "index": 10740,
+          "line": 301
         }
       }
     }
