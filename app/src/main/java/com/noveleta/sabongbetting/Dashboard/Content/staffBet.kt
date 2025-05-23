@@ -64,7 +64,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.min
-
+import androidx.compose.ui.platform.LocalDensity
 
 import com.noveleta.sabongbetting.ui.theme.*
 import com.noveleta.sabongbetting.Factory.*
@@ -141,6 +141,9 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
     val digitDisplayState = remember { mutableStateOf("0") }
+    val density = LocalDensity.current
+    val screenWidthPx = with(density) { screenWidth.roundToPx() }
+
 
 if (betResponse != null) {
 
@@ -254,7 +257,8 @@ LaunchedEffect(cashInResponse) {
                     .size(48.dp)
                     .clickable {
                         coroutineScope.launch {
-                            scrollState.animateScrollTo(max(scrollState.value - screenWidth.roundToPx(), 0))
+scrollState.animateScrollTo(max(scrollState.value - screenWidthPx, 0))
+
                         }
                     },
                 tint = Color(0xFFFFFFFF)
@@ -287,7 +291,7 @@ LaunchedEffect(cashInResponse) {
                     .size(48.dp)
                     .clickable {
                         coroutineScope.launch {
-                            scrollState.animateScrollTo(min(scrollState.value + screenWidth.roundToPx(), scrollState.maxValue))
+                            scrollState.animateScrollTo(max(scrollState.value - screenWidthPx, 0))
                         }
                     },
                 tint = Color(0xFFFFFFFF)

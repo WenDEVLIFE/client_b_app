@@ -103,7 +103,7 @@ class BettingViewModel : ViewModel() {
                     
                     Toast.makeText(
                     context,
-                    "Error $resultInt: $message",
+                    "Error $resultInt: $resultString",
                     Toast.LENGTH_LONG
                 ).show()
                 
