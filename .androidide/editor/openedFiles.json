@@ -109,14 +109,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/DigitInputBox.kt",
       "selection": {
         "end": {
-          "column": 0,
-          "index": 7234,
-          "line": 186
+          "column": 49,
+          "index": 3889,
+          "line": 97
         },
         "start": {
-          "column": 0,
-          "index": 7234,
-          "line": 186
+          "column": 49,
+          "index": 3889,
+          "line": 97
         }
       }
     }
