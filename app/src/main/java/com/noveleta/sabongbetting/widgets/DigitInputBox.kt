@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.Dp
 
 object DigitInputBox {
 
-@OptIn(ExperimentalMaterial3Api::class)w
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DigitInputBoxDisplay(
     clickableMeron: (Int) -> Unit,
