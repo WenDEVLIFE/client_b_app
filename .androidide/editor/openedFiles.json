@@ -29,7 +29,37 @@
           "line": 312
         }
       }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/DigitInputBox.kt",
+      "selection": {
+        "end": {
+          "column": 74,
+          "index": 5334,
+          "line": 135
+        },
+        "start": {
+          "column": 74,
+          "index": 5334,
+          "line": 135
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/tableLayout.kt",
+      "selection": {
+        "end": {
+          "column": 0,
+          "index": 14594,
+          "line": 399
+        },
+        "start": {
+          "column": 0,
+          "index": 14594,
+          "line": 399
+        }
+      }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/ReprintBet.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/tableLayout.kt"
 }

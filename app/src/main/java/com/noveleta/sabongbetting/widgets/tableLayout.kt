@@ -250,130 +250,60 @@ fun logHistoryTable(
         Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
             Column {
                 // Header
-                
-                Row(modifier = Modifier.height(50.dp)) {
-    val transaction = entry.transaction ?: "-"
-    val amount = entry.amount ?: "0"
-    val date = entry.eventDate ?: "-"
-    val transactionCode = entry.transactionCode
-
-    // No. # 1 2...
-    Box(
-        modifier = Modifier
-            .width(80.dp)
-            .fillMaxHeight(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = if (showAll) (index + 1).toString() else (currentPage * rowsPerPage + index + 1).toString(),
-            color = Color(0xFFFFFFFF),
-            fontSize = 13.sp
-        )
-    }
-
-    // Transaction
-    Box(
-        modifier = Modifier
-            .width(80.dp)
-            .fillMaxHeight(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = transaction,
-            color = Color(0xFFFFFFFF),
-            fontSize = 13.sp
-        )
-    }
-
-    // Amount
-    Box(
-        modifier = Modifier
-            .width(80.dp)
-            .fillMaxHeight(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = amount,
-            color = Color(0xFFFFFFFF),
-            fontSize = 13.sp
-        )
-    }
-
-    // Reprint Icon Column (2nd to last)
-    Box(
-        modifier = Modifier
-            .width(80.dp)
-            .fillMaxHeight()
-            .clickable(enabled = !transactionCode.isNullOrBlank()) {
-                transactionCode?.let { onReprintClick(it) }
-            },
-        contentAlignment = Alignment.Center
-    ) {
-        if (!transactionCode.isNullOrBlank()) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_open),
-                contentDescription = "Reprint",
-                modifier = Modifier
-                    .size(24.dp)
-                    .padding(2.dp),
-                colorFilter = ColorFilter.tint(iconTint)
-            )
-        }
-    }
-
-    // Date
-    Box(
-        modifier = Modifier
-            .width(80.dp)
-            .fillMaxHeight(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = date,
-            color = Color(0xFFFFFFFF),
-            fontSize = 13.sp
-        )
-    }
-}
+                Row(modifier = Modifier.height(40.dp)) {
+                    columns.forEach { label ->
+                        Box(
+                            modifier = Modifier
+                                .width(80.dp)
+                                .fillMaxHeight(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = label,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White,
+                                fontSize = 14.sp
+                            )
+                        }
+                    }
+                }
 
                 // Data rows
                 paginatedList.forEachIndexed { index, entry ->
-                    runCatching {
-                        Row(modifier = Modifier.height(50.dp)) {
-                            val transaction = entry.transaction ?: "-"
-                            val amount = entry.amount ?: "0"
-                            val date = entry.eventDate ?: "-"
+                    Row(modifier = Modifier.height(50.dp)) {
+                        val transaction = entry.transaction ?: "-"
+                        val amount = entry.amount ?: "0"
+                        val date = entry.eventDate ?: "-"
+                        val transactionCode = entry.transactionCode
 
-                            listOf(
-                                if (showAll) (index + 1).toString() else (currentPage * rowsPerPage + index + 1).toString(),
-                                transaction,
-                                amount,
-                                date
-                            ).forEach { cell ->
-                                Box(
-                                    modifier = Modifier
-                                        .width(80.dp)
-                                        .fillMaxHeight(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = cell,
-                                        color = Color(0xFFFFFFFF),
-                                        fontSize = 13.sp
-                                    )
-                                }
-                            }
+                        val rowIndex = if (showAll) index + 1 else currentPage * rowsPerPage + index + 1
 
-                            // QR Reprint Button
+                        listOf(
+                            rowIndex.toString(),
+                            transaction,
+                            amount
+                        ).forEach { text ->
                             Box(
                                 modifier = Modifier
                                     .width(80.dp)
-                                    .fillMaxHeight()
-                                    .clickable(enabled = !entry.transactionCode.isNullOrBlank()) {
-                                        entry.transactionCode?.let { onReprintClick(it) }
-                                    },
+                                    .fillMaxHeight(),
                                 contentAlignment = Alignment.Center
                             ) {
+                                Text(text = text, color = Color.White, fontSize = 13.sp)
+                            }
+                        }
+
+                        // Reprint Icon
+                        Box(
+                            modifier = Modifier
+                                .width(80.dp)
+                                .fillMaxHeight()
+                                .clickable(enabled = !transactionCode.isNullOrBlank()) {
+                                    transactionCode?.let { onReprintClick(it) }
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (!transactionCode.isNullOrBlank()) {
                                 Image(
                                     painter = painterResource(id = R.drawable.ic_open),
                                     contentDescription = "Reprint",
@@ -384,8 +314,16 @@ fun logHistoryTable(
                                 )
                             }
                         }
-                    }.onFailure { error ->
-                        Log.e("logHistoryTable", "Error rendering row $index: ${error.message}")
+
+                        // Date
+                        Box(
+                            modifier = Modifier
+                                .width(80.dp)
+                                .fillMaxHeight(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = date, color = Color.White, fontSize = 13.sp)
+                        }
                     }
                 }
             }
@@ -393,7 +331,7 @@ fun logHistoryTable(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Pagination Controls Row
+        // Pagination Controls
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -402,60 +340,44 @@ fun logHistoryTable(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Left: Prev + Page numbers + Next
+            // Left side: page nav
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (!showAll) {
-                  if (currentPage > 0){
-                     TextButton(
-                        onClick = { if (currentPage > 0) currentPage-- },
-                        enabled = currentPage > 0
-                    ) {
-                        Text("< Prev",
-                        color = Color(0xFFFFFFFF),
-                        fontSize = 12.sp
-                        )
+                    if (currentPage > 0) {
+                        TextButton(onClick = { currentPage-- }) {
+                            Text("< Prev", color = Color.White, fontSize = 12.sp)
+                        }
                     }
-                  }
- 
 
                     for (i in 0 until pageCount) {
                         TextButton(onClick = { currentPage = i }) {
                             Text(
                                 text = "${i + 1}",
-                                color = if (i == currentPage) Color(0xFFFFFFFF) else Color.Gray,
+                                color = if (i == currentPage) Color.White else Color.Gray,
                                 fontSize = 12.sp,
                                 modifier = if (i == currentPage) {
                                     Modifier
-                                        .background(
-                                            color = Color(0xFF4A90E2),
-                                            shape = RoundedCornerShape(12.dp)
-                                        )
+                                        .background(Color(0xFF4A90E2), RoundedCornerShape(12.dp))
                                         .padding(horizontal = 8.dp, vertical = 4.dp)
                                 } else Modifier
                             )
                         }
                     }
-                    
-                    if (currentPage < pageCount - 1){
-                       TextButton(
-                        onClick = { if (currentPage < pageCount - 1) currentPage++ },
-                        enabled = currentPage < pageCount - 1
-                    ) {
-                        Text("Next >",
-                        color = Color(0xFFFFFFFF),
-                        fontSize = 12.sp)
+
+                    if (currentPage < pageCount - 1) {
+                        TextButton(onClick = { currentPage++ }) {
+                            Text("Next >", color = Color.White, fontSize = 12.sp)
+                        }
                     }
-                    }
-                    
                 }
             }
 
-            // Right: Total pages + Show All toggle
+            // Right side: show all toggle
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (!showAll) {
                     Text(
                         text = "$pageCount",
-                        color = Color(0xFFFFFFFF),
+                        color = Color.White,
                         fontSize = 12.sp,
                         modifier = Modifier.padding(end = 8.dp)
                     )
@@ -468,13 +390,14 @@ fun logHistoryTable(
                     Text(
                         text = if (showAll) "Hide All" else "Show All",
                         fontSize = 12.sp,
-                        color = Color(0xFFFFFFFF)
+                        color = Color.White
                     )
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun currentBetTableUI(

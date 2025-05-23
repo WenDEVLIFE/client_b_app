@@ -52,7 +52,7 @@ fun DigitInputBoxDisplay(
     clickableWala: (Int) -> Unit
 ) {
     val digitDisplay by digitDisplayState
-    var digitDisplay by remember { mutableStateOf("") }
+    
     val numberCounts = remember { mutableStateMapOf<Int, Int>() }
 
     // To show numeric keyboard and allow user input
@@ -133,11 +133,10 @@ fun DigitInputBoxDisplay(
                             .width(buttonWidth)
                             .height(buttonHeight)
                             .clickable {
-                                val currentDigit = digitDisplay.toIntOrNull() ?: 0
+                                val currentDigit = digitDisplayState.value.toIntOrNull() ?: 0
                                 val count = numberCounts.getOrDefault(num, 0) + 1
                                 numberCounts[num] = count
-                                digitDisplay = (currentDigit + num).toString()
-                                digitDisplayState.value = (current + num).toString()
+                                digitDisplayState.value = (currentDigit + num).toString()
                             },
                         elevation = CardDefaults.cardElevation(4.dp)
                     ) {
