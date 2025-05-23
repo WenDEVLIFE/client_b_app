@@ -94,9 +94,9 @@ fun DigitInputBoxDisplay(
                     },
                 textStyle = LocalTextStyle.current.copy(fontSize = 32.sp, textAlign = TextAlign.Center),
                 singleLine = true,
+                textStyle = TextStyle(color = Color(0xFFFFFFFF)),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     cursorColor = Color(0xFFFFFFFF),
-                    textColor = Color(0xFFFFFFFF),
                     containerColor = Color.Transparent,
                     focusedBorderColor = Color(0xFFFFFFFF),
                     unfocusedBorderColor = Color.Gray
