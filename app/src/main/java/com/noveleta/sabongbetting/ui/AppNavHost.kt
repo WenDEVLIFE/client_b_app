@@ -74,6 +74,7 @@ fun AppNavHost(
             bannerMessage = "Back online"
             bannerColor = Color(0xFF1BEB53)
             showBanner = true
+            showOfflineDialog = false
             delay(2000)
             showBanner = false
         }
