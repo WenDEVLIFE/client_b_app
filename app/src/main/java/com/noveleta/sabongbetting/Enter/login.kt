@@ -147,15 +147,7 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
     
     var showSettingsDialog by remember { mutableStateOf(false) }
     var showWarningDialog by remember { mutableStateOf(false) }
-    val scrollState = rememberScrollState()
-    val coroutineScope = rememberCoroutineScope()
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     
-      val cardWidth = 280.dp
-    val spacing = 16.dp
-    val containerWidth = 280.dp
-val cardWidthPx = with(LocalDensity.current) { cardWidth.toPx() }
-
 Box(
     modifier = Modifier
         .fillMaxSize()
@@ -168,80 +160,101 @@ Box(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
     
+    val scrollState = rememberScrollState()
+val coroutineScope = rememberCoroutineScope()
+val density = LocalDensity.current
+
+val cardWidth = 280.dp
+val spacing = 16.dp
+val totalCardWidth = cardWidth + spacing
+
 val items = listOf(
-        Triple("Meron", "200", Color(0xFFB12D36)),
-        Triple("Draw", "204", Color(0xFF2EB132)),
-        Triple("Wala", "120", Color(0xFF2070E1))
-    )
+    Triple("Meron", "200", Color(0xFFB12D36)),
+    Triple("Draw", "204", Color(0xFF2EB132)),
+    Triple("Wala", "120", Color(0xFF2070E1))
+)
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        // LEFT arrow
-        if (scrollState.value > 0) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Scroll Left",
-                modifier = Modifier
-                    .size(28.dp)
-                    .clickable {
-                        coroutineScope.launch {
-                            scrollState.animateScrollTo(
-                                max(scrollState.value - cardWidthPx.toInt(), 0)
-                            )
-                        }
-                    },
-                tint = Color.White
-            )
-        } else {
-            Spacer(Modifier.size(28.dp))
-        }
+val currentIndex = remember { mutableStateOf(0) }
 
-        // Scrollable Row
-        Box(
+val totalCardWidthPx = with(density) { totalCardWidth.toPx() }
+val screenWidthPx = with(density) { LocalConfiguration.current.screenWidthDp.dp.toPx() }
+val containerWidth = cardWidth  // So only one card is shown centered
+
+fun scrollToCard(index: Int) {
+    val centeredOffset = (totalCardWidthPx * index - (screenWidthPx - totalCardWidthPx) / 2).toInt()
+    coroutineScope.launch {
+        scrollState.animateScrollTo(
+            centeredOffset.coerceIn(0, scrollState.maxValue),
+            animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing)
+        )
+    }
+}
+
+Row(
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.Center,
+    modifier = Modifier.fillMaxWidth()
+) {
+    // LEFT arrow
+    if (currentIndex.value > 0) {
+        Icon(
+            imageVector = Icons.Default.ArrowBack,
+            contentDescription = "Scroll Left",
             modifier = Modifier
-                .width(containerWidth)
-                .horizontalScroll(scrollState)
-        ) {
-            Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-                items.forEach { (title, payout, color) ->
-                    BetInfoCards.InfoCard(
-                        title = title,
-                        payout = payout,
-                        totalBets = "0",
-                        backgroundColor = color,
-                        modifier = Modifier
-                            .width(cardWidth)
-                            .padding(vertical = 8.dp)
-                    )
-                }
+                .size(28.dp)
+                .clickable {
+                    if (currentIndex.value > 0) {
+                        currentIndex.value--
+                        scrollToCard(currentIndex.value)
+                    }
+                },
+            tint = Color.White
+        )
+    } else {
+        Spacer(Modifier.size(28.dp))
+    }
+
+    // Scrollable Row
+    Box(
+        modifier = Modifier
+            .width(containerWidth)
+            .horizontalScroll(scrollState)
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
+            items.forEach { (title, payout, color) ->
+                BetInfoCards.InfoCard(
+                    title = title,
+                    payout = payout,
+                    totalBets = "0",
+                    backgroundColor = color,
+                    modifier = Modifier
+                        .width(cardWidth)
+                        .padding(vertical = 8.dp)
+                )
             }
         }
-
-        // RIGHT arrow
-        val maxScrollPx = ((items.size - 1) * cardWidthPx).toInt()
-        if (scrollState.value < maxScrollPx) {
-            Icon(
-                imageVector = Icons.Default.ArrowForward,
-                contentDescription = "Scroll Right",
-                modifier = Modifier
-                    .size(28.dp)
-                    .clickable {
-                        coroutineScope.launch {
-                            scrollState.animateScrollTo(
-                                min(scrollState.value + cardWidthPx.toInt(), maxScrollPx)
-                            )
-                        }
-                    },
-                tint = Color.White
-            )
-        } else {
-            Spacer(Modifier.size(28.dp))
-        }
     }
-    
+
+    // RIGHT arrow
+    if (currentIndex.value < items.lastIndex) {
+        Icon(
+            imageVector = Icons.Default.ArrowForward,
+            contentDescription = "Scroll Right",
+            modifier = Modifier
+                .size(28.dp)
+                .clickable {
+                    if (currentIndex.value < items.lastIndex) {
+                        currentIndex.value++
+                        scrollToCard(currentIndex.value)
+                    }
+                },
+            tint = Color.White
+        )
+    } else {
+        Spacer(Modifier.size(28.dp))
+    }
+}
+
     
   }
 }
