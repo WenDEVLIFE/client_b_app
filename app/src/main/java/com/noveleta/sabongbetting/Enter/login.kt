@@ -147,6 +147,9 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
     
     var showSettingsDialog by remember { mutableStateOf(false) }
     var showWarningDialog by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
+    val coroutineScope = rememberCoroutineScope()
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     
       val cardWidth = 350.dp
 val cardWidthPx = with(LocalDensity.current) { cardWidth.toPx() }
