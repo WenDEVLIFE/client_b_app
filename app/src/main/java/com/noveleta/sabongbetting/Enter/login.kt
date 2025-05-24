@@ -62,7 +62,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toPx
+
 
 import kotlinx.coroutines.launch
 import kotlin.math.max
@@ -219,7 +219,7 @@ Row(
     }
 
     // Scrollable Row
-   val sidePadding = ((screenWidthPx - cardWidth.toPx()) / 2).toInt()
+   val sidePadding = ((screenWidthPx - cardWidthPx) / 2).toInt()
 
 Box(
     modifier = Modifier
