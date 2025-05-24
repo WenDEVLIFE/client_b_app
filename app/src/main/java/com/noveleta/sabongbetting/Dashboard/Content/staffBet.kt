@@ -143,11 +143,7 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
     val digitDisplayState = remember { mutableStateOf("0") }
-    val density = LocalDensity.current
-    val screenWidthPx = with(density) { screenWidth.roundToPx() }
-    val cardWidth = 350.dp
-    val cardWidthPx = with(LocalDensity.current) { cardWidth.toPx() }
-
+    
 
 if (betResponse != null) {
 
@@ -246,65 +242,100 @@ LaunchedEffect(cashInResponse) {
             Spacer(modifier = Modifier.height(16.dp))
 
     
+
+    val scrollState = rememberScrollState()
+val coroutineScope = rememberCoroutineScope()
+val density = LocalDensity.current
+
+val cardWidth = 300.dp
+val spacing = 30.dp
+val totalCardWidth = cardWidth + spacing
+
+
+val currentIndex = remember { mutableStateOf(0) }
+
+val totalCardWidthPx = with(density) { totalCardWidth.toPx() }
+val screenWidthPx = with(density) { LocalConfiguration.current.screenWidthDp.dp.toPx() }
+val containerWidth = cardWidth  // So only one card is shown centered
+
+fun scrollToCard(index: Int) {
+    val centeredOffset = (totalCardWidthPx * index - (screenWidthPx - totalCardWidthPx) / 20).toInt()
+    coroutineScope.launch {
+        scrollState.animateScrollTo(
+            centeredOffset.coerceIn(0, scrollState.maxValue),
+            animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing)
+        )
+    }
+}
+
 Row(
     verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(8.dp)
+    horizontalArrangement = Arrangement.Center,
+    modifier = Modifier.fillMaxWidth()
 ) {
-    // LEFT Arrow
-    if (scrollState.value > 0) {
+    // LEFT arrow
+    if (currentIndex.value > 0) {
         Icon(
             imageVector = Icons.Default.ArrowBack,
             contentDescription = "Scroll Left",
             modifier = Modifier
-                .size(48.dp)
+                .size(28.dp)
                 .clickable {
-                    coroutineScope.launch {
-                        scrollState.animateScrollTo(max(scrollState.value - cardWidthPx.toInt(), 0))
+                    if (currentIndex.value > 0) {
+                        currentIndex.value--
+                        scrollToCard(currentIndex.value)
                     }
                 },
             tint = Color.White
         )
+    } else {
+        Spacer(Modifier.size(28.dp))
     }
+    val items = listOf(
+    BetItemCards("Meron", "200", "54", Color(0xFFB12D36)),
+    BetItemCards("Draw", "204", "33", Color(0xFF2EB132)),
+    BetItemCards("Wala", "120", "71", Color(0xFF2070E1))
+)
 
-    Row(
+
+    // Scrollable Row
+    Box(
         modifier = Modifier
-            .width(350.dp)
-            .horizontalScroll(scrollState),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+            .width(containerWidth)
+            .horizontalScroll(scrollState)
     ) {
-        listOf(
-            Triple("Meron", liveBetData?.meronText ?: "0", Color(0xFFB12D36)),
-            Triple("Draw", liveBetData?.drawText ?: "0", Color(0xFF2EB132)),
-            Triple("Wala", liveBetData?.walaText ?: "0", Color(0xFF2070E1))
-        ).forEach { (title, payout, color) ->
-            BetInfoCards.InfoCard(
-                title = title,
-                payout = payout,
-                totalBets = "0",
-                backgroundColor = color,
-                modifier = Modifier
-                    .width(cardWidth)
-                    .padding(vertical = 8.dp)
-            )
+        Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
+            items.forEach { item ->
+    BetInfoCards.InfoCard(
+        title = item.title,
+        payout = item.payout,
+        totalBets = item.totalBets,
+        backgroundColor = item.backgroundColor,
+        modifier = Modifier
+            .width(cardWidth)
+            .padding(vertical = 8.dp)
+    )
+}
         }
     }
 
-    // RIGHT Arrow
-    if (scrollState.value < scrollState.maxValue) {
+    // RIGHT arrow
+    if (currentIndex.value < items.lastIndex) {
         Icon(
             imageVector = Icons.Default.ArrowForward,
             contentDescription = "Scroll Right",
             modifier = Modifier
-                .size(48.dp)
+                .size(28.dp)
                 .clickable {
-                    coroutineScope.launch {
-                        scrollState.animateScrollTo(
-                            min(scrollState.value + cardWidthPx.toInt(), scrollState.maxValue)
-                        )
+                    if (currentIndex.value < items.lastIndex) {
+                        currentIndex.value++
+                        scrollToCard(currentIndex.value)
                     }
                 },
             tint = Color.White
         )
+    } else {
+        Spacer(Modifier.size(28.dp))
     }
 }
     

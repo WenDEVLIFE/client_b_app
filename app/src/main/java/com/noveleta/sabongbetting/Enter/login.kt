@@ -168,11 +168,6 @@ val cardWidth = 300.dp
 val spacing = 30.dp
 val totalCardWidth = cardWidth + spacing
 
-val items = listOf(
-    Triple("Meron", "200", Color(0xFFB12D36)),
-    Triple("Draw", "204", Color(0xFF2EB132)),
-    Triple("Wala", "120", Color(0xFF2070E1))
-)
 
 val currentIndex = remember { mutableStateOf(0) }
 
@@ -213,6 +208,12 @@ Row(
     } else {
         Spacer(Modifier.size(28.dp))
     }
+    val items = listOf(
+    BetItemCards("Meron", "200", "54", Color(0xFFB12D36)),
+    BetItemCards("Draw", "204", "33", Color(0xFF2EB132)),
+    BetItemCards("Wala", "120", "71", Color(0xFF2070E1))
+)
+
 
     // Scrollable Row
     Box(
@@ -221,17 +222,17 @@ Row(
             .horizontalScroll(scrollState)
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-            items.forEach { (title, payout, color) ->
-                BetInfoCards.InfoCard(
-                    title = title,
-                    payout = payout,
-                    totalBets = "0",
-                    backgroundColor = color,
-                    modifier = Modifier
-                        .width(cardWidth)
-                        .padding(vertical = 8.dp)
-                )
-            }
+            items.forEach { item ->
+    BetInfoCards.InfoCard(
+        title = item.title,
+        payout = item.payout,
+        totalBets = item.totalBets,
+        backgroundColor = item.backgroundColor,
+        modifier = Modifier
+            .width(cardWidth)
+            .padding(vertical = 8.dp)
+    )
+}
         }
     }
 
