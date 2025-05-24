@@ -61,7 +61,7 @@ fun DigitInputBoxDisplay(
 
     // Fixed width for buttons and cards for alignment
     val buttonWidth = 100.dp
-    val buttonHeight = 30.dp
+    val buttonHeight = 40.dp
 
     Column(
         modifier = Modifier
@@ -161,13 +161,13 @@ fun DigitInputBoxDisplay(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            BetButton("Bet Meron", Color(0xFFB12D36), buttonWidth, buttonHeight) {
+            BetButton("Bet Meron", Color(0xFFB12D36), buttonWidth, 40.dp) {
                 clickableMeron(digitDisplayState.value.toIntOrNull() ?: 0)
             }
-            BetButton("Bet Draw", Color(0xFF2EB132), buttonWidth, buttonHeight) {
+            BetButton("Bet Draw", Color(0xFF2EB132), buttonWidth, 40.dp) {
                 clickableDraw(digitDisplayState.value.toIntOrNull() ?: 0)
             }
-            BetButton("Bet Wala", Color(0xFF2070E1), buttonWidth, buttonHeight) {
+            BetButton("Bet Wala", Color(0xFF2070E1), buttonWidth, 40.dp) {
                 clickableWala(digitDisplayState.value.toIntOrNull() ?: 0)
             }
         }
@@ -194,7 +194,7 @@ fun BetButton(text: String, color: Color, width: Dp, height: Dp, clickableBet: (
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .size(width = 150.dp, height = 50.dp)
+                .size(width = 150.dp, height = 40.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .background(color)
                 .clickable { clickableBet() }
