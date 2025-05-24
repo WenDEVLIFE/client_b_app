@@ -99,7 +99,7 @@ class BettingViewModel : ViewModel() {
                 } else {
                     _betResponse.value = null
                     _betMessage.value = resultString
-                    _betResult.value = resultInt
+                    _betResult.value = -1
                     
                     Toast.makeText(
                     context,
@@ -111,7 +111,7 @@ class BettingViewModel : ViewModel() {
 
             } catch (e: Exception) {
                 e.printStackTrace()
-                _betResult.value = -1
+                _betResult.value = null
                 _betResponse.value = null
                 
                 val fullError = Log.getStackTraceString(e)

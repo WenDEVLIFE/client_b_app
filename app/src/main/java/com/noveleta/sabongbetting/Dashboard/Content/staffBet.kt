@@ -243,31 +243,35 @@ LaunchedEffect(cashInResponse) {
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
+    val cardWidth = 350.dp
+val cardWidthPx = with(LocalDensity.current) { cardWidth.toPx() }
+
+Row(
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(8.dp)
+) {
+    // LEFT Arrow
+    if (scrollState.value > 0) {
+        Icon(
+            imageVector = Icons.Default.ArrowBack,
+            contentDescription = "Scroll Left",
+            modifier = Modifier
+                .size(48.dp)
+                .clickable {
+                    coroutineScope.launch {
+                        scrollState.animateScrollTo(max(scrollState.value - cardWidthPx.toInt(), 0))
+                    }
+                },
+            tint = Color.White
+        )
+    }
+
     Row(
         modifier = Modifier
-            .fillMaxWidth()
+            .width(350.dp)
             .horizontalScroll(scrollState),
-        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // LEFT Arrow
-        if (scrollState.value > 0) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Scroll Left",
-                modifier = Modifier
-                    .size(48.dp)
-                    .clickable {
-                        coroutineScope.launch {
-scrollState.animateScrollTo(max(scrollState.value - screenWidthPx, 0))
-
-                        }
-                    },
-                tint = Color(0xFFFFFFFF)
-            )
-        }
-
-        // Full-Width Cards
         listOf(
             Triple("Meron", liveBetData?.meronText ?: "0", Color(0xFFB12D36)),
             Triple("Draw", liveBetData?.drawText ?: "0", Color(0xFF2EB132)),
@@ -276,30 +280,33 @@ scrollState.animateScrollTo(max(scrollState.value - screenWidthPx, 0))
             BetInfoCards.InfoCard(
                 title = title,
                 payout = payout,
-                totalBets = "0", // You can change this per card
+                totalBets = "0",
                 backgroundColor = color,
                 modifier = Modifier
-                    .width(screenWidth)
+                    .width(cardWidth)
                     .padding(vertical = 8.dp)
             )
         }
+    }
 
-        // RIGHT Arrow
-        if (scrollState.value < scrollState.maxValue) {
-            Icon(
-                imageVector = Icons.Default.ArrowForward,
-                contentDescription = "Scroll Right",
-                modifier = Modifier
-                    .size(48.dp)
-                    .clickable {
-                        coroutineScope.launch {
-                            scrollState.animateScrollTo(max(scrollState.value - screenWidthPx, 0))
-                        }
-                    },
-                tint = Color(0xFFFFFFFF)
-            )
-        }
- }   
+    // RIGHT Arrow
+    if (scrollState.value < scrollState.maxValue) {
+        Icon(
+            imageVector = Icons.Default.ArrowForward,
+            contentDescription = "Scroll Right",
+            modifier = Modifier
+                .size(48.dp)
+                .clickable {
+                    coroutineScope.launch {
+                        scrollState.animateScrollTo(
+                            min(scrollState.value + cardWidthPx.toInt(), scrollState.maxValue)
+                        )
+                    }
+                },
+            tint = Color.White
+        )
+    }
+}
     
     
              Spacer(modifier = Modifier.height(4.dp))
@@ -316,7 +323,7 @@ Row(
         showCashOutTellerDialog = true
     }
 }
-
+Spacer(modifier = Modifier.height(8.dp))
              if (liveBetData?.isBetting == 1 ?: "" || liveBetData?.isBetting == 4 ?: ""){
              Spacer(modifier = Modifier.height(16.dp))
              Text(

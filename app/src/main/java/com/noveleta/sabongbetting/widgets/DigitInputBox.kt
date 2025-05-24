@@ -154,20 +154,20 @@ fun DigitInputBoxDisplay(
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         // Bet Buttons
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            BetButton("Bet Meron", Color(0xFFB12D36), buttonWidth, 40.dp) {
+            BetButton("Bet Meron", Color(0xFFB12D36), buttonWidth, 50.dp) {
                 clickableMeron(digitDisplayState.value.toIntOrNull() ?: 0)
             }
-            BetButton("Bet Draw", Color(0xFF2EB132), buttonWidth, 40.dp) {
+            BetButton("Bet Draw", Color(0xFF2EB132), buttonWidth, 50.dp) {
                 clickableDraw(digitDisplayState.value.toIntOrNull() ?: 0)
             }
-            BetButton("Bet Wala", Color(0xFF2070E1), buttonWidth, 40.dp) {
+            BetButton("Bet Wala", Color(0xFF2070E1), buttonWidth, 50.dp) {
                 clickableWala(digitDisplayState.value.toIntOrNull() ?: 0)
             }
         }

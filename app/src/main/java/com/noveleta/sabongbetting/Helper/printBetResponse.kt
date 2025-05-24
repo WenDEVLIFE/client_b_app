@@ -66,9 +66,9 @@ fun rePrintBetResponse(context: Context, betResponse: ReprintBetResponse) {
         
         SunmiPrinterHelper.printLabelValue("Cashier: ", betResponse.cashier)
         SunmiPrinterHelper.printLabelValue("REPRINT BET", "")
-        SunmiPrinterHelper.printLabelValue("AMOUNT: ", betResponse.betType)
+        SunmiPrinterHelper.printLabelValue("AMOUNT: ", betResponse.amount)
         SunmiPrinterHelper.printLabelValue("FIGHT #: ", betResponse.fightNumber)
-        SunmiPrinterHelper.printLabelValue("SIDE: ", betResponse.fightNumber)
+        SunmiPrinterHelper.printLabelValue("SIDE: ", betResponse.betType)
         SunmiPrinterHelper.print3Line()
         // Cut paper and feed
         SunmiPrinterHelper.cutpaper()
