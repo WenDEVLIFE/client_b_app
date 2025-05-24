@@ -193,9 +193,9 @@ Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         listOf(
-            Triple("Meron", liveBetData?.meronText ?: "0", Color(0xFFB12D36)),
-            Triple("Draw", liveBetData?.drawText ?: "0", Color(0xFF2EB132)),
-            Triple("Wala", liveBetData?.walaText ?: "0", Color(0xFF2070E1))
+            Triple("Meron", "200", Color(0xFFB12D36)),
+            Triple("Draw", "204", Color(0xFF2EB132)),
+            Triple("Wala", "120", Color(0xFF2070E1))
         ).forEach { (title, payout, color) ->
             BetInfoCards.InfoCard(
                 title = title,
