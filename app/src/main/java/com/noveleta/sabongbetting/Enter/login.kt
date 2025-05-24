@@ -164,8 +164,8 @@ Box(
 val coroutineScope = rememberCoroutineScope()
 val density = LocalDensity.current
 
-val cardWidth = 280.dp
-val spacing = 40.dp
+val cardWidth = 300.dp
+val spacing = 30.dp
 val totalCardWidth = cardWidth + spacing
 
 val items = listOf(
@@ -181,7 +181,7 @@ val screenWidthPx = with(density) { LocalConfiguration.current.screenWidthDp.dp.
 val containerWidth = cardWidth  // So only one card is shown centered
 
 fun scrollToCard(index: Int) {
-    val centeredOffset = (totalCardWidthPx * index - (screenWidthPx - totalCardWidthPx) / 6).toInt()
+    val centeredOffset = (totalCardWidthPx * index - (screenWidthPx - totalCardWidthPx) / 10).toInt()
     coroutineScope.launch {
         scrollState.animateScrollTo(
             centeredOffset.coerceIn(0, scrollState.maxValue),
@@ -229,7 +229,7 @@ Row(
                     backgroundColor = color,
                     modifier = Modifier
                         .width(cardWidth)
-                        .padding(vertical = 4.dp)
+                        .padding(vertical = 8.dp)
                 )
             }
         }
