@@ -259,7 +259,7 @@ val screenWidthPx = with(density) { LocalConfiguration.current.screenWidthDp.dp.
 val containerWidth = cardWidth  // So only one card is shown centered
 
 fun scrollToCard(index: Int) {
-    val centeredOffset = (totalCardWidthPx * index - (screenWidthPx - totalCardWidthPx) / 20).toInt()
+    val centeredOffset = (totalCardWidthPx * index - (screenWidthPx - totalCardWidthPx) / 30).toInt()
     coroutineScope.launch {
         scrollState.animateScrollTo(
             centeredOffset.coerceIn(0, scrollState.maxValue),
@@ -292,9 +292,9 @@ Row(
         Spacer(Modifier.size(28.dp))
     }
     val items = listOf(
-    BetItemCards("Meron", "200", "54", Color(0xFFB12D36)),
-    BetItemCards("Draw", "204", "33", Color(0xFF2EB132)),
-    BetItemCards("Wala", "120", "71", Color(0xFF2070E1))
+    BetItemCards("Meron", staffBetData?.payoutMeron ?: "", staffBetData?.meronTotalBetAmount ?: "", Color(0xFFB12D36)),
+    BetItemCards("Draw", staffBetData?.payoutDraw ?: "", staffBetData?.drawTotalBetAmount ?: "", Color(0xFF2EB132)),
+    BetItemCards("Wala", staffBetData?.payoutWala ?: "", staffBetData?.walaTotalBetAmount ?: "", Color(0xFF2070E1))
 )
 
 
