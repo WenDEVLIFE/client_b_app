@@ -164,8 +164,8 @@ Box(
 val coroutineScope = rememberCoroutineScope()
 val density = LocalDensity.current
 
-val cardWidth = 250.dp
-val spacing = 8.dp
+val cardWidth = 280.dp
+val spacing = 32.dp
 val totalCardWidth = cardWidth + spacing
 
 val items = listOf(
@@ -211,7 +211,7 @@ Row(
             tint = Color.White
         )
     } else {
-        Spacer(Modifier.size(24.dp))
+        Spacer(Modifier.size(28.dp))
     }
 
     // Scrollable Row
@@ -251,7 +251,7 @@ Row(
             tint = Color.White
         )
     } else {
-        Spacer(Modifier.size(24.dp))
+        Spacer(Modifier.size(28.dp))
     }
 }
 
