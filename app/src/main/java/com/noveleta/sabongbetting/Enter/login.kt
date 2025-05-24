@@ -215,25 +215,32 @@ Row(
     }
 
     // Scrollable Row
-    Box(
+   val sidePadding = ((screenWidthPx - cardWidth.toPx()) / 2).toInt()
+
+Box(
+    modifier = Modifier
+        .width(containerWidth)
+        .horizontalScroll(scrollState)
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(spacing),
         modifier = Modifier
-            .width(containerWidth)
-            .horizontalScroll(scrollState)
+            .padding(horizontal = with(LocalDensity.current) { sidePadding.toDp() })
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-            items.forEach { (title, payout, color) ->
-                BetInfoCards.InfoCard(
-                    title = title,
-                    payout = payout,
-                    totalBets = "0",
-                    backgroundColor = color,
-                    modifier = Modifier
-                        .width(cardWidth)
-                        .padding(vertical = 8.dp)
-                )
-            }
+        items.forEach { (title, payout, color) ->
+            BetInfoCards.InfoCard(
+                title = title,
+                payout = payout,
+                totalBets = "0",
+                backgroundColor = color,
+                modifier = Modifier
+                    .width(cardWidth)
+                    .padding(vertical = 8.dp)
+            )
         }
     }
+}
+
 
     // RIGHT arrow
     if (currentIndex.value < items.lastIndex) {
