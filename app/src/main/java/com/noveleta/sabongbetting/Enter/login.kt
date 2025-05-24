@@ -167,6 +167,8 @@ val coroutineScope = rememberCoroutineScope()
 val density = LocalDensity.current
 
 val cardWidth = 280.dp
+val cardWidthPx = with(LocalDensity.current) { cardWidth.toPx() }
+
 val spacing = 16.dp
 val totalCardWidth = cardWidth + spacing
 
