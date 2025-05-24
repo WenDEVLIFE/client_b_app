@@ -181,7 +181,7 @@ val screenWidthPx = with(density) { LocalConfiguration.current.screenWidthDp.dp.
 val containerWidth = cardWidth  // So only one card is shown centered
 
 fun scrollToCard(index: Int) {
-    val centeredOffset = (totalCardWidthPx * index - (screenWidthPx - totalCardWidthPx) / 16).toInt()
+    val centeredOffset = (totalCardWidthPx * index - (screenWidthPx - totalCardWidthPx) / 20).toInt()
     coroutineScope.launch {
         scrollState.animateScrollTo(
             centeredOffset.coerceIn(0, scrollState.maxValue),
