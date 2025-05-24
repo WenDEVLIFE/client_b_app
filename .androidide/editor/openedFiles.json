@@ -79,13 +79,13 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/PrintBetErrors.kt",
       "selection": {
         "end": {
-          "column": 50,
-          "index": 2966,
+          "column": 92,
+          "index": 3008,
           "line": 74
         },
         "start": {
-          "column": 50,
-          "index": 2966,
+          "column": 92,
+          "index": 3008,
           "line": 74
         }
       }
@@ -181,5 +181,5 @@
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/staffBet.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/PrintBetErrors.kt"
 }

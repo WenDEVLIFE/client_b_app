@@ -72,7 +72,7 @@ resultText = "Betting is not allowed at this Moment. Please Contact System Devel
 }else if(result == 5){
 resultText = "ERROR! Unable to placed a BET. Please restart the application or Contact System Developer."
 }else if(result == 6){
-resultText = "ERROR! Unable to placed a BET. Betting is already CLOSED!"
+resultText = "ERROR! Unable to placed a BET. Betting is already CLOSED! or No Fight STARTED!"
 }else if(result == 7){
 resultText = "ERROR! Event is already closed!."
 }else if(result == 8){
