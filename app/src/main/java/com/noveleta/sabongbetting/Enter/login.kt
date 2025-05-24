@@ -151,7 +151,7 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
     val coroutineScope = rememberCoroutineScope()
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     
-      val cardWidth = 350.dp
+      val cardWidth = 300.dp
 val cardWidthPx = with(LocalDensity.current) { cardWidth.toPx() }
 
 Box(
@@ -176,7 +176,7 @@ Row(
             imageVector = Icons.Default.ArrowBack,
             contentDescription = "Scroll Left",
             modifier = Modifier
-                .size(48.dp)
+                .size(28.dp)
                 .clickable {
                     coroutineScope.launch {
                         scrollState.animateScrollTo(max(scrollState.value - cardWidthPx.toInt(), 0))
@@ -215,7 +215,7 @@ Row(
             imageVector = Icons.Default.ArrowForward,
             contentDescription = "Scroll Right",
             modifier = Modifier
-                .size(48.dp)
+                .size(28.dp)
                 .clickable {
                     coroutineScope.launch {
                         scrollState.animateScrollTo(
