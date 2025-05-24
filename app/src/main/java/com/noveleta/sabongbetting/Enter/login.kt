@@ -151,7 +151,7 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
     val coroutineScope = rememberCoroutineScope()
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     
-      val cardWidth = 140.dp
+      val cardWidth = 350.dp
     val spacing = 8.dp
     val containerWidth = 350.dp
 val cardWidthPx = with(LocalDensity.current) { cardWidth.toPx() }
