@@ -1,5 +1,73 @@
 package com.noveleta.sabongbetting.Enter;
 
+
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.*
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.*
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.*
+import androidx.compose.ui.text.input.*
+import androidx.compose.ui.text.style.*
+import androidx.compose.ui.unit.*
+import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.livedata.observeAsState
+import android.widget.Toast
+
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.ui.graphics.ColorFilter
+
+
+import coil.compose.AsyncImage
+
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
+
+import kotlinx.coroutines.*
+
+import androidx.compose.foundation.horizontalScroll
+
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import kotlin.math.max
+import kotlin.math.min
+import androidx.compose.ui.platform.LocalDensity
+
+/*
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -53,6 +121,7 @@ import coil.compose.AsyncImage
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 import kotlinx.coroutines.*
+*/
 
 import com.noveleta.sabongbetting.ui.theme.*
 import com.noveleta.sabongbetting.Factory.*
@@ -78,8 +147,88 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
     
     var showSettingsDialog by remember { mutableStateOf(false) }
     var showWarningDialog by remember { mutableStateOf(false) }
+    
+      val cardWidth = 350.dp
+val cardWidthPx = with(LocalDensity.current) { cardWidth.toPx() }
 
-    Box(
+Box(
+    modifier = Modifier
+        .fillMaxSize()
+) {
+    
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+    
+Row(
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(8.dp)
+) {
+    // LEFT Arrow
+    if (scrollState.value > 0) {
+        Icon(
+            imageVector = Icons.Default.ArrowBack,
+            contentDescription = "Scroll Left",
+            modifier = Modifier
+                .size(48.dp)
+                .clickable {
+                    coroutineScope.launch {
+                        scrollState.animateScrollTo(max(scrollState.value - cardWidthPx.toInt(), 0))
+                    }
+                },
+            tint = Color.White
+        )
+    }
+
+    Row(
+        modifier = Modifier
+            .width(350.dp)
+            .horizontalScroll(scrollState),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        listOf(
+            Triple("Meron", liveBetData?.meronText ?: "0", Color(0xFFB12D36)),
+            Triple("Draw", liveBetData?.drawText ?: "0", Color(0xFF2EB132)),
+            Triple("Wala", liveBetData?.walaText ?: "0", Color(0xFF2070E1))
+        ).forEach { (title, payout, color) ->
+            BetInfoCards.InfoCard(
+                title = title,
+                payout = payout,
+                totalBets = "0",
+                backgroundColor = color,
+                modifier = Modifier
+                    .width(cardWidth)
+                    .padding(vertical = 8.dp)
+            )
+        }
+    }
+
+    // RIGHT Arrow
+    if (scrollState.value < scrollState.maxValue) {
+        Icon(
+            imageVector = Icons.Default.ArrowForward,
+            contentDescription = "Scroll Right",
+            modifier = Modifier
+                .size(48.dp)
+                .clickable {
+                    coroutineScope.launch {
+                        scrollState.animateScrollTo(
+                            min(scrollState.value + cardWidthPx.toInt(), scrollState.maxValue)
+                        )
+                    }
+                },
+            tint = Color.White
+        )
+      }
+    }
+  }
+}
+
+
+    /*Box(
     modifier = Modifier
         .fillMaxSize()
         .verticalScroll(rememberScrollState())
@@ -118,6 +267,7 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+    
             Image(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = "logo",
@@ -311,7 +461,7 @@ if (showWarningDialog) {
         title = { Text("Missing Configuration!") },
         text = { Text("Please set up your IP address and port number before logging in.") }
     )
-}
+}*/
 
     
 }

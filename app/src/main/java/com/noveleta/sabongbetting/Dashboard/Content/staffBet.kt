@@ -145,6 +145,8 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     val digitDisplayState = remember { mutableStateOf("0") }
     val density = LocalDensity.current
     val screenWidthPx = with(density) { screenWidth.roundToPx() }
+    val cardWidth = 350.dp
+    val cardWidthPx = with(LocalDensity.current) { cardWidth.toPx() }
 
 
 if (betResponse != null) {
@@ -243,9 +245,7 @@ LaunchedEffect(cashInResponse) {
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-    val cardWidth = 350.dp
-val cardWidthPx = with(LocalDensity.current) { cardWidth.toPx() }
-
+    
 Row(
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.spacedBy(8.dp)
