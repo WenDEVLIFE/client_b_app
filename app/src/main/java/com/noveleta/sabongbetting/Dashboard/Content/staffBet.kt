@@ -88,7 +88,9 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     var showCashInTellerDialog by remember { mutableStateOf(false) }
     var showCashOutTellerDialog by remember { mutableStateOf(false) }
     var showMeronClosed by remember { mutableStateOf(false) }
+    var showEmptyAmount by remember { mutableStateOf(false) }
     var showWalaClosed by remember { mutableStateOf(false) }
+    var showDrawClosed by remember { mutableStateOf(false) }
     var showWarningBetDraw by remember { mutableStateOf(false) }
     var cashInOrOut by remember { mutableStateOf("Cash In") } 
     
@@ -329,7 +331,13 @@ Row(
              if (liveBetData?.meronClosed == "LOCKED" ?: "0"){
              showMeronClosed = true
              }else{
+             
+             if(betAmount == 0){
+             showEmptyAmount = true
+             }else{
              viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 1, betAmount = betAmount)
+             }
+             
              }
              
              },
@@ -342,13 +350,28 @@ if (betAmount != null && betAmount >= drawMax) {
 } else {
     showWarningBetDraw = true
 }*/
-viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 3, betAmount = betAmount)
+if (liveBetData?.drawClosed == "LOCKED" ?: "0"){
+             showDrawClosed = true
+             }else{
+             
+             if(betAmount == 0){
+             showEmptyAmount = true
+             }else{
+             viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 3, betAmount = betAmount)
+             }
+             
+            }
+
              },
              clickableWala = { betAmount ->
              if (liveBetData?.walaClosed == "LOCKED" ?: "0"){
              showWalaClosed = true
              }else{
+                if(betAmount == 0){
+                showEmptyAmount = true
+                }else{
                 viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 2, betAmount = betAmount)
+                }
              }
           
              })
@@ -413,6 +436,21 @@ showMeronClosed = false
 }
 
 }
+
+if(showDrawClosed){
+
+DrawClosed(){
+showDrawClosed = false
+}
+
+}
+
+if (showEmptyAmount){
+NoValueEntered(){
+showEmptyAmount = false
+}
+}
+
 
 if (showCashOutTellerDialog) {
     CashTellerDialog(

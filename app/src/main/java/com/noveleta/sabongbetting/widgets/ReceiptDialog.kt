@@ -668,3 +668,61 @@ fun WalaClosed(
         }
     )
 }
+
+@Composable
+fun DrawClosed(
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+        title = { Text("Mobile App Transaction") },
+        text = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .size(width = 320.dp, height = 380.dp)
+            ) {
+                Text(
+                    text = "ERROR! Betting for Draw is Closed.",
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Okay")
+            }
+        }
+    )
+}
+
+@Composable
+fun NoValueEntered(
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+        title = { Text("Mobile App Transaction") },
+        text = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .size(width = 320.dp, height = 380.dp)
+            ) {
+                Text(
+                    text = "ERROR! Unable to Place Bet, No Input Bet",
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Okay")
+            }
+        }
+    )
+}
