@@ -62,8 +62,6 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-
-
 import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.min
@@ -166,10 +164,8 @@ Box(
 val coroutineScope = rememberCoroutineScope()
 val density = LocalDensity.current
 
-val cardWidth = 280.dp
-val cardWidthPx = with(LocalDensity.current) { cardWidth.toPx() }
-
-val spacing = 16.dp
+val cardWidth = 250.dp
+val spacing = 8.dp
 val totalCardWidth = cardWidth + spacing
 
 val items = listOf(
@@ -215,36 +211,29 @@ Row(
             tint = Color.White
         )
     } else {
-        Spacer(Modifier.size(28.dp))
+        Spacer(Modifier.size(24.dp))
     }
 
     // Scrollable Row
-   val sidePadding = ((screenWidthPx - cardWidthPx) / 2).toInt()
-
-Box(
-    modifier = Modifier
-        .width(containerWidth)
-        .horizontalScroll(scrollState)
-) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(spacing),
+    Box(
         modifier = Modifier
-            .padding(horizontal = with(LocalDensity.current) { sidePadding.toDp() })
+            .width(containerWidth)
+            .horizontalScroll(scrollState)
     ) {
-        items.forEach { (title, payout, color) ->
-            BetInfoCards.InfoCard(
-                title = title,
-                payout = payout,
-                totalBets = "0",
-                backgroundColor = color,
-                modifier = Modifier
-                    .width(cardWidth)
-                    .padding(vertical = 8.dp)
-            )
+        Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
+            items.forEach { (title, payout, color) ->
+                BetInfoCards.InfoCard(
+                    title = title,
+                    payout = payout,
+                    totalBets = "0",
+                    backgroundColor = color,
+                    modifier = Modifier
+                        .width(cardWidth)
+                        .padding(vertical = 4.dp)
+                )
+            }
         }
     }
-}
-
 
     // RIGHT arrow
     if (currentIndex.value < items.lastIndex) {
@@ -262,7 +251,7 @@ Box(
             tint = Color.White
         )
     } else {
-        Spacer(Modifier.size(28.dp))
+        Spacer(Modifier.size(24.dp))
     }
 }
 
