@@ -97,7 +97,7 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     val viewModel: BettingViewModel = viewModel()
     val viewModelCallWebsocket: CallWebsocketDashboard = viewModel()
     val viewModelStaffBetData: PlaceBetsViewModel = viewModel()
-    val viewModelPrintMoneyOnHandReports: PlaceBetsViewModel = viewModel()
+    val viewModelPrintMoneyOnHandReports: SendMoneyOnHandViewModel = viewModel()
     val viewModelCashInData: SendCashInTellerViewModel = viewModel()
     val viewModelCashOutData: SendCashOutTellerViewModel = viewModel()
     val viewModelReprintBet: ReprintBetViewModel = viewModel()
