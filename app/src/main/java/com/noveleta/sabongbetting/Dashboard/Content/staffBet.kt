@@ -372,7 +372,11 @@ Row(
         showCashOutTellerDialog = true
     }
     DigitInputBox.TellerButton("Money On Hand", Color(0xFFB12D36)) {
-        
+        viewModelPrintMoneyOnHandReports.sendMoneyOnHandReport(
+        context,
+        userID = companyId,
+        roleID = userRole
+        )
     }
 }
 Spacer(modifier = Modifier.height(8.dp))
