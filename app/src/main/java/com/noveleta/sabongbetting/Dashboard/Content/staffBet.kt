@@ -414,8 +414,6 @@ Spacer(modifier = Modifier.height(8.dp))
              viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 1, betAmount = betAmount)
             }
              
-             }
-             
              },
              
              clickableDraw = { betAmount ->
