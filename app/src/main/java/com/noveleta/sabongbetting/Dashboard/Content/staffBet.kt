@@ -408,16 +408,8 @@ Spacer(modifier = Modifier.height(8.dp))
              DigitInputBox.DigitInputBoxDisplay(
              digitDisplayState = digitDisplayState,
              clickableMeron = { betAmount ->
-             if (liveBetData?.meronClosed == "LOCKED" ?: "0"){
-             showMeronClosed = true
-             }else{
-             
-             if(betAmount == 0){
-             showEmptyAmount = true
-             }else{
              viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 1, betAmount = betAmount)
-             }
-             
+          
              }
              
              },
@@ -430,29 +422,12 @@ if (betAmount != null && betAmount >= drawMax) {
 } else {
     showWarningBetDraw = true
 }*/
-if (liveBetData?.drawClosed == "LOCKED" ?: "0"){
-             showDrawClosed = true
-             }else{
-             
-             if(betAmount == 0){
-             showEmptyAmount = true
-             }else{
-             viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 3, betAmount = betAmount)
-             }
-             
-            }
+viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 3, betAmount = betAmount)
+          
 
              },
              clickableWala = { betAmount ->
-             if (liveBetData?.walaClosed == "LOCKED" ?: "0"){
-             showWalaClosed = true
-             }else{
-                if(betAmount == 0){
-                showEmptyAmount = true
-                }else{
-                viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 2, betAmount = betAmount)
-                }
-             }
+             viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 2, betAmount = betAmount)
           
              })
              
