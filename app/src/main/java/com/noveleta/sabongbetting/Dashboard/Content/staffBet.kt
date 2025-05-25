@@ -186,7 +186,7 @@ val items = listOf(
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
-                .padding(start = 16.dp, end = 16.dp),
+                .padding(start = 16.dp, end = 16.dp)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
