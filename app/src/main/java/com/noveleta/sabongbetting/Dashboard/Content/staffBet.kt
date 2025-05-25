@@ -408,8 +408,12 @@ Spacer(modifier = Modifier.height(8.dp))
              DigitInputBox.DigitInputBoxDisplay(
              digitDisplayState = digitDisplayState,
              clickableMeron = { betAmount ->
+             if(betAmount == 0){
+             showEmptyAmount = true
+             }else{
              viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 1, betAmount = betAmount)
-          
+            }
+             
              }
              
              },
@@ -422,13 +426,20 @@ if (betAmount != null && betAmount >= drawMax) {
 } else {
     showWarningBetDraw = true
 }*/
-viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 3, betAmount = betAmount)
-          
+if(betAmount == 0){
+             showEmptyAmount = true
+             }else{
+             viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 3, betAmount = betAmount)
+             }
+
 
              },
              clickableWala = { betAmount ->
+             if(betAmount == 0){
+             showEmptyAmount = true
+             }else{
              viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 2, betAmount = betAmount)
-          
+            }
              })
              
              Spacer(modifier = Modifier.height(16.dp))
