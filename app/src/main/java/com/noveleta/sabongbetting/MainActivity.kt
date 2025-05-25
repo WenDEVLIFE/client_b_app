@@ -99,8 +99,9 @@ import androidx.compose.foundation.gestures.detectTapGestures
 class MainActivity : ComponentActivity() {
     private lateinit var networkMonitor: NetworkMonitor
     private val permissionGranted = mutableStateOf(false)
-
-  private val cameraPermissionLauncher = registerForActivityResult(
+    private var isPrinterInitialized = false
+    
+    private val cameraPermissionLauncher = registerForActivityResult(
     ActivityResultContracts.RequestPermission()
   ) { isGranted ->
     if (isGranted) {
@@ -121,11 +122,6 @@ class MainActivity : ComponentActivity() {
             AppLifecycleObserver(placeBetsViewModel, liveBettingViewModel)
         )
         
-        SunmiPrinterHelper.initSunmiPrinterService(this) {
-            // Printer is ready here; you could enable your “Print” buttons, etc.
-            Toast.makeText(this, "Printer is ready", Toast.LENGTH_SHORT).show()
-            SunmiPrinterHelper.showPrinterStatus(this)
-        }
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
       Thread.setDefaultUncaughtExceptionHandler { _, ex ->
@@ -158,9 +154,21 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (!isPrinterInitialized) {
+            SunmiPrinterHelper.initSunmiPrinterService(this) {
+                Toast.makeText(this, "Printer is ready", Toast.LENGTH_SHORT).show()
+                SunmiPrinterHelper.showPrinterStatus(this)
+            }
+            isPrinterInitialized = true
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         networkMonitor.unregister()
         SunmiPrinterHelper.deInitSunmiPrinterService(this)
+        isPrinterInitialized = false
     }
 }
