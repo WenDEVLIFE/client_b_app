@@ -366,8 +366,8 @@ Row(
     horizontalArrangement = Arrangement.spacedBy(8.dp)
 ) {
     DigitInputBox.TellerButton(
-        label = "Teller CashIn",
-        color = Color(0xFFB12D36),
+        "Teller CashIn",
+        Color(0xFFB12D36),
         modifier = Modifier.weight(1f)
     ) {
         cashInOrOut = "Cash In"
@@ -375,8 +375,8 @@ Row(
     }
 
     DigitInputBox.TellerButton(
-        label = "Teller CashOut",
-        color = Color(0xFFB12D36),
+        "Teller CashOut",
+        Color(0xFFB12D36),
         modifier = Modifier.weight(1f)
     ) {
         cashInOrOut = "Cash Out"
@@ -384,8 +384,8 @@ Row(
     }
 
     DigitInputBox.TellerButton(
-        label = "Money On Hand",
-        color = Color(0xFFB12D36),
+        "Money On Hand",
+        Color(0xFFB12D36),
         modifier = Modifier.weight(1f)
     ) {
         viewModelPrintMoneyOnHandReports.sendMoneyOnHandReport(
