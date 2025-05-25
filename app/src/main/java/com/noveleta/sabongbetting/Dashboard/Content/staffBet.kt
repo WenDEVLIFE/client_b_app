@@ -265,7 +265,7 @@ LaunchedEffect(cashInResponse) {
 val coroutineScope = rememberCoroutineScope()
 val density = LocalDensity.current
 
-val cardWidth = 280.dp
+val cardWidth = 300.dp
 val spacing = 8.dp
 val totalCardWidth = cardWidth + spacing
 

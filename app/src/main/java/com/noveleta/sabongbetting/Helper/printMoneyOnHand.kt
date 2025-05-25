@@ -40,13 +40,14 @@ fun printMoneyOnHand(context: Context, betResponse: SummaryReport) {
         
         SunmiPrinterHelper.print3Line()
         
-        SunmiPrinterHelper.printLabelValue("", "Money On Hand: ${betResponse.totalMobileWithdraw}")
-        
-        SunmiPrinterHelper.print3Line()
+        SunmiPrinterHelper.printLabelValue("", "Money On Hand: ${betResponse.moneyOnHand}")
+        SunmiPrinterHelper.printLabelValue("", "Commission: ${betResponse.commisionBody}")
         
         SunmiPrinterHelper.printLabelValue("Total Payout Unclaimed:", "")
         SunmiPrinterHelper.printLabelValue("${betResponse.totalPayoutUnclaimed}", "")
         SunmiPrinterHelper.printLabelValue("Total draw unclaimed: ${betResponse.totalDrawUnclaimed}", "")
+        
+        SunmiPrinterHelper.print3Line()
         
         // Cut paper and feed
         SunmiPrinterHelper.cutpaper()
