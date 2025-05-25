@@ -618,7 +618,7 @@ fun MeronClosed(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-        title = { Text("Mobile App Transaction") },
+        title = { Text("Place Bet Error!") },
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -647,7 +647,7 @@ fun WalaClosed(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-        title = { Text("Mobile App Transaction") },
+        title = { Text("Place Bet Error!") },
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -676,7 +676,7 @@ fun DrawClosed(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-        title = { Text("Mobile App Transaction") },
+        title = { Text("Place Bet Error!") },
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -705,7 +705,7 @@ fun NoValueEntered(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-        title = { Text("Mobile App Transaction") },
+        title = { Text("Place Bet Error!") },
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
