@@ -151,6 +151,103 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     val digitDisplayState = remember { mutableStateOf("0") }
     val density = LocalDensity.current
 
+    if (betResponse != null) {
+
+    //--------------------- 
+    //
+    // TODO:: Call Live Dashboard on PC Side after Betting
+    //
+    //---------------------
+
+    viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
+
+    BetReceiptDialog(
+        response = betResponse!!,
+        onDismiss = {
+            viewModel.clearBetState()
+        }
+    )
+    digitDisplayState.value = "0"
+    LaunchedEffect(betResponse) {
+            // only runs a single time per distinct betResponse
+            printBetResponse(context, betResponse!!)
+        }
+
+}else if (betResponse == null && betErrorCode == -1) {
+
+    PrintBetErrorResults(betResult, betMessage){
+    viewModel.clearBetState()
+    }
+
+}
+
+if(printMOHResponse != null && printMOHResults == 0){
+LaunchedEffect(printMOHResponse) {
+            // only runs a single time per distinct betResponse
+            printMoneyOnHand(context, printMOHResponse!!)
+
+        }
+}else if(printMOHResponse == null && printMOHErrorCode == -1){
+PrintMOHError(printMOHResults){
+    viewModelPrintMoneyOnHandReports.clearBetState()
+    }
+}
+
+if (reprintResponse != null && reprintErrorCode == 0) {
+    ReprintBetReceiptDialog(
+        response = reprintResponse!!,
+        onDismiss = {
+            viewModelReprintBet.clearBetState()
+        }
+    )
+LaunchedEffect(reprintResponse) {
+        rePrintBetResponse(context, reprintResponse!!)
+        }
+
+}else if (reprintResponse == null && reprintErrorCode == -1) {
+
+    RePrintBetErrorResults(reprintResult){
+    viewModelReprintBet.clearBetState()
+    }
+
+}
+
+if (cashOutResponse != null) {
+TellerFundCashOutReceiptDialog(
+        response = cashOutResponse!!,
+        onDismiss = {
+            viewModelCashOutData.clearBetState()
+        }
+    )
+    LaunchedEffect(cashOutResponse) {
+        printTellerCashoutResponse(context, cashOutResponse!!)
+        }
+
+}else if (cashOutErrorCode == -1) {
+    PrintTellerCashOutErrorResults(cashOutResult){
+    viewModelCashOutData.clearBetState()
+    }
+}
+
+if (cashInResponse != null) {
+TellerFundCashInReceiptDialog(
+        response = cashInResponse!!,
+        onDismiss = {
+            viewModelCashInData.clearBetState()
+        }
+    )
+LaunchedEffect(cashInResponse) {
+        printTellerCashinResponse(context, cashInResponse!!)
+    }
+}else if (cashInErrorCode == -1) {
+
+    PrintTellerCashInErrorResults(cashInResult){
+    viewModelCashInData.clearBetState()
+    }
+
+}
+
     val cardWidth = 280.dp
     val spacing = 8.dp
     val totalCardWidth = cardWidth + spacing
