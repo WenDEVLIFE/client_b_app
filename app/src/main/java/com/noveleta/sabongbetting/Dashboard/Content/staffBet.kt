@@ -411,7 +411,7 @@ Spacer(modifier = Modifier.height(8.dp))
              if(betAmount == 0){
              showEmptyAmount = true
              }else{
-             viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 1, betAmount = betAmount)
+             viewModel.placeBet(context,userID = companyId, roleID = userRole, drawTotalBet = staffBetData?.drawTotalBetAmount ?: "", betType = 1, betAmount = betAmount)
             }
              
              },
@@ -427,7 +427,7 @@ if (betAmount != null && betAmount >= drawMax) {
 if(betAmount == 0){
              showEmptyAmount = true
              }else{
-             viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 3, betAmount = betAmount)
+             viewModel.placeBet(context,userID = companyId, roleID = userRole, drawTotalBet = staffBetData?.drawTotalBetAmount ?: "", betType = 3, betAmount = betAmount)
              }
 
 
@@ -436,7 +436,7 @@ if(betAmount == 0){
              if(betAmount == 0){
              showEmptyAmount = true
              }else{
-             viewModel.placeBet(context,userID = companyId, roleID = userRole, betType = 2, betAmount = betAmount)
+             viewModel.placeBet(context,userID = companyId, roleID = userRole, drawTotalBet = staffBetData?.drawTotalBetAmount ?: "", betType = 2, betAmount = betAmount)
             }
              })
              

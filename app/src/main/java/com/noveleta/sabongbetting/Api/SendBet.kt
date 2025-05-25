@@ -43,6 +43,7 @@ class BettingViewModel : ViewModel() {
     context: Context,
         userID: String,
         roleID: String,
+        drawTotalBet: String,
         betType: Int,
         betAmount: Int
     ) {
@@ -61,6 +62,7 @@ class BettingViewModel : ViewModel() {
                 val jsonBody = JSONObject().apply {
                     put("userID", userID)
                     put("roleID", roleID)
+                    put("drawTotalBet", drawTotalBet)
                     put("cname", SessionManager.cname ?: "N/A")
                     put("betType", betType)
                     put("betAmount", betAmount.toDouble())
