@@ -83,7 +83,7 @@ if (!responseText.trim().startsWith("{")) {
                  Log.e("WebSocket", "Response: Success Cash In, message = $message")
                     _betResponse.value = SummaryReport(
     errorCode = json.getInt("errorCode"),
-    reportTitle = json.getString("reportTitle"),
+    reportTitle = json.getString("message"),
     systemName = json.getString("systemName"),
     dateTime = json.getString("dateTime"),
     username = json.getString("username"),
