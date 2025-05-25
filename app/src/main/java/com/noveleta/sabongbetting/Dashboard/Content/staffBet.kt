@@ -181,17 +181,16 @@ if (betResponse != null) {
     
 }
 
-if(printMOHResponse != null){
+if(printMOHResponse != null && printMOHResults == 0){
 LaunchedEffect(printMOHResponse) {
             // only runs a single time per distinct betResponse
             printMoneyOnHand(context, printMOHResponse!!)
             
         }
-}else if(printMOHResponse == null || printMOHErrorCode == -1){
+}else if(printMOHResponse == null && printMOHErrorCode == -1){
 PrintMOHError(printMOHResults){
     viewModelPrintMoneyOnHandReports.clearBetState()
     }
-    
 }
 
 if (reprintResponse != null && reprintErrorCode == 0) {

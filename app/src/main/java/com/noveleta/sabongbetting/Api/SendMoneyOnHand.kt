@@ -114,7 +114,7 @@ if (!responseText.trim().startsWith("{")) {
             } catch (e: Exception) {
                 e.printStackTrace()
                 _betResult.value = null
-                _betErrorCode.value = 0
+                _betErrorCode.value = null
                 _betResponse.value = null
                 
                 val fullError = Log.getStackTraceString(e)
@@ -131,7 +131,7 @@ if (!responseText.trim().startsWith("{")) {
 
     fun clearBetState() {
         _betResult.value = null
-        _betErrorCode.value = 0
+        _betErrorCode.value = null
         _betResponse.value = null
     }
 }
