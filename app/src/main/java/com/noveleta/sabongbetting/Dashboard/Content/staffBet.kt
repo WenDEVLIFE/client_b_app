@@ -150,120 +150,9 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     val companyId = SessionManager.accountID ?: "500"
     val digitDisplayState = remember { mutableStateOf("0") }
     
-
-if (betResponse != null) {
-
-    //--------------------- 
-    //
-    // TODO:: Call Live Dashboard on PC Side after Betting
-    //
-    //---------------------
-    
-    viewModelCallWebsocket.sendDashboardTrigger()
-    viewModelCallWebsocket.sendBetsTrigger()
-
-    BetReceiptDialog(
-        response = betResponse!!,
-        onDismiss = {
-            viewModel.clearBetState()
-        }
-    )
-    digitDisplayState.value = "0"
-    LaunchedEffect(betResponse) {
-            // only runs a single time per distinct betResponse
-            printBetResponse(context, betResponse!!)
-        }
-    
-}else if (betResponse == null && betErrorCode == -1) {
-    
-    PrintBetErrorResults(betResult, betMessage){
-    viewModel.clearBetState()
-    }
-    
-}
-
-if(printMOHResponse != null && printMOHResults == 0){
-LaunchedEffect(printMOHResponse) {
-            // only runs a single time per distinct betResponse
-            printMoneyOnHand(context, printMOHResponse!!)
-            
-        }
-}else if(printMOHResponse == null && printMOHErrorCode == -1){
-PrintMOHError(printMOHResults){
-    viewModelPrintMoneyOnHandReports.clearBetState()
-    }
-}
-
-if (reprintResponse != null && reprintErrorCode == 0) {
-    ReprintBetReceiptDialog(
-        response = reprintResponse!!,
-        onDismiss = {
-            viewModelReprintBet.clearBetState()
-        }
-    )
-LaunchedEffect(reprintResponse) {
-        rePrintBetResponse(context, reprintResponse!!)
-        }
-    
-}else if (reprintResponse == null && reprintErrorCode == -1) {
-    
-    RePrintBetErrorResults(reprintResult){
-    viewModelReprintBet.clearBetState()
-    }
-    
-}
-
-if (cashOutResponse != null) {
-TellerFundCashOutReceiptDialog(
-        response = cashOutResponse!!,
-        onDismiss = {
-            viewModelCashOutData.clearBetState()
-        }
-    )
-    LaunchedEffect(cashOutResponse) {
-        printTellerCashoutResponse(context, cashOutResponse!!)
-        }
-    
-}else if (cashOutErrorCode == -1) {
-    PrintTellerCashOutErrorResults(cashOutResult){
-    viewModelCashOutData.clearBetState()
-    }
-}
-
-if (cashInResponse != null) {
-TellerFundCashInReceiptDialog(
-        response = cashInResponse!!,
-        onDismiss = {
-            viewModelCashInData.clearBetState()
-        }
-    )
-LaunchedEffect(cashInResponse) {
-        printTellerCashinResponse(context, cashInResponse!!)
-    }
-}else if (cashInErrorCode == -1) {
-
-    PrintTellerCashInErrorResults(cashInResult){
-    viewModelCashInData.clearBetState()
-    }
-    
-}
-
-    Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
-        Column(
-            modifier = Modifier
-                .padding(8.dp)
-                .verticalScroll(rememberScrollState())
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(4.dp))
-
-    
-
     val scrollState = rememberScrollState()
-val coroutineScope = rememberCoroutineScope()
-val density = LocalDensity.current
+    val coroutineScope = rememberCoroutineScope()
+    val density = LocalDensity.current
 
 val cardWidth = 280.dp
 val spacing = 8.dp
@@ -286,119 +175,134 @@ fun scrollToCard(index: Int) {
     }
 }
 
-Row(
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.Center,
-    modifier = Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp)
-) {
-    // LEFT arrow
-    if (currentIndex.value > 0) {
-        Icon(
-            imageVector = Icons.Default.ArrowBack,
-            contentDescription = "Scroll Left",
-            modifier = Modifier
-                .size(26.dp)
-                .clickable {
-                    if (currentIndex.value > 0) {
-                        currentIndex.value--
-                        scrollToCard(currentIndex.value)
-                    }
-                },
-            tint = Color.White
-        )
-    } else {
-        Spacer(Modifier.size(16.dp))
-    }
-    val items = listOf(
+val items = listOf(
     BetItemCards("Meron", staffBetData?.payoutMeron ?: "", staffBetData?.meronTotalBetAmount ?: "", Color(0xFFB12D36)),
     BetItemCards("Draw", staffBetData?.payoutDraw ?: "", staffBetData?.drawTotalBetAmount ?: "", Color(0xFF2EB132)),
     BetItemCards("Wala", staffBetData?.payoutWala ?: "", staffBetData?.walaTotalBetAmount ?: "", Color(0xFF2070E1))
 )
 
 
-    // Scrollable Row
-    Box(
-        modifier = Modifier
-            .width(containerWidth)
-            .horizontalScroll(scrollState)
-    ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-            items.forEach { item ->
-    BetInfoCards.InfoCard(
-        title = item.title,
-        payout = item.payout,
-        totalBets = item.totalBets,
-        backgroundColor = item.backgroundColor,
-        modifier = Modifier
-            .width(cardWidth)
-            .padding(vertical = 8.dp)
-    )
-}
-        }
-    }
-
-    // RIGHT arrow
-    if (currentIndex.value < items.lastIndex) {
-        Icon(
-            imageVector = Icons.Default.ArrowForward,
-            contentDescription = "Scroll Right",
+    Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
+        Column(
             modifier = Modifier
-                .size(26.dp)
-                .clickable {
-                    if (currentIndex.value < items.lastIndex) {
-                        currentIndex.value++
-                        scrollToCard(currentIndex.value)
-                    }
-                },
-            tint = Color.White
-        )
-    } else {
-        Spacer(Modifier.size(16.dp))
-    }
-}
+                .verticalScroll(rememberScrollState())
+                .padding(start = 16.dp, end = 16.dp),
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(8.dp))
+
+           Row(
+              verticalAlignment = Alignment.CenterVertically,
+              horizontalArrangement = Arrangement.Center,
+              modifier = Modifier.fillMaxWidth()
+           ) {
+            // LEFT arrow
+           if (currentIndex.value > 0) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Scroll Left",
+                modifier = Modifier
+                  .size(26.dp)
+                  .clickable {
+                     if (currentIndex.value > 0) {
+                          currentIndex.value--
+                          scrollToCard(currentIndex.value)
+                        }
+                   },
+                tint = Color.White
+               )
+           } else {
+              Spacer(Modifier.size(24.dp))
+           } 
+
+
+           // Scrollable Row
+           Box(
+             modifier = Modifier
+               .width(containerWidth)
+               .horizontalScroll(scrollState)
+            ) {
+             Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
+                items.forEach { item ->
+                  BetInfoCards.InfoCard(
+                    title = item.title,
+                    payout = item.payout,
+                    totalBets = item.totalBets,
+                    backgroundColor = item.backgroundColor,
+                    modifier = Modifier
+                        .width(cardWidth)
+                        .padding(vertical = 8.dp)
+                    )
+                }
+            }
+        }
+
+            // RIGHT arrow
+            if (currentIndex.value < items.lastIndex) {
+                Icon(
+                    imageVector = Icons.Default.ArrowForward,
+                    contentDescription = "Scroll Right",
+                    modifier = Modifier
+                        .size(26.dp)
+                        .clickable {
+                            if (currentIndex.value < items.lastIndex) {
+                                currentIndex.value++
+                                scrollToCard(currentIndex.value)
+                            }
+                        },
+                    tint = Color.White
+                )
+            } else {
+                Spacer(Modifier.size(24.dp))
+            }
+        }
     
     
-             Spacer(modifier = Modifier.height(4.dp))
-Row(
-    modifier = Modifier
-        .fillMaxWidth()
-        .padding(start = 8.dp, end = 8.dp),
-    horizontalArrangement = Arrangement.spacedBy(8.dp)
-) {
-    DigitInputBox.TellerButton(
-        "Teller CashIn",
-        Color(0xFFB12D36),
-        modifier = Modifier.weight(1f)
-    ) {
-        cashInOrOut = "Cash In"
-        showCashInTellerDialog = true
-    }
+            Spacer(modifier = Modifier.height(4.dp))
+            
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+            DigitInputBox.TellerButton(
+                "Teller CashIn",
+                Color(0xFFB12D36),
+                modifier = Modifier.weight(1f)
+            ) {
+                cashInOrOut = "Cash In"
+                showCashInTellerDialog = true
+            }
 
-    DigitInputBox.TellerButton(
-        "Teller CashOut",
-        Color(0xFFB12D36),
-        modifier = Modifier.weight(1f)
-    ) {
-        cashInOrOut = "Cash Out"
-        showCashOutTellerDialog = true
-    }
+            DigitInputBox.TellerButton(
+                "Teller CashOut",
+                Color(0xFFB12D36),
+                modifier = Modifier.weight(1f)
+            ) {
+                cashInOrOut = "Cash Out"
+                showCashOutTellerDialog = true
+            }
 
-    DigitInputBox.TellerButton(
-        "Money On Hand",
-        Color(0xFFB12D36),
-        modifier = Modifier.weight(1f)
-    ) {
-        viewModelPrintMoneyOnHandReports.sendMoneyOnHandReport(
-            context,
-            userID = companyId,
-            roleID = userRole
-        )
-    }
-}
+            DigitInputBox.TellerButton(
+                "Money On Hand",
+                Color(0xFFB12D36),
+                modifier = Modifier.weight(1f)
+            ) {
+                viewModelPrintMoneyOnHandReports.sendMoneyOnHandReport(
+                    context,
+                    userID = companyId,
+                    roleID = userRole
+                )
+            }
+        }
 
-Spacer(modifier = Modifier.height(8.dp))
+             Spacer(modifier = Modifier.height(8.dp))
+             
              if (liveBetData?.isBetting == 1 ?: "" || liveBetData?.isBetting == 4 ?: ""){
              Spacer(modifier = Modifier.height(16.dp))
+             
              Text(
                     text = "No Fight Started, Come Back Later.",
                     fontSize = 20.sp,
@@ -408,61 +312,64 @@ Spacer(modifier = Modifier.height(8.dp))
              DigitInputBox.DigitInputBoxDisplay(
              digitDisplayState = digitDisplayState,
              clickableMeron = { betAmount ->
+             
              if(betAmount == 0){
-             showEmptyAmount = true
+               showEmptyAmount = true
              }else{
-             viewModel.placeBet(context,userID = companyId, roleID = userRole, drawTotalBet = staffBetData?.drawTotalBetAmount ?: "", betType = 1, betAmount = betAmount)
-            }
+               viewModel.placeBet(context,userID = companyId, roleID = userRole, drawTotalBet = staffBetData?.drawTotalBetAmount ?: "", betType = 1, betAmount = betAmount)
+             }
              
              },
              
              clickableDraw = { betAmount ->
-            /* val drawMax = liveBetData?.drawMaxData?.toIntOrNull() ?: 0
-
-if (betAmount != null && betAmount >= drawMax) {
-    
-} else {
-    showWarningBetDraw = true
-}*/
-if(betAmount == 0){
-             showEmptyAmount = true
+           
+             if(betAmount == 0){
+               showEmptyAmount = true
              }else{
-             viewModel.placeBet(context,userID = companyId, roleID = userRole, drawTotalBet = staffBetData?.drawTotalBetAmount ?: "", betType = 3, betAmount = betAmount)
+               viewModel.placeBet(context,userID = companyId, roleID = userRole, drawTotalBet = staffBetData?.drawTotalBetAmount ?: "", betType = 3, betAmount = betAmount)
              }
-
-
+             
              },
              clickableWala = { betAmount ->
+             
              if(betAmount == 0){
-             showEmptyAmount = true
+               showEmptyAmount = true
              }else{
-             viewModel.placeBet(context,userID = companyId, roleID = userRole, drawTotalBet = staffBetData?.drawTotalBetAmount ?: "", betType = 2, betAmount = betAmount)
-            }
+               viewModel.placeBet(context,userID = companyId, roleID = userRole, drawTotalBet = staffBetData?.drawTotalBetAmount ?: "", betType = 2, betAmount = betAmount)
+             }
+             
              })
              
              Spacer(modifier = Modifier.height(16.dp))
-             }
+             }// End of Else for Checking isBetting
              
              Spacer(modifier = Modifier.height(8.dp))
+             
              Divider()
+             
              Spacer(modifier = Modifier.height(8.dp))
+             
              Text(
                     text = "Current Bet List",
                     fontSize = 20.sp,
                     color = Color.White
                 )
+                
              Spacer(modifier = Modifier.height(16.dp))   
               
-       tableLayout.logHistoryTable(
-            fightHistory = liveBetData.userTransactionLogs ?: emptyList(),
-            onReprintClick = { transactionCode ->
-               Log.d("Reprint", "Clicked reprint for: $transactionCode")
-               viewModelReprintBet.reprintBet(context,companyId,userRole,transactionCode)
-            }
-        )
+             tableLayout.logHistoryTable(
+                fightHistory = liveBetData.userTransactionLogs ?: emptyList(),
+                onReprintClick = { transactionCode ->
+                   Log.d("Reprint", "Clicked reprint for: $transactionCode")
+                   viewModelReprintBet.reprintBet(context,companyId,userRole,transactionCode)
+                }
+             )
              
-        }
-    }
+        }//End Of Column with default Padding start 8 and end 8
+    }//End of Box Wrap inside column content
+    
+    
+    /* DIALOGS */
     
     // Cash In Dialog
 if (showCashInTellerDialog) {

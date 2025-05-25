@@ -123,7 +123,16 @@ resultText = "ERROR! Fight Bettings for MERON is temporarily closed."
 resultText = "ERROR! Fight Bettings for WALA is temporarily closed."
 }else if(result == 13){
 resultText = "ERROR! Fight Bettings for DRAW is temporarily closed."
+}else if(result == 60){
+resultText = "ERROR! Please Input Bet Amount, Minimum bet amount is 100"
+}else if(result == 70){
+resultText = "EROR! Please Input Bet Amount, Maximum bet amount is 50000."
+}else if(result == 65){
+resultText = "ERROR! Please Input Bet Amount, Minimum bet amount is 100"
+}else if(result == 75){
+resultText = "EROR! Please Input Bet Amount, Maximum bet amount is 500."
 }
+
 
 
 AlertDialog(

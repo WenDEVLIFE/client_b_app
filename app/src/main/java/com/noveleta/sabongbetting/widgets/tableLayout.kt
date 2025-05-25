@@ -245,7 +245,6 @@ fun logHistoryTable(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = Color(0xFF313131), shape = RoundedCornerShape(20.dp))
-            .padding(8.dp)
     ) {
         Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
             Column {

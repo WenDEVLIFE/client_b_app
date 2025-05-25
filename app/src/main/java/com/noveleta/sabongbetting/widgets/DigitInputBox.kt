@@ -66,8 +66,7 @@ fun DigitInputBoxDisplay(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Transparent)
-            .padding(8.dp),
+            .background(Color.Transparent),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Digit display with editable TextField
@@ -199,7 +198,8 @@ fun TellerButton(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .height(40.dp) // keep height fixed
+            .width(100.dp) // fixed width 
+            .height(40.dp) // fixed height
             .clip(RoundedCornerShape(12.dp))
             .background(color)
             .clickable { clickableBet() }
@@ -208,7 +208,7 @@ fun TellerButton(
             text = text,
             color = Color.White,
             fontWeight = FontWeight.Bold,
-            fontSize = 12.sp // smaller text
+            fontSize = 12.sp
         )
     }
 }
