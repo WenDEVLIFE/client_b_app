@@ -81,7 +81,7 @@ if (!responseText.trim().startsWith("{")) {
 
                 if (success) {
                  Log.e("WebSocket", "Response: Success Cash In, message = $message")
-                    _betResponse.value = SummaryReport(
+                   _betResponse.value = SummaryReport(
     errorCode = json.getInt("errorCode"),
     reportTitle = json.getString("message"),
     systemName = json.getString("systemName"),
@@ -102,8 +102,12 @@ if (!responseText.trim().startsWith("{")) {
     commisionBody = json.getString("commisionBody"),
     commSettings = json.getString("commSettings"),
     totalPayoutUnclaimed = json.getString("totalPayoutUnclaimed"),
-    totalDrawUnclaimed = json.getString("totalDrawUnclaimed")
+    totalDrawUnclaimed = json.getString("totalDrawUnclaimed"),
+    totalDrawBetsCancelledPaid = json.getString("totalDrawBetsCancelledPaid"),
+    totalDrawBetsCancelled = json.getString("totalDrawBetsCancelled"),
+    totalDrawPayoutUnclaimed = json.getString("totalDrawPayoutUnclaimed")
 )
+
                 } else {
                     _betResponse.value = null
                     _betErrorCode.value = -1
