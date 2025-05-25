@@ -19,6 +19,7 @@ data class SummaryReport(
     val totalMobileWithdraw: String,
     val moneyOnHand: String,
     val commisionBody: String,
+    val commSettings: String,
     val totalPayoutUnclaimed: String,
     val totalDrawUnclaimed: String
 )

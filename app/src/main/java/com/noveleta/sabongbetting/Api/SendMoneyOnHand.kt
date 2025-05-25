@@ -100,6 +100,7 @@ if (!responseText.trim().startsWith("{")) {
     totalMobileWithdraw = json.getString("totalMobileWithdraw"),
     moneyOnHand = json.getString("moneyOnHand"),
     commisionBody = json.getString("commisionBody"),
+    commSettings = json.getString("commSettings"),
     totalPayoutUnclaimed = json.getString("totalPayoutUnclaimed"),
     totalDrawUnclaimed = json.getString("totalDrawUnclaimed")
 )
