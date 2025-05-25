@@ -265,7 +265,7 @@ LaunchedEffect(cashInResponse) {
 val coroutineScope = rememberCoroutineScope()
 val density = LocalDensity.current
 
-val cardWidth = 290.dp
+val cardWidth = 280.dp
 val spacing = 8.dp
 val totalCardWidth = cardWidth + spacing
 
@@ -297,7 +297,7 @@ Row(
             imageVector = Icons.Default.ArrowBack,
             contentDescription = "Scroll Left",
             modifier = Modifier
-                .size(24.dp)
+                .size(26.dp)
                 .clickable {
                     if (currentIndex.value > 0) {
                         currentIndex.value--
@@ -343,7 +343,7 @@ Row(
             imageVector = Icons.Default.ArrowForward,
             contentDescription = "Scroll Right",
             modifier = Modifier
-                .size(24.dp)
+                .size(26.dp)
                 .clickable {
                     if (currentIndex.value < items.lastIndex) {
                         currentIndex.value++
