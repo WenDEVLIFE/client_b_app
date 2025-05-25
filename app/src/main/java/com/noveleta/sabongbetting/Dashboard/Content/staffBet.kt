@@ -149,37 +149,32 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
     val digitDisplayState = remember { mutableStateOf("0") }
-    
-    val scrollState = rememberScrollState()
-    val coroutineScope = rememberCoroutineScope()
     val density = LocalDensity.current
 
-val cardWidth = 280.dp
-val spacing = 8.dp
-val totalCardWidth = cardWidth + spacing
+    val cardWidth = 280.dp
+    val spacing = 8.dp
+    val totalCardWidth = cardWidth + spacing
+    val currentIndex = remember { mutableStateOf(0) }
 
+    val totalCardWidthPx = with(density) { totalCardWidth.toPx() }
+    val screenWidthPx = with(density) { LocalConfiguration.current.screenWidthDp.dp.toPx() }
+    val containerWidth = cardWidth  // So only one card is shown centered
 
-val currentIndex = remember { mutableStateOf(0) }
-
-val totalCardWidthPx = with(density) { totalCardWidth.toPx() }
-val screenWidthPx = with(density) { LocalConfiguration.current.screenWidthDp.dp.toPx() }
-val containerWidth = cardWidth  // So only one card is shown centered
-
-fun scrollToCard(index: Int) {
-    val centeredOffset = (totalCardWidthPx * index - (screenWidthPx - totalCardWidthPx) / 30).toInt()
-    coroutineScope.launch {
-        scrollState.animateScrollTo(
-            centeredOffset.coerceIn(0, scrollState.maxValue),
-            animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing)
-        )
+    fun scrollToCard(index: Int) {
+        val centeredOffset = (totalCardWidthPx * index - (screenWidthPx - totalCardWidthPx) / 30).toInt()
+        coroutineScope.launch {
+            scrollState.animateScrollTo(
+                centeredOffset.coerceIn(0, scrollState.maxValue),
+                animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing)
+            )
+        }
     }
-}
 
-val items = listOf(
-    BetItemCards("Meron", staffBetData?.payoutMeron ?: "", staffBetData?.meronTotalBetAmount ?: "", Color(0xFFB12D36)),
-    BetItemCards("Draw", staffBetData?.payoutDraw ?: "", staffBetData?.drawTotalBetAmount ?: "", Color(0xFF2EB132)),
-    BetItemCards("Wala", staffBetData?.payoutWala ?: "", staffBetData?.walaTotalBetAmount ?: "", Color(0xFF2070E1))
-)
+    val items = listOf(
+        BetItemCards("Meron", staffBetData?.payoutMeron ?: "", staffBetData?.meronTotalBetAmount ?: "", Color(0xFFB12D36)),
+        BetItemCards("Draw", staffBetData?.payoutDraw ?: "", staffBetData?.drawTotalBetAmount ?: "", Color(0xFF2EB132)),
+        BetItemCards("Wala", staffBetData?.payoutWala ?: "", staffBetData?.walaTotalBetAmount ?: "", Color(0xFF2070E1))
+    )
 
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
