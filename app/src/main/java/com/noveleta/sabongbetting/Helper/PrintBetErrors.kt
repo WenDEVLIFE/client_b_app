@@ -57,6 +57,46 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.*
 
 @Composable
+fun PrintMOHError(result: Int?, confirmButton: () -> Unit){
+
+var resultText by remember { mutableStateOf("") }
+
+when (result) {
+    2 -> resultText = "ERROR! No System Name!"
+    30 -> resultText = "ERROR! This Feature has been Closed by Admin."
+    10 -> resultText = "ERROR! Comission Settings is not Active!"
+}
+
+AlertDialog(
+      onDismissRequest = confirmButton,
+      title = {
+        Text(
+          text = "Money On Hand Error",
+          style = MaterialTheme.typography.headlineLarge
+        )
+      },
+      text = {
+        Text(
+          text = "$resultText",
+          fontSize = 12.sp,
+          style = MaterialTheme.typography.bodyLarge
+        )
+      },
+      confirmButton = {
+        Button(
+          onClick = confirmButton,
+          modifier = Modifier.fillMaxWidth()
+        ) {
+          Text(
+            text = "Okay",
+            style = MaterialTheme.typography.titleLarge
+          )
+        }
+      }
+    )
+}
+
+@Composable
 fun PrintBetErrorResults(result: Int?,messageBet: String?, confirmButton: () -> Unit){
 
 var resultText by remember { mutableStateOf("") } 

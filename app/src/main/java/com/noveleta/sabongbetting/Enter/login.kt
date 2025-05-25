@@ -1,73 +1,5 @@
 package com.noveleta.sabongbetting.Enter;
 
-
-import android.content.Intent
-import android.os.Bundle
-import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.*
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.*
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.*
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.*
-import androidx.compose.ui.text.input.*
-import androidx.compose.ui.text.style.*
-import androidx.compose.ui.unit.*
-import androidx.lifecycle.*
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.runtime.livedata.observeAsState
-import android.widget.Toast
-
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.ui.graphics.ColorFilter
-
-
-import coil.compose.AsyncImage
-
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
-
-import kotlinx.coroutines.*
-
-import androidx.compose.foundation.horizontalScroll
-
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
-import kotlin.math.max
-import kotlin.math.min
-import androidx.compose.ui.platform.LocalDensity
-
-/*
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -121,7 +53,6 @@ import coil.compose.AsyncImage
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 import kotlinx.coroutines.*
-*/
 
 import com.noveleta.sabongbetting.ui.theme.*
 import com.noveleta.sabongbetting.Factory.*
@@ -148,120 +79,7 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
     var showSettingsDialog by remember { mutableStateOf(false) }
     var showWarningDialog by remember { mutableStateOf(false) }
     
-Box(
-    modifier = Modifier
-        .fillMaxSize()
-) {
-    
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-    
-    val scrollState = rememberScrollState()
-val coroutineScope = rememberCoroutineScope()
-val density = LocalDensity.current
-
-val cardWidth = 300.dp
-val spacing = 30.dp
-val totalCardWidth = cardWidth + spacing
-
-
-val currentIndex = remember { mutableStateOf(0) }
-
-val totalCardWidthPx = with(density) { totalCardWidth.toPx() }
-val screenWidthPx = with(density) { LocalConfiguration.current.screenWidthDp.dp.toPx() }
-val containerWidth = cardWidth  // So only one card is shown centered
-
-fun scrollToCard(index: Int) {
-    val centeredOffset = (totalCardWidthPx * index - (screenWidthPx - totalCardWidthPx) / 30).toInt()
-    coroutineScope.launch {
-        scrollState.animateScrollTo(
-            centeredOffset.coerceIn(0, scrollState.maxValue),
-            animationSpec = tween(durationMillis = 400, easing = FastOutSlowInEasing)
-        )
-    }
-}
-
-Row(
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.Center,
-    modifier = Modifier.fillMaxWidth()
-) {
-    // LEFT arrow
-    if (currentIndex.value > 0) {
-        Icon(
-            imageVector = Icons.Default.ArrowBack,
-            contentDescription = "Scroll Left",
-            modifier = Modifier
-                .size(28.dp)
-                .clickable {
-                    if (currentIndex.value > 0) {
-                        currentIndex.value--
-                        scrollToCard(currentIndex.value)
-                    }
-                },
-            tint = Color.White
-        )
-    } else {
-        Spacer(Modifier.size(28.dp))
-    }
-    val items = listOf(
-    BetItemCards("Meron", "200", "54", Color(0xFFB12D36)),
-    BetItemCards("Draw", "204", "33", Color(0xFF2EB132)),
-    BetItemCards("Wala", "120", "71", Color(0xFF2070E1))
-)
-
-
-    // Scrollable Row
     Box(
-        modifier = Modifier
-            .width(containerWidth)
-            .horizontalScroll(scrollState)
-    ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-            items.forEach { item ->
-    BetInfoCards.InfoCard(
-        title = item.title,
-        payout = item.payout,
-        totalBets = item.totalBets,
-        backgroundColor = item.backgroundColor,
-        modifier = Modifier
-            .width(cardWidth)
-            .padding(vertical = 8.dp)
-    )
-}
-        }
-    }
-
-    // RIGHT arrow
-    if (currentIndex.value < items.lastIndex) {
-        Icon(
-            imageVector = Icons.Default.ArrowForward,
-            contentDescription = "Scroll Right",
-            modifier = Modifier
-                .size(28.dp)
-                .clickable {
-                    if (currentIndex.value < items.lastIndex) {
-                        currentIndex.value++
-                        scrollToCard(currentIndex.value)
-                    }
-                },
-            tint = Color.White
-        )
-    } else {
-        Spacer(Modifier.size(28.dp))
-    }
-}
-
-    
-  }
-}
-
-
-    /*Box(
     modifier = Modifier
         .fillMaxSize()
         .verticalScroll(rememberScrollState())
@@ -494,7 +312,7 @@ if (showWarningDialog) {
         title = { Text("Missing Configuration!") },
         text = { Text("Please set up your IP address and port number before logging in.") }
     )
-}*/
+}
 
     
 }

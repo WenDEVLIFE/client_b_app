@@ -97,6 +97,7 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     val viewModel: BettingViewModel = viewModel()
     val viewModelCallWebsocket: CallWebsocketDashboard = viewModel()
     val viewModelStaffBetData: PlaceBetsViewModel = viewModel()
+    val viewModelPrintMoneyOnHandReports: PlaceBetsViewModel = viewModel()
     val viewModelCashInData: SendCashInTellerViewModel = viewModel()
     val viewModelCashOutData: SendCashOutTellerViewModel = viewModel()
     val viewModelReprintBet: ReprintBetViewModel = viewModel()
@@ -104,6 +105,10 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     val reprintResponse by viewModelReprintBet.betResponse.collectAsState()
     val reprintErrorCode by viewModelReprintBet.betErrorCode.collectAsState()
     val reprintResult by viewModelReprintBet.betResult.collectAsState()
+    
+    val printMOHResponse by viewModelPrintMoneyOnHandReports.betResponse.collectAsState()
+    val printMOHErrorCode by viewModelPrintMoneyOnHandReports.betErrorCode.collectAsState()
+    val printMOHResults by viewModelPrintMoneyOnHandReports.betResult.collectAsState()
     
     val cashInResponse by viewModelCashInData.betResponse.collectAsState()
     val cashInErrorCode by viewModelCashInData.betErrorCode.collectAsState()
@@ -172,6 +177,19 @@ if (betResponse != null) {
     
     PrintBetErrorResults(betResult, betMessage){
     viewModel.clearBetState()
+    }
+    
+}
+
+if(printMOHResponse != null){
+LaunchedEffect(printMOHResponse) {
+            // only runs a single time per distinct betResponse
+            printMoneyOnHand(context, printMOHResponse!!)
+            
+        }
+}else if(printMOHResponse == null || printMOHErrorCode == -1){
+PrintMOHError(printMOHResults){
+    viewModelPrintMoneyOnHandReports.clearBetState()
     }
     
 }
@@ -352,6 +370,9 @@ Row(
     DigitInputBox.TellerButton("Teller CashOut", Color(0xFFB12D36)) {
         cashInOrOut = "Cash Out"
         showCashOutTellerDialog = true
+    }
+    DigitInputBox.TellerButton("Money On Hand", Color(0xFFB12D36)) {
+        
     }
 }
 Spacer(modifier = Modifier.height(8.dp))
