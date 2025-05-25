@@ -120,6 +120,7 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     
     val betResponse by viewModel.betResponse.collectAsState()
     val betResult by viewModel.betResult.collectAsState()
+    val betErrorCode by viewModel.betErrorCode.collectAsState()
     val betMessage by viewModel.betMessage.collectAsState()
     
     val isLoading by viewModel.isLoading.collectAsState()
@@ -173,7 +174,7 @@ if (betResponse != null) {
             printBetResponse(context, betResponse!!)
         }
     
-}else if (betResponse == null && betResult == -1) {
+}else if (betResponse == null && betErrorCode == -1) {
     
     PrintBetErrorResults(betResult, betMessage){
     viewModel.clearBetState()
@@ -264,8 +265,8 @@ LaunchedEffect(cashInResponse) {
 val coroutineScope = rememberCoroutineScope()
 val density = LocalDensity.current
 
-val cardWidth = 300.dp
-val spacing = 30.dp
+val cardWidth = 200.dp
+val spacing = 8.dp
 val totalCardWidth = cardWidth + spacing
 
 
@@ -288,7 +289,7 @@ fun scrollToCard(index: Int) {
 Row(
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.Center,
-    modifier = Modifier.fillMaxWidth()
+    modifier = Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp)
 ) {
     // LEFT arrow
     if (currentIndex.value > 0) {
@@ -296,7 +297,7 @@ Row(
             imageVector = Icons.Default.ArrowBack,
             contentDescription = "Scroll Left",
             modifier = Modifier
-                .size(28.dp)
+                .size(24.dp)
                 .clickable {
                     if (currentIndex.value > 0) {
                         currentIndex.value--
@@ -306,7 +307,7 @@ Row(
             tint = Color.White
         )
     } else {
-        Spacer(Modifier.size(28.dp))
+        Spacer(Modifier.size(16.dp))
     }
     val items = listOf(
     BetItemCards("Meron", staffBetData?.payoutMeron ?: "", staffBetData?.meronTotalBetAmount ?: "", Color(0xFFB12D36)),
@@ -342,7 +343,7 @@ Row(
             imageVector = Icons.Default.ArrowForward,
             contentDescription = "Scroll Right",
             modifier = Modifier
-                .size(28.dp)
+                .size(24.dp)
                 .clickable {
                     if (currentIndex.value < items.lastIndex) {
                         currentIndex.value++
@@ -352,32 +353,49 @@ Row(
             tint = Color.White
         )
     } else {
-        Spacer(Modifier.size(28.dp))
+        Spacer(Modifier.size(16.dp))
     }
 }
     
     
              Spacer(modifier = Modifier.height(4.dp))
 Row(
-    modifier = Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp),
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 8.dp, end = 8.dp),
     horizontalArrangement = Arrangement.spacedBy(8.dp)
 ) {
-    DigitInputBox.TellerButton("Teller CashIn", Color(0xFFB12D36)) {
+    DigitInputBox.TellerButton(
+        label = "Teller CashIn",
+        color = Color(0xFFB12D36),
+        modifier = Modifier.weight(1f)
+    ) {
         cashInOrOut = "Cash In"
         showCashInTellerDialog = true
     }
-    DigitInputBox.TellerButton("Teller CashOut", Color(0xFFB12D36)) {
+
+    DigitInputBox.TellerButton(
+        label = "Teller CashOut",
+        color = Color(0xFFB12D36),
+        modifier = Modifier.weight(1f)
+    ) {
         cashInOrOut = "Cash Out"
         showCashOutTellerDialog = true
     }
-    DigitInputBox.TellerButton("Money On Hand", Color(0xFFB12D36)) {
+
+    DigitInputBox.TellerButton(
+        label = "Money On Hand",
+        color = Color(0xFFB12D36),
+        modifier = Modifier.weight(1f)
+    ) {
         viewModelPrintMoneyOnHandReports.sendMoneyOnHandReport(
-        context,
-        userID = companyId,
-        roleID = userRole
+            context,
+            userID = companyId,
+            roleID = userRole
         )
     }
 }
+
 Spacer(modifier = Modifier.height(8.dp))
              if (liveBetData?.isBetting == 1 ?: "" || liveBetData?.isBetting == 4 ?: ""){
              Spacer(modifier = Modifier.height(16.dp))

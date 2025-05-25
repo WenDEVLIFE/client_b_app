@@ -189,19 +189,30 @@ fun BetButton(text: String, color: Color, width: Dp, height: Dp, clickableBet: (
 }
 
     
-    @Composable
-    fun TellerButton(text: String, color: Color, clickableBet: () -> Unit) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(width = 150.dp, height = 40.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(color)
-                .clickable { clickableBet() }
-        ) {
-            Text(text = text, color = Color.White, fontWeight = FontWeight.Bold)
-        }
+   @Composable
+fun TellerButton(
+    text: String,
+    color: Color,
+    modifier: Modifier = Modifier,
+    clickableBet: () -> Unit
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .height(40.dp) // keep height fixed
+            .clip(RoundedCornerShape(12.dp))
+            .background(color)
+            .clickable { clickableBet() }
+    ) {
+        Text(
+            text = text,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            fontSize = 12.sp // smaller text
+        )
     }
+}
+
     
     @Composable
     fun BetClaimPayout(text: String, color: Color, clickableBet: () -> Unit) {

@@ -30,6 +30,9 @@ class BettingViewModel : ViewModel() {
     private val _betResult = MutableStateFlow<Int?>(null)
     val betResult: StateFlow<Int?> = _betResult
     
+    private val _betErrorCode = MutableStateFlow<Int?>(null)
+    val betErrorCode: StateFlow<Int?> = _betErrorCode
+    
     private val _betMessage = MutableStateFlow<String?>(null)
     val betMessage: StateFlow<String?> = _betMessage
 
@@ -99,7 +102,8 @@ class BettingViewModel : ViewModel() {
                 } else {
                     _betResponse.value = null
                     _betMessage.value = resultString
-                    _betResult.value = -1
+                    _betErrorCode.value = -1
+                    _betResult.value = resultInt
                     
                     Toast.makeText(
                     context,
@@ -112,6 +116,7 @@ class BettingViewModel : ViewModel() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 _betResult.value = null
+                _betErrorCode.value = null
                 _betResponse.value = null
                 
                 val fullError = Log.getStackTraceString(e)
@@ -128,6 +133,7 @@ class BettingViewModel : ViewModel() {
 
     fun clearBetState() {
         _betResult.value = null
+        _betErrorCode.value = null
         _betResponse.value = null
     }
 }

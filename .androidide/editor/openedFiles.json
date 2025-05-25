@@ -19,14 +19,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/staffBet.kt",
       "selection": {
         "end": {
-          "column": 5,
-          "index": 7383,
-          "line": 192
+          "column": 24,
+          "index": 11963,
+          "line": 345
         },
         "start": {
-          "column": 5,
-          "index": 7383,
-          "line": 192
+          "column": 24,
+          "index": 11963,
+          "line": 345
         }
       }
     },
@@ -34,14 +34,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendMoneyOnHand.kt",
       "selection": {
         "end": {
-          "column": 41,
-          "index": 4581,
-          "line": 117
+          "column": 53,
+          "index": 1057,
+          "line": 32
         },
         "start": {
-          "column": 41,
-          "index": 4581,
-          "line": 117
+          "column": 4,
+          "index": 947,
+          "line": 31
         }
       }
     },
@@ -104,7 +104,37 @@
           "line": 59
         }
       }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendBet.kt",
+      "selection": {
+        "end": {
+          "column": 20,
+          "index": 1014,
+          "line": 33
+        },
+        "start": {
+          "column": 8,
+          "index": 1002,
+          "line": 33
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/DigitInputBox.kt",
+      "selection": {
+        "end": {
+          "column": 0,
+          "index": 7952,
+          "line": 214
+        },
+        "start": {
+          "column": 0,
+          "index": 7952,
+          "line": 214
+        }
+      }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendMoneyOnHand.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/staffBet.kt"
 }
