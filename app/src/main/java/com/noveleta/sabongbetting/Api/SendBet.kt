@@ -91,12 +91,15 @@ class BettingViewModel : ViewModel() {
                 }
 
                 if (success) {
+                val amountString = json.getString("amount")
+                val amount = amountString.toDouble()
+
                     _betResponse.value = BetResponse(
                         success = true,
                         barcode = json.getString("barcode"),
                         fightNumber = json.getInt("fightNumber"),
                         betType = json.getInt("betType"),
-                        amount = json.getDouble("amount"),
+                        amount = amount,
                         transactionDate = json.getString("transactionDate"),
                         cashier = json.getString("cashier"),
                         systemName = json.getString("systemName")

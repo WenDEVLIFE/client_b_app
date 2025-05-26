@@ -296,7 +296,7 @@ LaunchedEffect(cashInResponse) {
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Scroll Left",
                 modifier = Modifier
-                  .size(20.dp)
+                  .size(40.dp)
                   .clickable {
                      if (currentIndex.value > 0) {
                           currentIndex.value--
@@ -306,7 +306,7 @@ LaunchedEffect(cashInResponse) {
                 tint = Color.White
                )
            } else {
-              Spacer(Modifier.size(33.dp))
+              Spacer(Modifier.size(20.dp))
            } 
 
 
@@ -337,7 +337,7 @@ LaunchedEffect(cashInResponse) {
                     imageVector = Icons.Default.ArrowForward,
                     contentDescription = "Scroll Right",
                     modifier = Modifier
-                        .size(20.dp)
+                        .size(40.dp)
                         .clickable {
                             if (currentIndex.value < items.lastIndex) {
                                 currentIndex.value++
@@ -347,7 +347,7 @@ LaunchedEffect(cashInResponse) {
                     tint = Color.White
                 )
             } else {
-                Spacer(Modifier.size(33.dp))
+                Spacer(Modifier.size(20.dp))
             }
         }
     
