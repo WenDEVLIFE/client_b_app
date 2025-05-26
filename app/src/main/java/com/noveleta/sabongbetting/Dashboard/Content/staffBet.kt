@@ -272,8 +272,18 @@ LaunchedEffect(cashInResponse) {
         BetItemCards("Draw", staffBetData?.payoutDraw ?: "", staffBetData?.drawTotalBetAmount ?: "", Color(0xFF2EB132)),
         BetItemCards("Wala", staffBetData?.payoutWala ?: "", staffBetData?.walaTotalBetAmount ?: "", Color(0xFF2070E1))
     )
-
-
+    
+    Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(start = 16.dp, end = 16.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(8.dp))
+            
     Row(
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.Center,
