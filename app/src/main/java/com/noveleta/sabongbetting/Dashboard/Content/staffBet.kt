@@ -274,51 +274,37 @@ LaunchedEffect(cashInResponse) {
     )
 
 
-    Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(start = 16.dp, end = 16.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(8.dp))
-
-           Row(
-              verticalAlignment = Alignment.CenterVertically,
-              horizontalArrangement = Arrangement.Center,
-              modifier = Modifier.fillMaxWidth()
-           ) {
-            // LEFT arrow
-           if (currentIndex.value > 0) {
+    Row(
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.Center,
+    modifier = Modifier.fillMaxWidth()
+) {
+    // LEFT arrow (always occupies space)
+    Box(modifier = Modifier.size(30.dp), contentAlignment = Alignment.Center) {
+        if (currentIndex.value > 0) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Scroll Left",
                 modifier = Modifier
-                  .size(40.dp)
-                  .clickable {
-                     if (currentIndex.value > 0) {
-                          currentIndex.value--
-                          scrollToCard(currentIndex.value)
-                        }
-                   },
+                    .fillMaxSize()
+                    .clickable {
+                        currentIndex.value--
+                        scrollToCard(currentIndex.value)
+                    },
                 tint = Color.White
-               )
-           } else {
-              Spacer(Modifier.size(20.dp))
-           } 
+            )
+        }
+    }
 
-
-           // Scrollable Row
-           Box(
-             modifier = Modifier
-               .width(containerWidth)
-               .horizontalScroll(scrollState)
-            ) {
-             Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
-                items.forEach { item ->
-                  BetInfoCards.InfoCard(
+    // Scrollable Row
+    Box(
+        modifier = Modifier
+            .width(containerWidth)
+            .horizontalScroll(scrollState)
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(spacing)) {
+            items.forEach { item ->
+                BetInfoCards.InfoCard(
                     title = item.title,
                     payout = item.payout,
                     totalBets = item.totalBets,
@@ -326,30 +312,29 @@ LaunchedEffect(cashInResponse) {
                     modifier = Modifier
                         .width(cardWidth)
                         .padding(vertical = 8.dp)
-                    )
-                }
-            }
-        }
-
-            // RIGHT arrow
-            if (currentIndex.value < items.lastIndex) {
-                Icon(
-                    imageVector = Icons.Default.ArrowForward,
-                    contentDescription = "Scroll Right",
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clickable {
-                            if (currentIndex.value < items.lastIndex) {
-                                currentIndex.value++
-                                scrollToCard(currentIndex.value)
-                            }
-                        },
-                    tint = Color.White
                 )
-            } else {
-                Spacer(Modifier.size(20.dp))
             }
         }
+    }
+
+    // RIGHT arrow (always occupies space)
+    Box(modifier = Modifier.size(30.dp), contentAlignment = Alignment.Center) {
+        if (currentIndex.value < items.lastIndex) {
+            Icon(
+                imageVector = Icons.Default.ArrowForward,
+                contentDescription = "Scroll Right",
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable {
+                        currentIndex.value++
+                        scrollToCard(currentIndex.value)
+                    },
+                tint = Color.White
+            )
+        }
+    }
+}
+
     
     
             Spacer(modifier = Modifier.height(4.dp))

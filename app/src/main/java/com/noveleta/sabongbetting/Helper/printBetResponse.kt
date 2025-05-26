@@ -28,7 +28,7 @@ fun printBetResponse(context: Context, betResponse: BetResponse) {
     SunmiPrinterHelper.printLabelValue("Cashier: ",    betResponse.cashier)
     SunmiPrinterHelper.printLabelValue("BET", "")
     // Label/value pairs
-    SunmiPrinterHelper.printLabelValue("AMOUNT: ",    betResponse.amount.toString())
+    SunmiPrinterHelper.printLabelValue("AMOUNT: ",    betResponse.amount)
     SunmiPrinterHelper.printLabelValue("FIGHT #: ",   betResponse.fightNumber.toString())
     SunmiPrinterHelper.printLabelValue("SIDE: ",      when (betResponse.betType) {
         1 -> "MERON"

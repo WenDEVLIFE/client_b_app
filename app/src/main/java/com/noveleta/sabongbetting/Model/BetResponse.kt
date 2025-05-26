@@ -5,7 +5,7 @@ data class BetResponse(
     val barcode: String,
     val fightNumber: Int,
     val betType: Int,
-    val amount: Double,
+    val amount: String,
     val transactionDate: String,
     val cashier: String,
     val systemName: String

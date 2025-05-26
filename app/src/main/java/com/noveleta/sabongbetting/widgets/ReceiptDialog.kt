@@ -72,7 +72,7 @@ fun BetReceiptDialog(
                 Text(text = "BET", fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = "AMOUNT: ${"%,.0f".format(response.amount)}",
+                    text = "AMOUNT: ${response.amount}",
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold
                 )
