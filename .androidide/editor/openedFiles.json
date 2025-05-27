@@ -34,13 +34,13 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/printMoneyOnHand.kt",
       "selection": {
         "end": {
-          "column": 62,
-          "index": 2657,
+          "column": 27,
+          "index": 2622,
           "line": 51
         },
         "start": {
-          "column": 39,
-          "index": 2634,
+          "column": 27,
+          "index": 2622,
           "line": 51
         }
       }
@@ -76,5 +76,5 @@
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/staffBet.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/printMoneyOnHand.kt"
 }
