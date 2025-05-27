@@ -144,7 +144,8 @@ if(betResponse != null){
             PayoutReceiptDialog(betResponse!!){
             viewModelPayoutData.clearBetState()
             }
-            
+            viewModelPayoutData.setTransactionCode("")
+        scanFinish = false
             LaunchedEffect(betResponse) {
              printPayout(context, betResponse!!)
             }
@@ -153,7 +154,8 @@ if(betResponse != null){
             PrintBetPayoutErrorResults(betResult){
             viewModelPayoutData.clearBetState()
             }
-            
+            viewModelPayoutData.setTransactionCode("")
+        scanFinish = false
             }
 
     val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
@@ -190,8 +192,6 @@ var showScanner by remember { mutableStateOf(false) }
         roleID = userRole,
         barcodeResult = transactionCode
       )
-      viewModelPayoutData.setTransactionCode("")
-        scanFinish = false
     }
     
     LaunchedEffect(Unit) {
