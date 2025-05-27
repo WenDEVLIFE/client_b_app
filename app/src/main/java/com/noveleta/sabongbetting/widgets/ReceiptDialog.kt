@@ -80,8 +80,15 @@ fun MoneyOnHandDialog(
                 Text("Total mobile withdraw: ${response.totalMobileWithdraw}")
 
                 Spacer(Modifier.height(8.dp))
-
-                Text("Money On Hand: ${response.moneyOnHand}")
+                Text("----------------------")
+                
+                Text(
+    text = "MONEY ON HAND: ${response.moneyOnHand}",
+    fontWeight = FontWeight.Bold,
+    fontSize = 18.sp // medium size, adjust if needed
+)
+Text("----------------------")
+Spacer(Modifier.height(8.dp))
                 if (response.commSettings != "0") {
                     Text("Commission: ${response.commisionBody}")
                 }

@@ -19,14 +19,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendMoneyOnHand.kt",
       "selection": {
         "end": {
-          "column": 19,
-          "index": 3571,
-          "line": 96
+          "column": 64,
+          "index": 4125,
+          "line": 105
         },
         "start": {
-          "column": 4,
-          "index": 3556,
-          "line": 96
+          "column": 46,
+          "index": 4107,
+          "line": 105
         }
       }
     },
@@ -34,14 +34,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/printMoneyOnHand.kt",
       "selection": {
         "end": {
-          "column": 73,
-          "index": 2660,
-          "line": 51
+          "column": 9,
+          "index": 2484,
+          "line": 47
         },
         "start": {
-          "column": 58,
-          "index": 2645,
-          "line": 51
+          "column": 9,
+          "index": 2484,
+          "line": 47
         }
       }
     },
@@ -49,14 +49,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/ReceiptDialog.kt",
       "selection": {
         "end": {
-          "column": 51,
-          "index": 3666,
-          "line": 91
+          "column": 29,
+          "index": 3551,
+          "line": 90
         },
         "start": {
-          "column": 51,
-          "index": 3666,
-          "line": 91
+          "column": 29,
+          "index": 3551,
+          "line": 90
         }
       }
     },
@@ -65,16 +65,16 @@
       "selection": {
         "end": {
           "column": 35,
-          "index": 10731,
-          "line": 297
+          "index": 11972,
+          "line": 335
         },
         "start": {
           "column": 35,
-          "index": 10731,
-          "line": 297
+          "index": 11972,
+          "line": 335
         }
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/ReceiptDialog.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/printMoneyOnHand.kt"
 }

@@ -333,7 +333,7 @@ LaunchedEffect(cashInResponse) {
     }
 
     // RIGHT arrow (always occupies space)
-    Box(modifier = Modifier.size(40.dp), contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.size(33.dp), contentAlignment = Alignment.Center) {
         if (currentIndex.value < items.lastIndex) {
             Icon(
                 imageVector = Icons.Default.ArrowForward,

@@ -38,8 +38,9 @@ fun printMoneyOnHand(context: Context, betResponse: SummaryReport) {
         SunmiPrinterHelper.printLabelValue("Total mobile withdraw: ${betResponse.totalMobileWithdraw}", "")
         
         SunmiPrinterHelper.print3Line()
-        
-        SunmiPrinterHelper.printLabelValue("", "Money On Hand: ${betResponse.moneyOnHand}")
+        SunmiPrinterHelper.printLabelValue("----------------------", "")
+        SunmiPrinterHelper.printLabelValue("", "MONEY ON HAND: ${betResponse.moneyOnHand}")
+        SunmiPrinterHelper.printLabelValue("----------------------", "")
         if(betResponse.commSettings == "0"){
            SunmiPrinterHelper.print3Line()
         }else{
