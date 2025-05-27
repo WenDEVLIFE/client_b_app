@@ -33,6 +33,12 @@ import com.noveleta.sabongbetting.R
 import com.noveleta.sabongbetting.*
 import com.noveleta.sabongbetting.Helper.*
 
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.Alignment
+
+
 @Composable
 fun MoneyOnHandDialog(
     response: SummaryReport,

@@ -186,11 +186,7 @@ if(printMOHResponse != null && printMOHResults == 0){
 MoneyOnHandDialog(
         response = printMOHResponse!!,
         onPrint = {
-        LaunchedEffect(printMOHResponse) {
-            // only runs a single time per distinct betResponse
-            printMoneyOnHand(context, printMOHResponse!!)
-
-        }
+        printMoneyOnHand(context, printMOHResponse!!)
         },
         onDismiss = {
             viewModelPrintMoneyOnHandReports.clearBetState()
