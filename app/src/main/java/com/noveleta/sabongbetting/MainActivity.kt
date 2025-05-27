@@ -117,6 +117,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         networkMonitor = NetworkMonitor(this)
+
         val placeBetsViewModel: PlaceBetsViewModel by viewModels()
         val liveBettingViewModel: LiveBettingViewModel by viewModels()
 
@@ -138,9 +139,6 @@ class MainActivity : ComponentActivity() {
 
         cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
 
-        // Initialize printer once in a safe way
-        initPrinter()
-
         setContent {
             MyComposeApplicationTheme {
                 if (permissionGranted.value ||
@@ -158,22 +156,18 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun initPrinter() {
-        SunmiPrinterHelper.initSunmiPrinterService(this) {
-            Toast.makeText(this, "Printer is ready", Toast.LENGTH_SHORT).show()
-            SunmiPrinterHelper.showPrinterStatus(this)
-        }
-    }
-
     override fun onResume() {
         super.onResume()
-        // Only show status if needed, don't re-init here to avoid freeze
-        SunmiPrinterHelper.showPrinterStatus(this)
+        // Only show printer status, don't re-init
+        if (SunmiPrinterHelper.sunmiPrinterService != null) {
+            SunmiPrinterHelper.showPrinterStatus(this)
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         networkMonitor.unregister()
-        SunmiPrinterHelper.deInitSunmiPrinterService(this)
+        // Do NOT de-init printer here; handled in Application
     }
 }
+

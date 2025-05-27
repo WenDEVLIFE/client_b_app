@@ -31,33 +31,41 @@ object SunmiPrinterHelper {
     private var sunmiPrinterService: SunmiPrinterService? = null
     private var onPrinterReady: (() -> Unit)? = null
 
-    fun initSunmiPrinterService(context: Context, onReady: () -> Unit) {
-        this.mContext = context
-        this.onPrinterReady = onReady
-        
-          sunmiPrinterService?.let {
-          onReady()
-          return
-          }
-          
-        try {
-            val ret = InnerPrinterManager.getInstance().bindService(
-                context.applicationContext,
-                innerPrinterCallback
-            )
-            if (!ret) {
-                sunmiPrinter = NoSunmiPrinter
-                Toast.makeText(context, "No printer found", Toast.LENGTH_SHORT).show()
-                Log.e("SunmiPrinterHelper", "bindService returned false")
-            } else {
-                Log.d("SunmiPrinterHelper", "bindService called successfully")
-            }
-        } catch (e: InnerPrinterException) {
-            sunmiPrinter = NoSunmiPrinter
-            Log.e("SunmiPrinterHelper", "InnerPrinterException: ${e.localizedMessage}")
-            Toast.makeText(context, "Printing failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
-        }
+    private var isServiceBindingAttempted = false
+
+fun initSunmiPrinterService(context: Context, onReady: () -> Unit) {
+    this.mContext = context.applicationContext
+    this.onPrinterReady = onReady
+
+    // If already connected, return early
+    if (sunmiPrinterService != null) {
+        onReady()
+        return
     }
+
+    // Prevent repeated attempts that may crash/freeze app
+    if (isServiceBindingAttempted) return
+
+    isServiceBindingAttempted = true
+
+    try {
+        val ret = InnerPrinterManager.getInstance().bindService(
+            context.applicationContext,
+            innerPrinterCallback
+        )
+        if (!ret) {
+            sunmiPrinter = NoSunmiPrinter
+            Toast.makeText(context, "No printer found", Toast.LENGTH_SHORT).show()
+            Log.e("SunmiPrinterHelper", "bindService returned false")
+        } else {
+            Log.d("SunmiPrinterHelper", "bindService called successfully")
+        }
+    } catch (e: InnerPrinterException) {
+        sunmiPrinter = NoSunmiPrinter
+        Log.e("SunmiPrinterHelper", "InnerPrinterException: ${e.localizedMessage}")
+        Toast.makeText(context, "Printing failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+    }
+}
 
     private val innerPrinterCallback: InnerPrinterCallback = object : InnerPrinterCallback() {
         override fun onConnected(service: SunmiPrinterService) {
