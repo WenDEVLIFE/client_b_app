@@ -90,16 +90,16 @@ fun cancelBetUI() {
             }
             viewModelCallWebsocket.sendDashboardTrigger()
     viewModelCallWebsocket.sendBetsTrigger()
-            viewModelCancelBetData.setTransactionCode("")
-        scanFinish = false
+            
             LaunchedEffect(betResponse) {
         printCancelledBetting(context, betResponse!!)
         }
             }else if (betErrorCode == -1) {
-            scanFinish = false
+            
             PrintCancelBetErrorResults(betResult){
             viewModelCancelBetData.clearBetState()
             }
+            
             }
     
     val transactionCode by viewModelCancelBetData.transactionCode.collectAsState()
@@ -133,6 +133,8 @@ fun cancelBetUI() {
                 roleID = userRole,
                 barcodeTxt = transactionCode
             )
+            viewModelCancelBetData.setTransactionCode("")
+        scanFinish = false
     }
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {

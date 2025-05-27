@@ -93,16 +93,16 @@ val activity = LocalContext.current as Activity
         PayoutReceiptDialog(betResponse!!){
             viewModelPayoutData.clearBetState()
         }
-        viewModelPayoutData.setTransactionCode("")
-        scanFinish = false
+        
     LaunchedEffect(betResponse) {
              printPayout(context, betResponse!!)
              }
     }else if (betErrorCode == -1) {
-    scanFinish = false
+    
       PrintBetPayoutErrorResults(betResult){
             viewModelPayoutData.clearBetState()
         }
+        
     }
     
     val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
@@ -114,6 +114,8 @@ val activity = LocalContext.current as Activity
         roleID = userRole,
         barcodeResult = transactionCode
       )
+      viewModelPayoutData.setTransactionCode("")
+        scanFinish = false
     }
     // Scanner launcher with modern result API
     val scannerLauncher = rememberLauncherForActivityResult(
