@@ -21,7 +21,7 @@ data class SummaryReport(
     val commisionBody: String,
     val commSettings: String,
     val totalPayoutUnclaimed: String,
-    val totalDrawUnclaimed: String,
+    val totalCancelledUnclaimed: String,
     val totalDrawBetsCancelledPaid: String,
     val totalDrawBetsCancelled: String,
     val totalDrawPayoutUnclaimed: String

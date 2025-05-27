@@ -102,7 +102,7 @@ if (!responseText.trim().startsWith("{")) {
     commisionBody = json.getString("commisionBody"),
     commSettings = json.getString("commSettings"),
     totalPayoutUnclaimed = json.getString("totalPayoutUnclaimed"),
-    totalDrawUnclaimed = json.getString("totalDrawUnclaimed"),
+    totalCancelledUnclaimed = json.getString("totalDrawUnclaimed"),
     totalDrawBetsCancelledPaid = json.getString("totalDrawBetsCancelledPaid"),
     totalDrawBetsCancelled = json.getString("totalDrawBetsCancelled"),
     totalDrawPayoutUnclaimed = json.getString("totalDrawPayoutUnclaimed")

@@ -295,7 +295,7 @@ LaunchedEffect(cashInResponse) {
     modifier = Modifier.fillMaxWidth()
 ) {
     // LEFT arrow (always occupies space)
-    Box(modifier = Modifier.size(40.dp), contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.size(30.dp), contentAlignment = Alignment.Center) {
         if (currentIndex.value > 0) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
