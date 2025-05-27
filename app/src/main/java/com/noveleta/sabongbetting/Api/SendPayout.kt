@@ -142,8 +142,6 @@ val json = JSONObject(responseText)
                     "Error $resultInt: $message",
                     Toast.LENGTH_LONG
                 ).show()
-                
-                _betErrorCode.value  = null
             }
 
         } catch (e: Exception) {
