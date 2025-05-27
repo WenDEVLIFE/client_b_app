@@ -4,14 +4,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Model/MoneyOnHand.kt",
       "selection": {
         "end": {
-          "column": 25,
-          "index": 790,
-          "line": 25
+          "column": 23,
+          "index": 441,
+          "line": 15
         },
         "start": {
-          "column": 25,
-          "index": 790,
-          "line": 25
+          "column": 8,
+          "index": 426,
+          "line": 15
         }
       }
     },
@@ -19,14 +19,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/SendMoneyOnHand.kt",
       "selection": {
         "end": {
-          "column": 27,
-          "index": 4031,
-          "line": 104
+          "column": 19,
+          "index": 3571,
+          "line": 96
         },
         "start": {
-          "column": 27,
-          "index": 4031,
-          "line": 104
+          "column": 4,
+          "index": 3556,
+          "line": 96
         }
       }
     },
@@ -34,13 +34,13 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/printMoneyOnHand.kt",
       "selection": {
         "end": {
-          "column": 27,
-          "index": 2622,
+          "column": 73,
+          "index": 2660,
           "line": 51
         },
         "start": {
-          "column": 27,
-          "index": 2622,
+          "column": 58,
+          "index": 2645,
           "line": 51
         }
       }
@@ -49,14 +49,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/ReceiptDialog.kt",
       "selection": {
         "end": {
-          "column": 39,
-          "index": 3607,
-          "line": 90
+          "column": 51,
+          "index": 3666,
+          "line": 91
         },
         "start": {
-          "column": 39,
-          "index": 3607,
-          "line": 90
+          "column": 51,
+          "index": 3666,
+          "line": 91
         }
       }
     },
@@ -76,5 +76,5 @@
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/printMoneyOnHand.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/ReceiptDialog.kt"
 }

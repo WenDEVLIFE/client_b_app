@@ -94,6 +94,7 @@ if (!responseText.trim().startsWith("{")) {
     totalPayoutPaid = json.getString("totalPayoutPaid"),
     totalCancelledPaid = json.getString("totalCancelledPaid"),
     totalCancelledBet = json.getString("totalCancelledBet"),
+    totalDrawUnpaid = json.getString("totalDrawUnpaid"),
     totalDrawPaid = json.getString("totalDrawPaid"),
     totalDrawBets = json.getString("totalDrawBets"),
     totalDrawBetsPaid = json.getString("totalDrawBetsPaid"),

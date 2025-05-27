@@ -48,6 +48,8 @@ fun printMoneyOnHand(context: Context, betResponse: SummaryReport) {
         
         SunmiPrinterHelper.printLabelValue("Total Payout Unclaimed:", "")
         SunmiPrinterHelper.printLabelValue("${betResponse.totalPayoutUnclaimed}", "")
+        SunmiPrinterHelper.printLabelValue("Total Draw Unpaid: ", "")
+        SunmiPrinterHelper.printLabelValue("${betResponse.totalDrawUnpaid}", "")
         SunmiPrinterHelper.printLabelValue("Total Cancelled Unclaimed: ", "")
         SunmiPrinterHelper.printLabelValue("${betResponse.totalCancelledUnclaimed}", "")
         SunmiPrinterHelper.printLabelValue("----------------------", "")

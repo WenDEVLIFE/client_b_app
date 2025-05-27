@@ -88,6 +88,8 @@ fun MoneyOnHandDialog(
 
                 Text("Total Payout Unclaimed:")
                 Text("${response.totalPayoutUnclaimed}")
+                Text("Total Draw Unclaimed: ")
+                Text("${response.totalDrawUnpaid}")
                 Text("Total Cancelled Unclaimed: ")
                 Text("${response.totalCancelledUnclaimed}")
                 

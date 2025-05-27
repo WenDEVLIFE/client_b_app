@@ -13,6 +13,7 @@ data class SummaryReport(
     val totalPayoutPaid: String,
     val totalCancelledPaid: String,
     val totalCancelledBet: String,
+    val totalDrawUnpaid: String,
     val totalDrawPaid: String,
     val totalDrawBets: String,
     val totalDrawBetsPaid: String,
