@@ -149,7 +149,8 @@ if(betResponse != null){
             LaunchedEffect(betResponse) {
              printPayout(context, betResponse!!)
             }
-            }else if (betResponse == null && betResult == -1) {
+            }else if (betResult == -1) {
+            scanFinish = false
             PrintBetPayoutErrorResults(betResult){
             viewModelPayoutData.clearBetState()
             }

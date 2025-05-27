@@ -99,6 +99,7 @@ val activity = LocalContext.current as Activity
              printPayout(context, betResponse!!)
              }
     }else if (betErrorCode == -1) {
+    scanFinish = false
       PrintBetPayoutErrorResults(betResult){
             viewModelPayoutData.clearBetState()
         }

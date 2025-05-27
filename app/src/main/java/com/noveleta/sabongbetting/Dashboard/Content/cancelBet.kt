@@ -96,6 +96,7 @@ fun cancelBetUI() {
         printCancelledBetting(context, betResponse!!)
         }
             }else if (betErrorCode == -1) {
+            scanFinish = false
             PrintCancelBetErrorResults(betResult){
             viewModelCancelBetData.clearBetState()
             }
