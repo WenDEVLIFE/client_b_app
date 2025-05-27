@@ -28,7 +28,7 @@ object SunmiPrinterHelper {
      * SunmiPrinterService for API
      */
     
-    private var sunmiPrinterService: SunmiPrinterService? = null
+     var sunmiPrinterService: SunmiPrinterService? = null
     private var onPrinterReady: (() -> Unit)? = null
 
     private var isServiceBindingAttempted = false
