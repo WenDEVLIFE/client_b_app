@@ -183,11 +183,20 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
 }
 
 if(printMOHResponse != null && printMOHResults == 0){
-LaunchedEffect(printMOHResponse) {
+MoneyOnHandDialog(
+        response = printMOHResponse!!,
+        onPrint = {
+        LaunchedEffect(printMOHResponse) {
             // only runs a single time per distinct betResponse
             printMoneyOnHand(context, printMOHResponse!!)
 
         }
+        },
+        onDismiss = {
+            viewModelPrintMoneyOnHandReports.clearBetState()
+        }
+    )
+
 }else if(printMOHResponse == null && printMOHErrorCode == -1){
 PrintMOHError(printMOHResults){
     viewModelPrintMoneyOnHandReports.clearBetState()
@@ -248,7 +257,7 @@ LaunchedEffect(cashInResponse) {
 
 }
 
-    val cardWidth = 280.dp
+    val cardWidth = 260.dp
     val spacing = 8.dp
     val totalCardWidth = cardWidth + spacing
     val currentIndex = remember { mutableStateOf(0) }
@@ -290,7 +299,7 @@ LaunchedEffect(cashInResponse) {
     modifier = Modifier.fillMaxWidth()
 ) {
     // LEFT arrow (always occupies space)
-    Box(modifier = Modifier.size(30.dp), contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.size(40.dp), contentAlignment = Alignment.Center) {
         if (currentIndex.value > 0) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
@@ -328,7 +337,7 @@ LaunchedEffect(cashInResponse) {
     }
 
     // RIGHT arrow (always occupies space)
-    Box(modifier = Modifier.size(30.dp), contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.size(40.dp), contentAlignment = Alignment.Center) {
         if (currentIndex.value < items.lastIndex) {
             Icon(
                 imageVector = Icons.Default.ArrowForward,

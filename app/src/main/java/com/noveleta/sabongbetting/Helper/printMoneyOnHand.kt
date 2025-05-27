@@ -40,7 +40,7 @@ fun printMoneyOnHand(context: Context, betResponse: SummaryReport) {
         SunmiPrinterHelper.print3Line()
         
         SunmiPrinterHelper.printLabelValue("", "Money On Hand: ${betResponse.moneyOnHand}")
-        if(betResponse.commSettings == "1"){
+        if(betResponse.commSettings == "0"){
            SunmiPrinterHelper.print3Line()
         }else{
            SunmiPrinterHelper.printLabelValue("", "Commission: ${betResponse.commisionBody}")

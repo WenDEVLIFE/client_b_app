@@ -34,6 +34,82 @@ import com.noveleta.sabongbetting.*
 import com.noveleta.sabongbetting.Helper.*
 
 @Composable
+fun MoneyOnHandDialog(
+    response: SummaryReport,
+    onPrint: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+        title = { Text("Money On Hand Reports") },
+        text = {
+            Column(
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier
+                    .size(width = 320.dp, height = 380.dp)
+                    .padding(8.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Text("SUMMARY REPORT", fontWeight = FontWeight.Bold)
+                Text("(Money On Hand)")
+                Text(response.systemName ?: "")
+                Text(response.dateTime ?: "")
+                Text("Username: ${response.username}")
+
+                Spacer(Modifier.height(8.dp))
+
+                Text("Cash In: ${response.cashIn}")
+                Text("Total bets: ${response.totalBets}")
+                Text("Total mobile deposit: ${response.totalMobileDeposit}")
+
+                Spacer(Modifier.height(8.dp))
+
+                Text("Cash Out: ${response.cashOut}")
+                Text("Total payout paid: ${response.totalPayoutPaid}")
+                Text("Total cancelled paid: ${response.totalCancelledPaid}")
+                Text("Total cancelled bet: ${response.totalCancelledBet}")
+                Text("Total draw bets Cancelled paid: ${response.totalDrawBetsCancelledPaid}")
+                Text("Total draw paid: ${response.totalDrawPaid}")
+                Text("Total mobile withdraw: ${response.totalMobileWithdraw}")
+
+                Spacer(Modifier.height(8.dp))
+
+                Text("Money On Hand: ${response.moneyOnHand}")
+                if (response.commSettings != "0") {
+                    Text("Commission: ${response.commisionBody}")
+                }
+
+                Text("Total Payout Unclaimed:")
+                Text("${response.totalPayoutUnclaimed}")
+                Text("Total draw unclaimed: ${response.totalDrawUnclaimed}")
+
+                Spacer(Modifier.height(8.dp))
+
+                Text("----------------------")
+                Text("DRAW REPORTS", fontWeight = FontWeight.Bold)
+                Text("----------------------")
+                Text("Total draw bets: ${response.totalDrawBets}")
+                Text("Total draw bets paid: ${response.totalDrawBetsPaid}")
+                Text("Total draw bets Cancelled: ${response.totalDrawBetsCancelled}")
+                Text("Total draw payout unclaimed: ${response.totalDrawPayoutUnclaimed}")
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onPrint) {
+                Text("Print")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Close")
+            }
+        }
+    )
+}
+
+@Composable
 fun BetReceiptDialog(
     response: BetResponse,
     onDismiss: () -> Unit
