@@ -97,23 +97,25 @@ import kotlin.random.Random
 import androidx.compose.foundation.gestures.detectTapGestures
 
 class MainActivity : ComponentActivity() {
+
     private lateinit var networkMonitor: NetworkMonitor
     private val permissionGranted = mutableStateOf(false)
-    private var isPrinterInitialized = false
-    
+
     private val cameraPermissionLauncher = registerForActivityResult(
-    ActivityResultContracts.RequestPermission()
-  ) { isGranted ->
-    if (isGranted) {
-      permissionGranted.value = true
-    } else {
-      Toast.makeText(this, "Camera permission denied", Toast.LENGTH_LONG).show()
-      setResult(Activity.RESULT_CANCELED)
-      finish()
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            permissionGranted.value = true
+        } else {
+            Toast.makeText(this, "Camera permission denied", Toast.LENGTH_LONG).show()
+            setResult(Activity.RESULT_CANCELED)
+            finish()
+        }
     }
-  }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         networkMonitor = NetworkMonitor(this)
         val placeBetsViewModel: PlaceBetsViewModel by viewModels()
         val liveBettingViewModel: LiveBettingViewModel by viewModels()
@@ -121,54 +123,57 @@ class MainActivity : ComponentActivity() {
         ProcessLifecycleOwner.get().lifecycle.addObserver(
             AppLifecycleObserver(placeBetsViewModel, liveBettingViewModel)
         )
-        
-        
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      Thread.setDefaultUncaughtExceptionHandler { _, ex ->
-        Toast.makeText(
-          this,
-          "Camera error: ${ex.localizedMessage ?: "unknown"}",
-          Toast.LENGTH_LONG
-        ).show()
-        setResult(Activity.RESULT_CANCELED)
-        finish()
-      }
-    }
 
-    cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Thread.setDefaultUncaughtExceptionHandler { _, ex ->
+                Toast.makeText(
+                    this,
+                    "Camera error: ${ex.localizedMessage ?: "unknown"}",
+                    Toast.LENGTH_LONG
+                ).show()
+                setResult(Activity.RESULT_CANCELED)
+                finish()
+            }
+        }
+
+        cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+
+        // Initialize printer once in a safe way
+        initPrinter()
 
         setContent {
             MyComposeApplicationTheme {
-            if (permissionGranted.value ||
-            ContextCompat.checkSelfPermission(
-              this,
-              android.Manifest.permission.CAMERA
-                ) == PackageManager.PERMISSION_GRANTED
-              ) {
-                AppNavHost(
-                    networkMonitor = networkMonitor,
-                    viewModelFactory = AccountLogInViewModelFactory(application)
-                )
-               }   
+                if (permissionGranted.value ||
+                    ContextCompat.checkSelfPermission(
+                        this,
+                        android.Manifest.permission.CAMERA
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    AppNavHost(
+                        networkMonitor = networkMonitor,
+                        viewModelFactory = AccountLogInViewModelFactory(application)
+                    )
+                }
             }
+        }
+    }
+
+    private fun initPrinter() {
+        SunmiPrinterHelper.initSunmiPrinterService(this) {
+            Toast.makeText(this, "Printer is ready", Toast.LENGTH_SHORT).show()
+            SunmiPrinterHelper.showPrinterStatus(this)
         }
     }
 
     override fun onResume() {
         super.onResume()
-        if (!isPrinterInitialized) {
-            SunmiPrinterHelper.initSunmiPrinterService(this) {
-                Toast.makeText(this, "Printer is ready", Toast.LENGTH_SHORT).show()
-                SunmiPrinterHelper.showPrinterStatus(this)
-            }
-            isPrinterInitialized = true
-        }
+        // Only show status if needed, don't re-init here to avoid freeze
+        SunmiPrinterHelper.showPrinterStatus(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         networkMonitor.unregister()
         SunmiPrinterHelper.deInitSunmiPrinterService(this)
-        isPrinterInitialized = false
     }
 }

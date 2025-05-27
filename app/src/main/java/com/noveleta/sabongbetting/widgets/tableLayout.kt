@@ -244,7 +244,7 @@ fun logHistoryTable(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color(0xFF313131), shape = RoundedCornerShape(20.dp))
+            .background(color = Color(0xFF313131), shape = RoundedCornerShape(0.dp))
     ) {
         Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
             Column {
@@ -416,7 +416,7 @@ fun currentBetTableUI(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color(0xFF313131), shape = RoundedCornerShape(20.dp))
+            .background(color = Color(0xFF313131), shape = RoundedCornerShape(0.dp))
             .padding(8.dp)
     ) {
         Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
