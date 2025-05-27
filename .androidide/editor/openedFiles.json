@@ -19,14 +19,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/MainActivity.kt",
       "selection": {
         "end": {
-          "column": 0,
-          "index": 5714,
-          "line": 172
+          "column": 23,
+          "index": 719,
+          "line": 21
         },
         "start": {
           "column": 0,
-          "index": 5714,
-          "line": 172
+          "index": 696,
+          "line": 21
         }
       }
     },
@@ -124,17 +124,17 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Application.kt",
       "selection": {
         "end": {
-          "column": 68,
-          "index": 371,
-          "line": 12
+          "column": 33,
+          "index": 122,
+          "line": 3
         },
         "start": {
-          "column": 12,
-          "index": 315,
-          "line": 12
+          "column": 33,
+          "index": 122,
+          "line": 3
         }
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/MainActivity.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Application.kt"
 }
