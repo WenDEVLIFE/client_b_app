@@ -263,7 +263,7 @@ LaunchedEffect(cashInResponse) {
     val containerWidth = cardWidth  // So only one card is shown centered
 
     fun scrollToCard(index: Int) {
-        val centeredOffset = (totalCardWidthPx * index - (screenWidthPx - totalCardWidthPx) / 40).toInt()
+        val centeredOffset = (totalCardWidthPx * index - (screenWidthPx - totalCardWidthPx) / 45).toInt()
         coroutineScope.launch {
             scrollState.animateScrollTo(
                 centeredOffset.coerceIn(0, scrollState.maxValue),

@@ -1,7 +1,7 @@
 package com.noveleta.sabongbetting
 
 import com.noveleta.sabongbetting.SharedPreference.*
-import com.noveleta.sabongbetting.*
+import com.noveleta.sabongbetting.Helper.*
 import android.app.Application
 import android.util.Log
 
