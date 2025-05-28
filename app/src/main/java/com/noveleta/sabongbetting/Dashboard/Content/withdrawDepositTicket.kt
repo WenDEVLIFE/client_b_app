@@ -251,7 +251,7 @@ val activity = LocalContext.current as Activity
 
             Button(
                     onClick = { /* handle withdraw */ 
-                    viewModelMobileWithdrawData.sendMobileWithdraw(userID = companyId, roleID = userRole, barcodeResult = widthdrawCode)
+                    viewModelMobileWithdrawData.sendMobileWithdraw(context, userID = companyId, roleID = userRole, barcodeResult = widthdrawCode)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -310,7 +310,7 @@ val activity = LocalContext.current as Activity
 
             Button(
                     onClick = { /* handle deposit */ 
-                    viewModelMobileDepositData.sendMobileDeposit(userID = companyId, roleID = userRole, barcodeResult = depositCode)
+                    viewModelMobileDepositData.sendMobileDeposit(context, userID = companyId, roleID = userRole, barcodeResult = depositCode)
                     },
                     modifier = Modifier
                         .fillMaxWidth()
