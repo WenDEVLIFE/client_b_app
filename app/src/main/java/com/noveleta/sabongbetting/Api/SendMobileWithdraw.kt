@@ -11,6 +11,14 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
+import java.io.IOException
+
+import android.content.Context
+import android.widget.Toast
+
+
+import kotlinx.coroutines.flow.asStateFlow
+import org.json.JSONException
 
 import com.noveleta.sabongbetting.Model.*
 import com.noveleta.sabongbetting.SharedPreference.*
@@ -30,6 +38,7 @@ class SendMobileWithdrawViewModel : ViewModel() {
     val isLoading: StateFlow<Boolean> = _isLoading
 
     fun sendMobileWithdraw(
+    context: Context,
     userID: String,
     roleID: String,
     barcodeResult: String
@@ -61,7 +70,9 @@ class SendMobileWithdrawViewModel : ViewModel() {
             val responseText = withContext(Dispatchers.IO) {
                 conn.inputStream.bufferedReader().use { it.readText() }
             }
-
+if (!responseText.trim().startsWith("{")) {
+    throw JSONException("Invalid JSON: $responseText")
+}
             val json = JSONObject(responseText)
             val success = json.getBoolean("success")
             val message = json.getString("message")
@@ -99,13 +110,25 @@ _betResponse.value = withdrawResponse
                 _betErrorCode.value = -1
                 Log.e("WebSocket", "Response: $resultInt, $message")
                 
+                Toast.makeText(
+                    context,
+                    "Error $resultInt: $message",
+                    Toast.LENGTH_LONG
+                ).show()
             }
 
         } catch (e: Exception) {
             e.printStackTrace()
-            _betResult.value = -1
-            _betErrorCode.value = -1
+            _betResult.value = null
+            _betErrorCode.value = null
             _betResponse.value = null
+            
+            val fullError = Log.getStackTraceString(e)
+            Toast.makeText(
+                context,
+                "Payout Error:\n$fullError",
+                Toast.LENGTH_LONG
+            ).show()
         }
 
         _isLoading.value = false

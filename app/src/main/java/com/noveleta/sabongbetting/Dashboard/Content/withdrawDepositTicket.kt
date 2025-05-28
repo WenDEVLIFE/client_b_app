@@ -88,31 +88,6 @@ val activity = LocalContext.current as Activity
     val mobileWithdrawResult   by viewModelMobileWithdrawData.betResult.collectAsState()
     val mobileWithdrawErrorCode   by viewModelMobileWithdrawData.betErrorCode.collectAsState()
     
-    if (mobileDepositResponse != null){
-      MobileDepositReceiptDialog(mobileDepositResponse!!){
-        viewModelMobileDepositData.clearBetState()
-      }
-      LaunchedEffect(mobileDepositResponse) {
-        printMobileDeposit(context, mobileDepositResponse!!)
-    }
-    } else if (mobileDepositErrorCode == -1) {
-      PrintDepositErrorResults(mobileDepositResult){
-        viewModelMobileDepositData.clearBetState()
-      }
-    }
-    
-    if (mobileWithdrawResponse != null){
-      MobileWithdrawReceiptDialog(mobileWithdrawResponse!!){
-        viewModelMobileWithdrawData.clearBetState()
-      }
-      LaunchedEffect(mobileWithdrawResponse) {
-        printMobileWithdraw(context, mobileWithdrawResponse!!)
-    }
-    } else if (mobileWithdrawErrorCode == -1) {
-      PrintWithdrawErrorResults(mobileWithdrawResult){
-        viewModelMobileWithdrawData.clearBetState()
-      }
-    }
     
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
@@ -129,6 +104,11 @@ val activity = LocalContext.current as Activity
     var showScanner by remember { mutableStateOf(false) }
     var scanFinish by remember { mutableStateOf(false) }
     var showScannerDialog by remember { mutableStateOf(false) }
+    var showScannerDialogMobileWithdraw by remember { mutableStateOf(false) }
+    var showScannerDialogMobileDeposit by remember { mutableStateOf(false) }
+    
+    var scanFinishWithdraw by remember { mutableStateOf(false) }
+    var scanFinishDeposit by remember { mutableStateOf(false) }
     
     if(betResponse != null){
         PayoutReceiptDialog(betResponse!!){
@@ -150,15 +130,48 @@ val activity = LocalContext.current as Activity
     
     val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
     
-    if(scanFinish){
-    viewModelPayoutData.claimPayout(
-      context,
-        userID = companyId,
-        roleID = userRole,
-        barcodeResult = transactionCode
-      )
-      
+    if(scanFinishDeposit){
+    viewModelMobileDepositData.sendMobileDeposit(context, userID = companyId, roleID = userRole, barcodeResult = depositCode)
     }
+    
+    if(scanFinishWithdraw){
+    viewModelMobileWithdrawData.sendMobileWithdraw(context, userID = companyId, roleID = userRole, barcodeResult = widthdrawCode)
+    }
+    
+    if (mobileDepositResponse != null){
+      MobileDepositReceiptDialog(mobileDepositResponse!!){
+        viewModelMobileDepositData.clearBetState()
+      }
+      depositCode = ""
+      scanFinish = false
+      LaunchedEffect(mobileDepositResponse) {
+        printMobileDeposit(context, mobileDepositResponse!!)
+    }
+    } else if (mobileDepositErrorCode == -1) {
+      PrintDepositErrorResults(mobileDepositResult){
+        viewModelMobileDepositData.clearBetState()
+      }
+      depositCode = ""
+      scanFinish = false
+    }
+    
+    if (mobileWithdrawResponse != null){
+      MobileWithdrawReceiptDialog(mobileWithdrawResponse!!){
+        viewModelMobileWithdrawData.clearBetState()
+      }
+      widthdrawCode = ""
+      scanFinish = false
+      LaunchedEffect(mobileWithdrawResponse) {
+        printMobileWithdraw(context, mobileWithdrawResponse!!)
+    }
+    } else if (mobileWithdrawErrorCode == -1) {
+      PrintWithdrawErrorResults(mobileWithdrawResult){
+        viewModelMobileWithdrawData.clearBetState()
+      }
+      widthdrawCode = ""
+      scanFinish = false
+    }
+    
     // Scanner launcher with modern result API
     val scannerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -206,16 +219,16 @@ val activity = LocalContext.current as Activity
 
                 Spacer(Modifier.width(8.dp))
 
-                /*Image(
+                Image(
                     painter = painterResource(id = R.drawable.ic_scan_barcode),
                     contentDescription = "Scan Barcode",
                     colorFilter = ColorFilter.tint(Color(0xFFFFFFFF)),
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            showScannerDialog = true
+                            showScannerDialogMobileWithdraw = true
                          }
-                )*/
+                )
             }
 
             Spacer(Modifier.height(16.dp))
@@ -223,7 +236,7 @@ val activity = LocalContext.current as Activity
             TextField(
                   value = widthdrawCode,
                   onValueChange = { 
-                  if (it.length <= 14 && it.all { char -> char.isDigit() }) {
+                  if (it.length <= 20 && it.all { char -> char.isDigit() }) {
                       widthdrawCode = it
                      }
                   },
@@ -265,16 +278,16 @@ val activity = LocalContext.current as Activity
 
                 Spacer(Modifier.width(8.dp))
 
-                /*Image(
+                Image(
                     painter = painterResource(id = R.drawable.ic_scan_barcode),
                     contentDescription = "Scan Barcode",
                     colorFilter = ColorFilter.tint(Color(0xFFFFFFFF)),
                     modifier = Modifier
                         .size(24.dp)
                         .clickable {
-                            showScannerDialog = true
+                            showScannerDialogMobileDeposit = true
                          }
-                )*/
+                )
             }   
             
             Spacer(Modifier.height(16.dp))
@@ -282,7 +295,7 @@ val activity = LocalContext.current as Activity
             TextField(
                   value = depositCode,
                   onValueChange = { 
-                  if (it.length <= 14 && it.all { char -> char.isDigit() }) {
+                  if (it.length <= 20 && it.all { char -> char.isDigit() }) {
                       depositCode = it
                      }
                   },
@@ -309,15 +322,28 @@ val activity = LocalContext.current as Activity
         }
 
         // --- DIALOG ---
-        if(showScannerDialog){
+        if(showScannerDialogMobileDeposit){
         BarcodeScannerScreen(
             onScanResult = { code ->
-              viewModelPayoutData.setTransactionCode(code)
-              scanFinish = true
-      showScannerDialog = false
+              depositCode = code
+              scanFinishDeposit = true
+      showScannerDialogMobileDeposit = false
             },
             onCancel = {
-              showScannerDialog = false
+              showScannerDialogMobileDeposit = false
+            }
+          )
+        }
+        
+        if(showScannerDialogMobileWithdraw){
+        BarcodeScannerScreen(
+            onScanResult = { code ->
+              widthdrawCode = code
+              scanFinishWithdraw = true
+      showScannerDialogMobileWithdraw = false
+            },
+            onCancel = {
+              showScannerDialogMobileWithdraw = false
             }
           )
         }
@@ -338,7 +364,7 @@ val activity = LocalContext.current as Activity
                         TextField(
     value = transactionCode,
     onValueChange = { 
-        if (it.length <= 14 && it.all { char -> char.isDigit() }) {
+        if (it.length <= 20 && it.all { char -> char.isDigit() }) {
             viewModelPayoutData.setTransactionCode(it)
         }
     },
