@@ -17,7 +17,7 @@ object SunmiPrinterHelper {
     var CheckSunmiPrinter = 0x00000001
     var FoundSunmiPrinter = 0x00000002
     var LostSunmiPrinter = 0x00000003
-    lateinit var mContext: Context
+    private lateinit var mContext: Context
 
     /**
      * sunmiPrinter means checking the printer connection status
@@ -34,67 +34,80 @@ object SunmiPrinterHelper {
     private var isServiceBindingAttempted = false
 
 fun initSunmiPrinterService(context: Context, onReady: () -> Unit) {
-    this.mContext = context.applicationContext
-    this.onPrinterReady = onReady
+        mContext = context.applicationContext
+        onPrinterReady = onReady
 
-    // If already connected, return early
-    if (sunmiPrinterService != null) {
-        onReady()
-        return
-    }
-
-    // Prevent repeated attempts that may crash/freeze app
-    if (isServiceBindingAttempted) return
-
-    isServiceBindingAttempted = true
-
-    try {
-        val ret = InnerPrinterManager.getInstance().bindService(
-            context.applicationContext,
-            innerPrinterCallback
-        )
-        if (!ret) {
-            sunmiPrinter = NoSunmiPrinter
-            Toast.makeText(context, "No printer found", Toast.LENGTH_SHORT).show()
-            Log.e("SunmiPrinterHelper", "bindService returned false")
-        } else {
-            Log.d("SunmiPrinterHelper", "bindService called successfully")
+        if (sunmiPrinterService != null) {
+            onReady()
+            return
         }
-    } catch (e: InnerPrinterException) {
-        sunmiPrinter = NoSunmiPrinter
-        Log.e("SunmiPrinterHelper", "InnerPrinterException: ${e.localizedMessage}")
-        Toast.makeText(context, "Printing failed: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+
+        if (isServiceBindingAttempted) return
+        isServiceBindingAttempted = true
+
+        try {
+            val ret = InnerPrinterManager.getInstance().bindService(
+                context.applicationContext,
+                innerPrinterCallback
+            )
+            if (!ret) {
+                sunmiPrinter = NoSunmiPrinter
+                showToastSafe("No printer found")
+                Log.e("SunmiPrinterHelper", "bindService returned false")
+            } else {
+                Log.d("SunmiPrinterHelper", "bindService called successfully")
+            }
+        } catch (e: InnerPrinterException) {
+            sunmiPrinter = NoSunmiPrinter
+            Log.e("SunmiPrinterHelper", "InnerPrinterException: ${e.localizedMessage}")
+            showToastSafe("Printing failed: ${e.localizedMessage}")
+        }
     }
-}
 
     private val innerPrinterCallback: InnerPrinterCallback = object : InnerPrinterCallback() {
         override fun onConnected(service: SunmiPrinterService) {
             sunmiPrinterService = service
             sunmiPrinter = FoundSunmiPrinter
             Log.d("SunmiPrinterHelper", "Printer connected")
-            
+
             Handler(Looper.getMainLooper()).postDelayed({
-                if (isPrinterReady()) {
-                    Log.d("SunmiPrinterHelper", "Calling onPrinterReady()")
-                    Toast.makeText(mContext, "Printer connected", Toast.LENGTH_SHORT).show()
+                if (isPrinterReady() && isAppInForeground()) {
+                    showToastSafe("Printer connected")
                     onPrinterReady?.invoke()
                 } else {
-                    Log.e("SunmiPrinterHelper", "Printer service is still null after connection")
-                    Toast.makeText(mContext, "Printer not ready after connect", Toast.LENGTH_SHORT).show()
+                    Log.e("SunmiPrinterHelper", "Printer not ready or app not in foreground")
                 }
-            }, 300) // Delay to ensure service is ready
+            }, 300)
         }
 
         override fun onDisconnected() {
             sunmiPrinterService = null
             sunmiPrinter = LostSunmiPrinter
             Log.w("SunmiPrinterHelper", "Printer disconnected")
-            Toast.makeText(mContext, "Printer disconnected", Toast.LENGTH_SHORT).show()
+            showToastSafe("Printer disconnected")
         }
     }
 
-    fun isPrinterReady(): Boolean {
+    private fun isPrinterReady(): Boolean {
         return sunmiPrinterService != null
+    }
+
+    private fun isAppInForeground(): Boolean {
+        val activityManager = mContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val appProcesses = activityManager.runningAppProcesses ?: return false
+        val packageName = mContext.packageName
+        return appProcesses.any {
+            it.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND &&
+                    it.processName == packageName
+        }
+    }
+
+    private fun showToastSafe(message: String) {
+        Handler(Looper.getMainLooper()).post {
+            if (isAppInForeground()) {
+                Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
     
     /**
@@ -135,7 +148,9 @@ fun initSunmiPrinterService(context: Context, onReady: () -> Unit) {
         } catch (e: InnerPrinterException) {
             e.printStackTrace()
         }
+        isServiceBindingAttempted = false
     }
+
 
     /**
      * Check the printer connection,

@@ -112,6 +112,18 @@ class MainActivity : ComponentActivity() {
             finish()
         }
     }
+    
+    override fun onStart() {
+        super.onStart()
+        SunmiPrinterHelper.initSunmiPrinterService(this) {
+            // Printer ready - safe to use
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        SunmiPrinterHelper.deInitSunmiPrinterService(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -153,14 +165,6 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        // Only show printer status, don't re-init
-        if (SunmiPrinterHelper.sunmiPrinterService != null) {
-            SunmiPrinterHelper.showPrinterStatus(this)
         }
     }
 
