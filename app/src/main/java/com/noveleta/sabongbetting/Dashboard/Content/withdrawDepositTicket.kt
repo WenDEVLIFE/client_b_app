@@ -8,7 +8,9 @@ import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import android.util.Log
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -53,6 +55,9 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 import kotlinx.coroutines.*
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+
 import com.noveleta.sabongbetting.ui.theme.*
 import com.noveleta.sabongbetting.Factory.*
 import com.noveleta.sabongbetting.Api.*
@@ -63,10 +68,12 @@ import com.noveleta.sabongbetting.SharedPreference.*
 import com.noveleta.sabongbetting.R
 import com.noveleta.sabongbetting.*
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun withdrawDepositUI() {
-val context = LocalContext.current
+val activity = LocalContext.current as Activity
+    val context = LocalContext.current
 
     var widthdrawCode by remember { mutableStateOf("") }
     var depositCode by remember { mutableStateOf("") }
@@ -110,6 +117,68 @@ val context = LocalContext.current
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
             
+    val isDarkTheme = isSystemInDarkTheme()
+    
+    val viewModelPayoutData: SendPayoutViewModel = viewModel()
+    val betResponse by viewModelPayoutData.betResponse.collectAsState()
+    val betResult   by viewModelPayoutData.betResult.collectAsState()
+    val betErrorCode   by viewModelPayoutData.betErrorCode.collectAsState()
+    
+    // dialog state
+    var showDialog by remember { mutableStateOf(false) }
+    var showScanner by remember { mutableStateOf(false) }
+    var scanFinish by remember { mutableStateOf(false) }
+    var showScannerDialog by remember { mutableStateOf(false) }
+    
+    if(betResponse != null){
+        PayoutReceiptDialog(betResponse!!){
+            viewModelPayoutData.clearBetState()
+        }
+        viewModelPayoutData.setTransactionCode("")
+        scanFinish = false
+    LaunchedEffect(betResponse) {
+             printPayout(context, betResponse!!)
+             }
+    }else if (betErrorCode == -1) {
+    
+      PrintBetPayoutErrorResults(betResult){
+            viewModelPayoutData.clearBetState()
+        }
+        viewModelPayoutData.setTransactionCode("")
+        scanFinish = false
+    }
+    
+    val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
+    
+    if(scanFinish){
+    viewModelPayoutData.claimPayout(
+      context,
+        userID = companyId,
+        roleID = userRole,
+        barcodeResult = transactionCode
+      )
+      
+    }
+    // Scanner launcher with modern result API
+    val scannerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val intent = result.data
+            val code = intent?.getStringExtra("scanned_code") ?: ""
+
+            if (code.isNotEmpty()) {
+                    viewModelPayoutData.setTransactionCode(code)
+      viewModelPayoutData.claimPayout(
+      context,
+        userID = companyId,
+        roleID = userRole,
+        barcodeResult = code
+      )
+            }
+        }
+    }
+
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
     
         Column(
@@ -136,8 +205,22 @@ val context = LocalContext.current
                 )
 
                 Spacer(Modifier.width(8.dp))
-                
-                TextField(
+
+                /*Image(
+                    painter = painterResource(id = R.drawable.ic_scan_barcode),
+                    contentDescription = "Scan Barcode",
+                    colorFilter = ColorFilter.tint(Color(0xFFFFFFFF)),
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable {
+                            showScannerDialog = true
+                         }
+                )*/
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            TextField(
                   value = widthdrawCode,
                   onValueChange = { 
                   if (it.length <= 14 && it.all { char -> char.isDigit() }) {
@@ -151,11 +234,10 @@ val context = LocalContext.current
                      keyboardType = KeyboardType.Number
                     )
                   )
+            Spacer(Modifier.height(16.dp))
 
-                 Spacer(Modifier.height(16.dp))
-
-                 Button(
-                    onClick = { /* handle payout */ 
+            Button(
+                    onClick = { /* handle withdraw */ 
                     viewModelMobileWithdrawData.sendMobileWithdraw(userID = companyId, roleID = userRole, barcodeResult = widthdrawCode)
                     },
                     modifier = Modifier
@@ -166,7 +248,15 @@ val context = LocalContext.current
                     Text("Claim Withdraw")
                     }
                     
-                    Text(
+            Spacer(Modifier.height(16.dp))      
+                  
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
                     "Mobile Deposit Points",
                     color = Color.White,
                     style = MaterialTheme.typography.titleMedium,
@@ -174,8 +264,22 @@ val context = LocalContext.current
                 )
 
                 Spacer(Modifier.width(8.dp))
-                
-                TextField(
+
+                /*Image(
+                    painter = painterResource(id = R.drawable.ic_scan_barcode),
+                    contentDescription = "Scan Barcode",
+                    colorFilter = ColorFilter.tint(Color(0xFFFFFFFF)),
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable {
+                            showScannerDialog = true
+                         }
+                )*/
+            }   
+            
+            Spacer(Modifier.height(16.dp))
+            
+            TextField(
                   value = depositCode,
                   onValueChange = { 
                   if (it.length <= 14 && it.all { char -> char.isDigit() }) {
@@ -189,11 +293,10 @@ val context = LocalContext.current
                      keyboardType = KeyboardType.Number
                     )
                   )
+            Spacer(Modifier.height(16.dp))
 
-                 Spacer(Modifier.height(16.dp))
-
-                 Button(
-                    onClick = { /* handle payout */ 
+            Button(
+                    onClick = { /* handle deposit */ 
                     viewModelMobileDepositData.sendMobileDeposit(userID = companyId, roleID = userRole, barcodeResult = depositCode)
                     },
                     modifier = Modifier
@@ -203,8 +306,74 @@ val context = LocalContext.current
                   ) {
                     Text("Send Deposit")
                     }
-                
+        }
+
+        // --- DIALOG ---
+        if(showScannerDialog){
+        BarcodeScannerScreen(
+            onScanResult = { code ->
+              viewModelPayoutData.setTransactionCode(code)
+              scanFinish = true
+      showScannerDialog = false
+            },
+            onCancel = {
+              showScannerDialog = false
+            }
+          )
+        }
+        
+        if (showDialog) {
+            AlertDialog(onDismissRequest = { showDialog = false }) {
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    tonalElevation = 8.dp,
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Column(
+                        Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        TextField(
+    value = transactionCode,
+    onValueChange = { 
+        if (it.length <= 14 && it.all { char -> char.isDigit() }) {
+            viewModelPayoutData.setTransactionCode(it)
+        }
+    },
+    placeholder = { Text("Enter Transaction Code") },
+    singleLine = true,
+    modifier = Modifier.fillMaxWidth(),
+    keyboardOptions = KeyboardOptions(
+        keyboardType = KeyboardType.Number
+    )
+)
+
+
+                        Spacer(Modifier.height(16.dp))
+
+                        Button(
+                            onClick = { /* handle payout */ 
+                            viewModelPayoutData.claimPayout(context,userID = companyId, roleID = userRole, barcodeResult = transactionCode)
+                            showDialog = false
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp),
+                            shape = RoundedCornerShape(20.dp)
+                        ) {
+                            Text("Claim Payout")
+                        }
+
+                        Spacer(Modifier.height(8.dp))
+
+                        IconButton(onClick = { showDialog = false }) {
+                            Icon(Icons.Default.Close, contentDescription = "Close")
+                        }
+                    }
                 }
-           }   
-     }            
+            }
+        }
+    }
 }

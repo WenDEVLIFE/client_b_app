@@ -109,7 +109,7 @@ class SendCancelBetViewModel : ViewModel() {
                 _betResponse.value = null
                 _betErrorCode.value = null
 
-                Toast.makeText(context, "Error: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                /*Toast.makeText(context, "Error: ${e.localizedMessage}", Toast.LENGTH_LONG).show()*/
             }
 
             _isLoading.value = false

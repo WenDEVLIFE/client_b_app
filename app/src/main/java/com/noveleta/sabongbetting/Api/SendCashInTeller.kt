@@ -108,7 +108,7 @@ if (!responseText.trim().startsWith("{")) {
                     _betErrorCode.value = -1
                     _betResult.value = resultInt
                     Log.e("WebSocket", "Response: $resultInt, $message")
-                    Toast.makeText(context, "Response: $resultInt, $message", Toast.LENGTH_LONG).show()
+                    /*Toast.makeText(context, "Response: $resultInt, $message", Toast.LENGTH_LONG).show()*/
                 }
 
             } catch (e: Exception) {

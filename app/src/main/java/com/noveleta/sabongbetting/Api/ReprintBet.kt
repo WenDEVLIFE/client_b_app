@@ -114,11 +114,11 @@ class ReprintBetViewModel : ViewModel() {
                 _betResponse.value = null
                 
                 val fullError = Log.getStackTraceString(e)
-            Toast.makeText(
+            /*Toast.makeText(
                 context,
                 "Payout Error:\n$fullError",
                 Toast.LENGTH_LONG
-            ).show()
+            ).show()*/
             }
 
             _isLoading.value = false
