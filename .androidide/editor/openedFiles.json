@@ -19,14 +19,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/SummiHelperClass.kt",
       "selection": {
         "end": {
-          "column": 9,
-          "index": 3772,
-          "line": 109
+          "column": 0,
+          "index": 457,
+          "line": 17
         },
         "start": {
-          "column": 9,
-          "index": 3772,
-          "line": 109
+          "column": 0,
+          "index": 457,
+          "line": 17
         }
       }
     },
@@ -46,5 +46,5 @@
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/MainActivity.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/SummiHelperClass.kt"
 }

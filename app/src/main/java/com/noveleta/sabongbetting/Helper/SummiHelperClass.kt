@@ -1,6 +1,9 @@
 package com.noveleta.sabongbetting.Helper;
 
 import android.content.Context
+import android.app.Activity
+import android.app.ActivityManager
+
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.RemoteException
@@ -88,7 +91,7 @@ fun initSunmiPrinterService(context: Context, onReady: () -> Unit) {
         }
     }
 
-    private fun isPrinterReady(): Boolean {
+    fun isPrinterReady(): Boolean {
         return sunmiPrinterService != null
     }
 
