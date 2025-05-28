@@ -348,7 +348,5 @@ val activity = LocalContext.current as Activity
             }
           )
         }
-        
-        }
     }
 }
