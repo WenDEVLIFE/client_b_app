@@ -39,7 +39,11 @@ class SendMobileWithdrawViewModel : ViewModel() {
     
     private val _transactionCode = MutableStateFlow("")
     val transactionCodeWithdraw: StateFlow<String> = _transactionCode.asStateFlow()
-
+    
+    fun setTransactionCode(code: String) {
+        _transactionCode.value = code
+    }
+    
     fun sendMobileWithdraw(
     context: Context,
     userID: String,

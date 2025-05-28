@@ -86,7 +86,7 @@ val activity = LocalContext.current as Activity
     val viewModelMobileWithdrawData: SendMobileWithdrawViewModel = viewModel()
     val mobileWithdrawResponse by viewModelMobileWithdrawData.betResponse.collectAsState()
     val mobileWithdrawResult   by viewModelMobileWithdrawData.betResult.collectAsState()
-    val mobileWithdrawErrorCode   by q.betErrorCode.collectAsState()
+    val mobileWithdrawErrorCode   by viewModelMobileWithdrawData.betErrorCode.collectAsState()
     
     
     val userRole = SessionManager.roleID ?: "2"
@@ -349,58 +349,6 @@ val activity = LocalContext.current as Activity
           )
         }
         
-        if (showDialog) {
-            AlertDialog(onDismissRequest = { showDialog = false }) {
-                Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    tonalElevation = 8.dp,
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Column(
-                        Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        TextField(
-    value = transactionCode,
-    onValueChange = { 
-        if (it.length <= 20 && it.all { char -> char.isDigit() }) {
-            viewModelPayoutData.setTransactionCode(it)
-        }
-    },
-    placeholder = { Text("Enter Transaction Code") },
-    singleLine = true,
-    modifier = Modifier.fillMaxWidth(),
-    keyboardOptions = KeyboardOptions(
-        keyboardType = KeyboardType.Number
-    )
-)
-
-
-                        Spacer(Modifier.height(16.dp))
-
-                        Button(
-                            onClick = { /* handle payout */ 
-                            viewModelPayoutData.claimPayout(context,userID = companyId, roleID = userRole, barcodeResult = transactionCode)
-                            showDialog = false
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(48.dp),
-                            shape = RoundedCornerShape(20.dp)
-                        ) {
-                            Text("Claim Payout")
-                        }
-
-                        Spacer(Modifier.height(8.dp))
-
-                        IconButton(onClick = { showDialog = false }) {
-                            Icon(Icons.Default.Close, contentDescription = "Close")
-                        }
-                    }
-                }
-            }
         }
     }
 }

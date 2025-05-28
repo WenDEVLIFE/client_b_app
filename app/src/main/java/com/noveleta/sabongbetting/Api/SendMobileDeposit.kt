@@ -37,6 +37,9 @@ class SendMobileDepositViewModel : ViewModel() {
     private val _transactionCode = MutableStateFlow("")
     val transactionDepositCode: StateFlow<String> = _transactionCode.asStateFlow()
     
+    fun setTransactionCode(code: String) {
+        _transactionCode.value = code
+    }
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
