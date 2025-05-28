@@ -124,6 +124,7 @@ fun MainWithDrawer() {
     
     val betResponse by viewModelPayoutData.betResponse.collectAsState()
     val betResult by viewModelPayoutData.betResult.collectAsState()
+    val betErrorCode   by viewModelPayoutData.betErrorCode.collectAsState()
     
     val dashboardData by viewModelDashboardData.dashboardData.observeAsState()
     val staffLiveBetData by viewModelStaffBetData.dashboardData.observeAsState(initial = null)
@@ -149,7 +150,7 @@ if(betResponse != null){
             LaunchedEffect(betResponse) {
              printPayout(context, betResponse!!)
             }
-            }else if (betResult == -1) {
+            }else if (betErrorCode == -1) {
             
             PrintBetPayoutErrorResults(betResult){
             viewModelPayoutData.clearBetState()
@@ -253,23 +254,7 @@ var showScanner by remember { mutableStateOf(false) }
         )
     }
     
-     if(showScannerDialog){
-        BarcodeScannerScreen(
-            onScanResult = { code ->
-              viewModelPayoutData.setTransactionCode(code)
-            viewModelPayoutData.claimPayout(
-            context,
-                userID = companyId,
-                roleID = userRole,
-                barcodeResult = code
-            )
-            },
-            onCancel = {
-              showScannerDialog = false
-            }
-          )
-        }
-
+     
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
