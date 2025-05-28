@@ -166,11 +166,11 @@ val activity = LocalContext.current as Activity
     }
     
     if(scanFinishDeposit){
-    viewModelMobileDepositData.sendMobileDeposit(context, userID = companyId, roleID = userRole, barcodeResult = depositCode)
+    viewModelMobileDepositData.sendMobileDeposit(context, userID = companyId, roleID = userRole, barcodeResult = transactionDepositCode)
     }
     
     if(scanFinishWithdraw){
-    viewModelMobileWithdrawData.sendMobileWithdraw(context, userID = companyId, roleID = userRole, barcodeResult = widthdrawCode)
+    viewModelMobileWithdrawData.sendMobileWithdraw(context, userID = companyId, roleID = userRole, barcodeResult = transactionCodeWithdraw)
     }
     
     // Scanner launcher with modern result API
@@ -237,7 +237,7 @@ val activity = LocalContext.current as Activity
             TextField(
                   value = transactionCodeWithdraw,
                   onValueChange = { 
-                  if (it.length <= 20 && it.all { char -> char.isDigit() }) {
+                  if (it.length <= 31 && it.all { char -> char.isDigit() }) {
                       viewModelMobileWithdrawData.setTransactionCode(it)
                      }
                   },
@@ -296,7 +296,7 @@ val activity = LocalContext.current as Activity
             TextField(
                   value = transactionDepositCode,
                   onValueChange = { 
-                  if (it.length <= 20 && it.all { char -> char.isDigit() }) {
+                  if (it.length <= 31 && it.all { char -> char.isDigit() }) {
                       viewModelMobileDepositData.setTransactionCode(it)
                      }
                   },
