@@ -34,6 +34,9 @@ class SendMobileDepositViewModel : ViewModel() {
     private val _betErrorCode = MutableStateFlow<Int?>(null)
     val betErrorCode: StateFlow<Int?> = _betErrorCode
     
+    private val _transactionCode = MutableStateFlow("")
+    val transactionDepositCode: StateFlow<String> = _transactionCode.asStateFlow()
+    
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
@@ -60,7 +63,7 @@ class SendMobileDepositViewModel : ViewModel() {
                 put("roleID", roleID)
                 put("cname", SessionManager.cname ?: "N/A")
                 put("systemName", SessionManager.systemName ?: "N/A")
-                put("txtBarCode", barcodeResult.toLong())
+                put("txtBarCode", barcodeResult)
             }
 
             withContext(Dispatchers.IO) {

@@ -86,7 +86,7 @@ val activity = LocalContext.current as Activity
     val viewModelMobileWithdrawData: SendMobileWithdrawViewModel = viewModel()
     val mobileWithdrawResponse by viewModelMobileWithdrawData.betResponse.collectAsState()
     val mobileWithdrawResult   by viewModelMobileWithdrawData.betResult.collectAsState()
-    val mobileWithdrawErrorCode   by viewModelMobileWithdrawData.betErrorCode.collectAsState()
+    val mobileWithdrawErrorCode   by q.betErrorCode.collectAsState()
     
     
     val userRole = SessionManager.roleID ?: "2"
@@ -128,22 +128,15 @@ val activity = LocalContext.current as Activity
         scanFinish = false
     }
     
-    val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
-    
-    if(scanFinishDeposit){
-    viewModelMobileDepositData.sendMobileDeposit(context, userID = companyId, roleID = userRole, barcodeResult = depositCode)
-    }
-    
-    if(scanFinishWithdraw){
-    viewModelMobileWithdrawData.sendMobileWithdraw(context, userID = companyId, roleID = userRole, barcodeResult = widthdrawCode)
-    }
+    val transactionCodeWithdraw by viewModelMobileWithdrawData.transactionCodeWithdraw.collectAsState()
+    val transactionDepositCode by viewModelMobileDepositData.transactionDepositCode.collectAsState()
     
     if (mobileDepositResponse != null){
       MobileDepositReceiptDialog(mobileDepositResponse!!){
         viewModelMobileDepositData.clearBetState()
       }
-      depositCode = ""
-      scanFinish = false
+      viewModelMobileDepositData.setTransactionCode("")
+      scanFinishDeposit = false
       LaunchedEffect(mobileDepositResponse) {
         printMobileDeposit(context, mobileDepositResponse!!)
     }
@@ -151,16 +144,16 @@ val activity = LocalContext.current as Activity
       PrintDepositErrorResults(mobileDepositResult){
         viewModelMobileDepositData.clearBetState()
       }
-      depositCode = ""
-      scanFinish = false
+      viewModelMobileDepositData.setTransactionCode("")
+      scanFinishDeposit = false
     }
     
     if (mobileWithdrawResponse != null){
       MobileWithdrawReceiptDialog(mobileWithdrawResponse!!){
         viewModelMobileWithdrawData.clearBetState()
       }
-      widthdrawCode = ""
-      scanFinish = false
+      viewModelMobileWithdrawData.setTransactionCode("")
+      scanFinishWithdraw = false
       LaunchedEffect(mobileWithdrawResponse) {
         printMobileWithdraw(context, mobileWithdrawResponse!!)
     }
@@ -168,8 +161,16 @@ val activity = LocalContext.current as Activity
       PrintWithdrawErrorResults(mobileWithdrawResult){
         viewModelMobileWithdrawData.clearBetState()
       }
-      widthdrawCode = ""
-      scanFinish = false
+      viewModelMobileWithdrawData.setTransactionCode("")
+      scanFinishWithdraw = false
+    }
+    
+    if(scanFinishDeposit){
+    viewModelMobileDepositData.sendMobileDeposit(context, userID = companyId, roleID = userRole, barcodeResult = depositCode)
+    }
+    
+    if(scanFinishWithdraw){
+    viewModelMobileWithdrawData.sendMobileWithdraw(context, userID = companyId, roleID = userRole, barcodeResult = widthdrawCode)
     }
     
     // Scanner launcher with modern result API
@@ -234,10 +235,10 @@ val activity = LocalContext.current as Activity
             Spacer(Modifier.height(16.dp))
 
             TextField(
-                  value = widthdrawCode,
+                  value = transactionCodeWithdraw,
                   onValueChange = { 
                   if (it.length <= 20 && it.all { char -> char.isDigit() }) {
-                      widthdrawCode = it
+                      viewModelMobileWithdrawData.setTransactionCode(it)
                      }
                   },
                   placeholder = { Text("Enter Barcode") },
@@ -293,10 +294,10 @@ val activity = LocalContext.current as Activity
             Spacer(Modifier.height(16.dp))
             
             TextField(
-                  value = depositCode,
+                  value = transactionDepositCode,
                   onValueChange = { 
                   if (it.length <= 20 && it.all { char -> char.isDigit() }) {
-                      depositCode = it
+                      viewModelMobileDepositData.setTransactionCode(it)
                      }
                   },
                   placeholder = { Text("Enter Barcode") },
@@ -325,7 +326,7 @@ val activity = LocalContext.current as Activity
         if(showScannerDialogMobileDeposit){
         BarcodeScannerScreen(
             onScanResult = { code ->
-              depositCode = code
+              viewModelMobileDepositData.setTransactionCode(code)
               scanFinishDeposit = true
       showScannerDialogMobileDeposit = false
             },
@@ -338,7 +339,7 @@ val activity = LocalContext.current as Activity
         if(showScannerDialogMobileWithdraw){
         BarcodeScannerScreen(
             onScanResult = { code ->
-              widthdrawCode = code
+              viewModelMobileWithdrawData.setTransactionCode(code)
               scanFinishWithdraw = true
       showScannerDialogMobileWithdraw = false
             },

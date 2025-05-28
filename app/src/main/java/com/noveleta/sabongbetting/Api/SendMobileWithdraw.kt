@@ -36,6 +36,9 @@ class SendMobileWithdrawViewModel : ViewModel() {
     
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
+    
+    private val _transactionCode = MutableStateFlow("")
+    val transactionCodeWithdraw: StateFlow<String> = _transactionCode.asStateFlow()
 
     fun sendMobileWithdraw(
     context: Context,
@@ -60,7 +63,7 @@ class SendMobileWithdrawViewModel : ViewModel() {
                 put("roleID", roleID)
                 put("cname", SessionManager.cname ?: "N/A")
                 put("systemName", SessionManager.systemName ?: "N/A")
-                put("txtBarCode", barcodeResult.toLong())
+                put("txtBarCode", barcodeResult)
             }
 
             withContext(Dispatchers.IO) {
