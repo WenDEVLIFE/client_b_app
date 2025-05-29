@@ -90,14 +90,11 @@ val activity = LocalContext.current as Activity
     val companyId = SessionManager.accountID ?: "500"
     
     if(betResponse != null){
-        PayoutReceiptDialog(betResponse!!){
-            viewModelPayoutData.clearBetState()
-        }
+        
         viewModelPayoutData.setTransactionCode("")
         scanFinish = false
-    LaunchedEffect(betResponse) {
-             printPayout(context, betResponse!!)
-             }
+        val intent = Intent(context, PrinterReceiptActivity::class.java)
+    startActivity(intent)
     }else if (betErrorCode == -1) {
     
       PrintBetPayoutErrorResults(betResult){

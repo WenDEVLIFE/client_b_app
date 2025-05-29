@@ -82,15 +82,8 @@ fun transactionLogsUI(liveBetData: LiveBettingData) {
     val reprintResult by viewModelReprintBet.betResult.collectAsState()
     
     if (reprintResponse != null && reprintErrorCode == 0) {
-    ReprintBetReceiptDialog(
-        response = reprintResponse!!,
-        onDismiss = {
-            viewModelReprintBet.clearBetState()
-        }
-    )
-    LaunchedEffect(reprintResponse) {
-        rePrintBetResponse(context, reprintResponse!!)
-        }
+    val intent = Intent(context, PrinterReceiptActivity::class.java)
+    startActivity(intent)
 }else if (reprintErrorCode == -1) {
     
     RePrintBetErrorResults(reprintResult){

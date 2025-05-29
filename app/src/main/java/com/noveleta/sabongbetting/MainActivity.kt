@@ -8,7 +8,7 @@ import androidx.activity.viewModels
 import com.sunmi.peripheral.printer.*
 
 import com.noveleta.sabongbetting.ui.theme.*
-import com.noveleta.sabongbetting.ui.*
+import com.noveleta.sabwongbetting.ui.*
 import com.noveleta.sabongbetting.Factory.*
 import com.noveleta.sabongbetting.Model.*
 import com.noveleta.sabongbetting.Helper.*
@@ -113,18 +113,6 @@ class MainActivity : ComponentActivity() {
         }
     }
     
-    override fun onStart() {
-        super.onStart()
-        SunmiPrinterHelper.initSunmiPrinterService(this) {
-            // Printer ready - safe to use
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        SunmiPrinterHelper.deInitSunmiPrinterService(this)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

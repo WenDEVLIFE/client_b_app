@@ -85,16 +85,11 @@ fun cancelBetUI() {
     val companyId = SessionManager.accountID ?: "500"
     
     if(betResponse != null && betErrorCode == 0){
-            CancelReceiptDialog(betResponse!!){
-            viewModelCancelBetData.clearBetState()
-            }
-            viewModelCallWebsocket.sendDashboardTrigger()
-    viewModelCallWebsocket.sendBetsTrigger()
+            
             viewModelCancelBetData.setTransactionCode("")
         scanFinish = false
-            LaunchedEffect(betResponse) {
-        printCancelledBetting(context, betResponse!!)
-        }
+            val intent = Intent(context, PrinterReceiptActivity::class.java)
+    startActivity(intent)
             }else if (betErrorCode == -1) {
             
             PrintCancelBetErrorResults(betResult){
