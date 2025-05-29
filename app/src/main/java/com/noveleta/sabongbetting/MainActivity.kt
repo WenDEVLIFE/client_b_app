@@ -178,7 +178,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onStop() {
         super.onStop()
-        SunmiPrinterHelper.deInitSunmiPrinterService(this)
        networkMonitor.unregister() // Unregister here instead of onDestroy
     }
 
