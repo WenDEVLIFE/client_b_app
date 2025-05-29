@@ -78,6 +78,7 @@ class PrinterReceiptActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PrinterScreen(
     onBackPressed: () -> Unit
