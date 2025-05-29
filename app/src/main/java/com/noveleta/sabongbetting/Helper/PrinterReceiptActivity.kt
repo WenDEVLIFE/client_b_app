@@ -37,7 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.livedata.observeAsState
 
 import androidx.compose.ui.platform.LocalContext
-
+import androidx.compose.runtime.getValue
 import com.noveleta.sabongbetting.ui.theme.*
 import com.noveleta.sabongbetting.Factory.*
 import com.noveleta.sabongbetting.Api.*

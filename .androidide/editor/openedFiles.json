@@ -64,14 +64,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/PrinterReceiptActivity.kt",
       "selection": {
         "end": {
-          "column": 39,
-          "index": 2695,
-          "line": 80
+          "column": 40,
+          "index": 1547,
+          "line": 39
         },
         "start": {
-          "column": 39,
-          "index": 2695,
-          "line": 80
+          "column": 40,
+          "index": 1547,
+          "line": 39
         }
       }
     },
@@ -154,14 +154,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/transactionLogs.kt",
       "selection": {
         "end": {
-          "column": 0,
-          "index": 2673,
-          "line": 68
+          "column": 35,
+          "index": 2642,
+          "line": 66
         },
         "start": {
-          "column": 0,
-          "index": 2673,
-          "line": 68
+          "column": 35,
+          "index": 2642,
+          "line": 66
         }
       }
     },
@@ -196,5 +196,5 @@
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/PrinterReceiptActivity.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/transactionLogs.kt"
 }
