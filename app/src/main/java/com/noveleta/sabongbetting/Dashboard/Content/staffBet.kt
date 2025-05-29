@@ -231,7 +231,6 @@ TellerFundCashOutReceiptDialog(
         response = cashOutResponse!!,
         onDismiss = {
             viewModelCashOutData.clearBetState()
-            activity.finish()
         }
     )
     LaunchedEffect(cashOutResponse) {
@@ -249,7 +248,6 @@ TellerFundCashInReceiptDialog(
         response = cashInResponse!!,
         onDismiss = {
             viewModelCashInData.clearBetState()
-            activity.finish()
         }
     )
 LaunchedEffect(cashInResponse) {
