@@ -101,7 +101,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var networkMonitor: NetworkMonitor
     private val permissionGranted = mutableStateOf(false)
 
-    private val cameraPermissionLauncher = registerForActivityResult(
+   /* private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
@@ -111,7 +111,7 @@ class MainActivity : ComponentActivity() {
             setResult(Activity.RESULT_CANCELED)
             finish()
         }
-    }
+    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,12 +119,13 @@ class MainActivity : ComponentActivity() {
         // Initialize networkMonitor but don't register yet
        // networkMonitor = NetworkMonitor(this)
 
-        val placeBetsViewModel: PlaceBetsViewModel by viewModels()
+      /*  val placeBetsViewModel: PlaceBetsViewModel by viewModels()
         val liveBettingViewModel: LiveBettingViewModel by viewModels()
-
-        ProcessLifecycleOwner.get().lifecycle.addObserver(
+        */
+        
+      /*  ProcessLifecycleOwner.get().lifecycle.addObserver(
             AppLifecycleObserver(placeBetsViewModel, liveBettingViewModel)
-        )
+        )*/
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Thread.setDefaultUncaughtExceptionHandler { _, ex ->
