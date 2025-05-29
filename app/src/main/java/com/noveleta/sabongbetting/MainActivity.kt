@@ -101,7 +101,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var networkMonitor: NetworkMonitor
     private val permissionGranted = mutableStateOf(false)
 
-   /* private val cameraPermissionLauncher = registerForActivityResult(
+   private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
@@ -111,7 +111,7 @@ class MainActivity : ComponentActivity() {
             setResult(Activity.RESULT_CANCELED)
             finish()
         }
-    }*/
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
