@@ -119,14 +119,14 @@ fun MainWithDrawer() {
     val viewModelStaffBetData: PlaceBetsViewModel = viewModel()
     val viewModelPayoutData: SendPayoutViewModel = viewModel()
     
-    val errorMsg by viewModelDashboardData.errorResult.observeAsState()
+    val errorMsg by viewModelDashboardData.errorMessage.observeAsState()
     val clipboard = LocalClipboardManager.current
     
     val betResponse by viewModelPayoutData.betResponse.collectAsState()
     val betResult by viewModelPayoutData.betResult.collectAsState()
     val betErrorCode   by viewModelPayoutData.betErrorCode.collectAsState()
     
-    val dashboardData by viewModelDashboardData.dashboardData.observeAsState()
+    val dashboardData by viewModelDashboardData.liveBettingData.observeAsState()
     val staffLiveBetData by viewModelStaffBetData.dashboardData.observeAsState(initial = null)
     val historyTransactionLogs by viewModelStaffBetData.transactionHistoryList.observeAsState()
     
@@ -214,12 +214,10 @@ var showScanner by remember { mutableStateOf(false) }
             text = { Text(message) },
             confirmButton = {
                 TextButton(onClick = {
-                    // Copy to clipboard
-                    clipboard.setText(AnnotatedString(message))
-                    Toast.makeText(context, "Error copied to clipboard", Toast.LENGTH_SHORT).show()
-                    viewModelDashboardData.clearError()
+                    viewModelDashboardData.connectWebSocket()
+        viewModelStaffBetData.connectWebSocket()
                 }) {
-                    Text("Copy")
+                    Text("Reconnect")
                 }
             },
             dismissButton = {

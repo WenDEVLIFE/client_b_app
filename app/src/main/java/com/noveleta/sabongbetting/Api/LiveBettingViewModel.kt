@@ -37,6 +37,9 @@ class LiveBettingViewModel : ViewModel() {
     private val _liveBettingData = MutableStateFlow<LiveBettingData?>(null)
     val liveBettingData: StateFlow<LiveBettingData?> = _liveBettingData
 
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
+
     private lateinit var webSocket: WebSocket
     private var isWebSocketConnected = false
     private var retryCount = 0
@@ -49,7 +52,9 @@ class LiveBettingViewModel : ViewModel() {
         }
 
         if (retryCount > maxRetries) {
-            Log.e("LiveWebSocket", "Max retries exceeded")
+            val msg = "Max retries exceeded. Please check your connection."
+            Log.e("LiveWebSocket", msg)
+            _errorMessage.value = msg
             return
         }
 
@@ -66,10 +71,12 @@ class LiveBettingViewModel : ViewModel() {
         val client = OkHttpClient()
 
         val listener = object : WebSocketListener() {
+
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 Log.d("LiveWebSocket", "Connected: ${response.message}")
                 isWebSocketConnected = true
                 retryCount = 0
+                _errorMessage.value = null // Clear previous error
 
                 val subscribeMessage = """{"type": "androidDashboard", "roleID": 2}"""
                 webSocket.send(subscribeMessage)
@@ -90,14 +97,19 @@ class LiveBettingViewModel : ViewModel() {
                     } else {
                         Log.w("LiveWebSocket", "Unhandled type: $success")
                     }
+
                 } catch (e: Exception) {
-                    Log.e("LiveWebSocket", "Parsing error: ${e.message}")
+                    val error = "Parsing error: ${e.message}"
+                    Log.e("LiveWebSocket", error)
+                    _errorMessage.value = error
                 }
             }
 
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                Log.e("LiveWebSocket", "WebSocket failed: ${t.message}")
+                val error = "WebSocket failed: ${t.message}"
+                Log.e("LiveWebSocket", error)
                 isWebSocketConnected = false
+                _errorMessage.value = error
                 retryCount++
                 Handler(Looper.getMainLooper()).postDelayed({
                     connectWebSocket()
@@ -126,7 +138,9 @@ class LiveBettingViewModel : ViewModel() {
                 Log.d("LiveWebSocket", "Closed manually")
             }
         } catch (e: Exception) {
-            Log.e("LiveWebSocket", "Close error: ${e.message}")
+            val error = "Close error: ${e.message}"
+            Log.e("LiveWebSocket", error)
+            _errorMessage.value = error
         } finally {
             isWebSocketConnected = false
         }

@@ -109,14 +109,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/dashboardMain.kt",
       "selection": {
         "end": {
-          "column": 44,
-          "index": 1539,
-          "line": 40
+          "column": 48,
+          "index": 8084,
+          "line": 217
         },
         "start": {
-          "column": 0,
-          "index": 1459,
-          "line": 39
+          "column": 48,
+          "index": 8084,
+          "line": 217
         }
       }
     },
@@ -214,14 +214,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/LiveBettingViewModel.kt",
       "selection": {
         "end": {
-          "column": 0,
-          "index": 4877,
-          "line": 140
+          "column": 23,
+          "index": 1087,
+          "line": 37
         },
         "start": {
-          "column": 0,
-          "index": 4877,
-          "line": 140
+          "column": 8,
+          "index": 1072,
+          "line": 37
         }
       }
     },
@@ -239,7 +239,22 @@
           "line": 187
         }
       }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/AppLifecycleObserver.kt",
+      "selection": {
+        "end": {
+          "column": 44,
+          "index": 790,
+          "line": 19
+        },
+        "start": {
+          "column": 44,
+          "index": 790,
+          "line": 19
+        }
+      }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/LiveBettingViewModel.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/dashboardMain.kt"
 }

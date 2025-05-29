@@ -18,10 +18,5 @@ class AppLifecycleObserver(private val viewModel: PlaceBetsViewModel, private va
 
     override fun onStop(owner: LifecycleOwner) {
         // App went to background or stopped
-        viewModel.stopPeriodicSubscription()
-        viewModel.closeWebSocket()
-        
-        viewModelTwo.stopPeriodicSubscription()
-        viewModelTwo.closeWebSocket()
     }
 }
