@@ -42,16 +42,16 @@ import android.provider.Settings
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavHost(
-    
+    networkMonitor: NetworkMonitor,
     viewModelFactory: ViewModelProvider.Factory
 ) {
-//networkMonitor: NetworkMonitor,
+
     val navController = rememberNavController()
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
     
 
-    //val isConnected by networkMonitor.isConnected.collectAsState()
+    val isConnected by networkMonitor.isConnected.collectAsState()
 
     var showBanner by remember { mutableStateOf(false) }
     var bannerMessage by remember { mutableStateOf("") }
@@ -65,7 +65,7 @@ fun AppNavHost(
     
     var showOfflineDialog by remember { mutableStateOf(false) }
 
-  /*  LaunchedEffect(isConnected) {
+    LaunchedEffect(isConnected) {
         if (!isConnected) {
             bannerMessage = "You are offline"
             bannerColor = Color.Red
@@ -80,7 +80,7 @@ fun AppNavHost(
             showBanner = false
         }
     } 
-    */
+    
 
 if (showOfflineDialog) {
     AlertDialog(

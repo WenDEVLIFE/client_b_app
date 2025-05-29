@@ -117,7 +117,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // Initialize networkMonitor but don't register yet
-       // networkMonitor = NetworkMonitor(this)
+       networkMonitor = NetworkMonitor(this)
 
       /*  val placeBetsViewModel: PlaceBetsViewModel by viewModels()
         val liveBettingViewModel: LiveBettingViewModel by viewModels()
@@ -150,9 +150,9 @@ class MainActivity : ComponentActivity() {
                         android.Manifest.permission.CAMERA
                     ) == PackageManager.PERMISSION_GRANTED
                 ) {
-                 //     networkMonitor = networkMonitor,
+                      
                     AppNavHost(
-                  
+                       networkMonitor = networkMonitor,
                         viewModelFactory = AccountLogInViewModelFactory(application)
                     )
                 }
@@ -165,13 +165,13 @@ class MainActivity : ComponentActivity() {
         SunmiPrinterHelper.initSunmiPrinterService(this) {
             // Printer is ready to use
         }
-       // networkMonitor.register() // Register here instead of onCreate
+       networkMonitor.register() // Register here instead of onCreate
     }
 
     override fun onStop() {
         super.onStop()
         SunmiPrinterHelper.deInitSunmiPrinterService(this)
-      //  networkMonitor.unregister() // Unregister here instead of onDestroy
+       networkMonitor.unregister() // Unregister here instead of onDestroy
     }
 
     override fun onDestroy() {
