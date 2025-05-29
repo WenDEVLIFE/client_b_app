@@ -90,13 +90,12 @@ fun cancelBetUI() {
             
             viewModelCancelBetData.setTransactionCode("")
         scanFinish = false
-            CancelReceiptDialog(betCancelResponse!!){
+            CancelReceiptDialog(betResponse!!){
             viewModelCancelBetData.clearBetState()
-            activity.finish()
             }
             
-            LaunchedEffect(betCancelResponse) {
-        printCancelledBetting(context, betCancelResponse!!)
+            LaunchedEffect(betResponse) {
+        printCancelledBetting(context, betResponse!!)
         }
             }else if (betErrorCode == -1) {
             

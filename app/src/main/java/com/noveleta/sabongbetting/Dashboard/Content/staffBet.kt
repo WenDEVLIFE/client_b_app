@@ -167,7 +167,6 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
                         response = betResponse!!,
                         onDismiss = {
                             viewModel.clearBetState()
-                            activity.finish()
                             }
                     )
                     
@@ -197,7 +196,6 @@ MoneyOnHandDialog(
         },
         onDismiss = {
             viewModelPrintMoneyOnHandReports.clearBetState()
-            activity.finish()
         }
     )
 
@@ -214,7 +212,6 @@ ReprintBetReceiptDialog(
         response = reprintResponse!!,
         onDismiss = {
             viewModelReprintBet.clearBetState()
-            activity.finish()
         }
     )
 LaunchedEffect(reprintResponse) {

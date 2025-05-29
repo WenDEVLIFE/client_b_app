@@ -86,7 +86,6 @@ fun transactionLogsUI(liveBetData: LiveBettingData) {
         response = reprintResponse!!,
         onDismiss = {
             viewModelReprintBet.clearBetState()
-            activity.finish()
         }
     )
 LaunchedEffect(reprintResponse) {

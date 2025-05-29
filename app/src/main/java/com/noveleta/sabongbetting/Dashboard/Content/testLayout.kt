@@ -94,12 +94,11 @@ val activity = LocalContext.current as Activity
         
         viewModelPayoutData.setTransactionCode("")
         scanFinish = false
-        PayoutReceiptDialog(betPayoutResponse!!){
+        PayoutReceiptDialog(betResponse!!){
             viewModelPayoutData.clearBetState()
-            activity.finish()
         }
-    LaunchedEffect(betPayoutResponse) {
-             printPayout(context, betPayoutResponse!!)
+    LaunchedEffect(betResponse) {
+             printPayout(context, betResponse!!)
              }
     }else if (betErrorCode == -1) {
     
