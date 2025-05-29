@@ -112,10 +112,11 @@ class MainActivity : ComponentActivity() {
             finish()
         }
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Initialize networkMonitor but don't register yet
         networkMonitor = NetworkMonitor(this)
 
         val placeBetsViewModel: PlaceBetsViewModel by viewModels()
@@ -137,6 +138,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        // Ask for camera permission
         cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
 
         setContent {
@@ -156,10 +158,23 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        SunmiPrinterHelper.initSunmiPrinterService(this) {
+            // Printer is ready to use
+        }
+        networkMonitor.register() // Register here instead of onCreate
+    }
+
+    override fun onStop() {
+        super.onStop()
+        SunmiPrinterHelper.deInitSunmiPrinterService(this)
+        networkMonitor.unregister() // Unregister here instead of onDestroy
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        networkMonitor.unregister()
-        // Do NOT de-init printer here; handled in Application
+        // Avoid doing network unregister here
+        // Printer de-init handled in Application as mentioned
     }
 }
-

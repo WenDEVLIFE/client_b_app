@@ -135,8 +135,14 @@ val activity = LocalContext.current as Activity
       
       viewModelMobileDepositData.setTransactionCode("")
       scanFinishDeposit = false
-      val intent = Intent(context, PrinterReceiptActivity::class.java)
-    context.startActivity(intent)
+      MobileDepositReceiptDialog(mobileDepositResponse!!){
+        viewModelMobileDepositData.clearBetState()
+        activity.finish()
+      }
+      
+      LaunchedEffect(mobileDepositResponse) {
+        printMobileDeposit(context, mobileDepositResponse!!)
+    }
     } else if (mobileDepositErrorCode == -1) {
       PrintDepositErrorResults(mobileDepositResult){
         viewModelMobileDepositData.clearBetState()
@@ -149,8 +155,14 @@ val activity = LocalContext.current as Activity
       
       viewModelMobileWithdrawData.setTransactionCode("")
       scanFinishWithdraw = false
-      val intent = Intent(context, PrinterReceiptActivity::class.java)
-    context.startActivity(intent)
+      MobileWithdrawReceiptDialog(mobileWithdrawResponse!!){
+        viewModelMobileWithdrawData.clearBetState()
+        activity.finish()
+      }
+      
+      LaunchedEffect(mobileWithdrawResponse) {
+        printMobileWithdraw(context, mobileWithdrawResponse!!)
+    }
     
     } else if (mobileWithdrawErrorCode == -1) {
       PrintWithdrawErrorResults(mobileWithdrawResult){

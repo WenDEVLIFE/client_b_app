@@ -10,38 +10,48 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class NetworkMonitor(context: Context) {
-    // 1) Grab the ConnectivityManager via the string‐based API
-    private val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    // 2) Backing Flow to emit connectivity state
+    private val connectivityManager =
+        context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
     private val _isConnected = MutableStateFlow(false)
     val isConnected: StateFlow<Boolean> = _isConnected.asStateFlow()
 
-    // 3) Our NetworkCallback to update the Flow
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             _isConnected.value = true
         }
+
         override fun onLost(network: Network) {
             _isConnected.value = false
         }
     }
 
-    init {
-        // 4) Prime the initial value from whatever's currently active
+    private var isRegistered = false
+
+    fun register() {
+        if (isRegistered) return
+        // Set initial connectivity status
         val active = connectivityManager.activeNetwork
         val caps = connectivityManager.getNetworkCapabilities(active)
         _isConnected.value = caps?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
 
-        // 5) Register for future updates (any Internet‐capable transport)
         val request = NetworkRequest.Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             .build()
+
         connectivityManager.registerNetworkCallback(request, networkCallback)
+        isRegistered = true
     }
 
     fun unregister() {
-        connectivityManager.unregisterNetworkCallback(networkCallback)
+        if (!isRegistered) return
+        try {
+            connectivityManager.unregisterNetworkCallback(networkCallback)
+        } catch (e: Exception) {
+            // Sometimes unregister can throw if callback was not registered
+            e.printStackTrace()
+        }
+        isRegistered = false
     }
 }

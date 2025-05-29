@@ -168,103 +168,27 @@ fun PrinterScreen(
                 ) {
                     Text("Ready to Print", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     
-                    viewModelCallWebsocket.sendDashboardTrigger()
-                    viewModelCallWebsocket.sendBetsTrigger()
-                    if(betResponse != null){
-                    BetReceiptDialog(
-                        response = betResponse!!,
-                        onDismiss = {
-                            viewModel.clearBetState()
-                            activity.finish()
-                            }
-                    )
                     
-                    LaunchedEffect(betResponse) {
-                            // only runs a single time per distinct betResponse
-                            printBetResponse(context, betResponse!!)
-                    }
+                    if(betResponse != null){
+                    
                     
                     }else if (printMOHResponse != null && printMOHResults == 0){
-                    MoneyOnHandDialog(
-        response = printMOHResponse!!,
-        onPrint = {
-        printMoneyOnHand(context, printMOHResponse!!)
-        },
-        onDismiss = {
-            viewModelPrintMoneyOnHandReports.clearBetState()
-            activity.finish()
-        }
-    )
-
+                    
                     }else if (reprintResponse != null && reprintErrorCode == 0) {
-                    ReprintBetReceiptDialog(
-        response = reprintResponse!!,
-        onDismiss = {
-            viewModelReprintBet.clearBetState()
-            activity.finish()
-        }
-    )
-LaunchedEffect(reprintResponse) {
-        rePrintBetResponse(context, reprintResponse!!)
-        }
+                    
                     }else if (cashOutResponse != null) {
-                    TellerFundCashOutReceiptDialog(
-        response = cashOutResponse!!,
-        onDismiss = {
-            viewModelCashOutData.clearBetState()
-            activity.finish()
-        }
-    )
-    LaunchedEffect(cashOutResponse) {
-        printTellerCashoutResponse(context, cashOutResponse!!)
-        }
+                    
                     }else if (cashInResponse != null) {
-TellerFundCashInReceiptDialog(
-        response = cashInResponse!!,
-        onDismiss = {
-            viewModelCashInData.clearBetState()
-            activity.finish()
-        }
-    )
-LaunchedEffect(cashInResponse) {
-        printTellerCashinResponse(context, cashInResponse!!)
-    }
+
     
     } else if (betPayoutResponse != null){
-    PayoutReceiptDialog(betPayoutResponse!!){
-            viewModelPayoutData.clearBetState()
-            activity.finish()
-        }
-    LaunchedEffect(betPayoutResponse) {
-             printPayout(context, betPayoutResponse!!)
-             }
+    
     }else if (mobileDepositResponse != null){
-      MobileDepositReceiptDialog(mobileDepositResponse!!){
-        viewModelMobileDepositData.clearBetState()
-        activity.finish()
-      }
       
-      LaunchedEffect(mobileDepositResponse) {
-        printMobileDeposit(context, mobileDepositResponse!!)
-    }
     }else if (mobileWithdrawResponse != null){
-      MobileWithdrawReceiptDialog(mobileWithdrawResponse!!){
-        viewModelMobileWithdrawData.clearBetState()
-        activity.finish()
-      }
       
-      LaunchedEffect(mobileWithdrawResponse) {
-        printMobileWithdraw(context, mobileWithdrawResponse!!)
-    }
     }else if(betCancelResponse != null && betCancelErrorCode == 0){
-            CancelReceiptDialog(betCancelResponse!!){
-            viewModelCancelBetData.clearBetState()
-            activity.finish()
-            }
             
-            LaunchedEffect(betCancelResponse) {
-        printCancelledBetting(context, betCancelResponse!!)
-        }
     } // End of else if
     
     

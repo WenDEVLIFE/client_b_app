@@ -94,8 +94,13 @@ val activity = LocalContext.current as Activity
         
         viewModelPayoutData.setTransactionCode("")
         scanFinish = false
-        val intent = Intent(context, PrinterReceiptActivity::class.java)
-    context.startActivity(intent)
+        PayoutReceiptDialog(betPayoutResponse!!){
+            viewModelPayoutData.clearBetState()
+            activity.finish()
+        }
+    LaunchedEffect(betPayoutResponse) {
+             printPayout(context, betPayoutResponse!!)
+             }
     }else if (betErrorCode == -1) {
     
       PrintBetPayoutErrorResults(betResult){

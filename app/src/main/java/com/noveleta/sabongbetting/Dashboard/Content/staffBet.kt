@@ -160,6 +160,21 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     // TODO:: Call Live Dashboard on PC Side after Betting
     //
     //---------------------
+    viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
+                    
+    BetReceiptDialog(
+                        response = betResponse!!,
+                        onDismiss = {
+                            viewModel.clearBetState()
+                            activity.finish()
+                            }
+                    )
+                    
+                    LaunchedEffect(betResponse) {
+                            // only runs a single time per distinct betResponse
+                            printBetResponse(context, betResponse!!)
+                    }
     
     digitDisplayState.value = "0"
     val intent = Intent(context, PrinterReceiptActivity::class.java)
@@ -175,8 +190,17 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
 
 if(printMOHResponse != null && printMOHResults == 0){
 
-val intent = Intent(context, PrinterReceiptActivity::class.java)
-    context.startActivity(intent)
+MoneyOnHandDialog(
+        response = printMOHResponse!!,
+        onPrint = {
+        printMoneyOnHand(context, printMOHResponse!!)
+        },
+        onDismiss = {
+            viewModelPrintMoneyOnHandReports.clearBetState()
+            activity.finish()
+        }
+    )
+
     
 }else if(printMOHResponse == null && printMOHErrorCode == -1){
 PrintMOHError(printMOHResults){
@@ -186,8 +210,16 @@ PrintMOHError(printMOHResults){
 
 if (reprintResponse != null && reprintErrorCode == 0) {
     
-val intent = Intent(context, PrinterReceiptActivity::class.java)
-    context.startActivity(intent)
+ReprintBetReceiptDialog(
+        response = reprintResponse!!,
+        onDismiss = {
+            viewModelReprintBet.clearBetState()
+            activity.finish()
+        }
+    )
+LaunchedEffect(reprintResponse) {
+        rePrintBetResponse(context, reprintResponse!!)
+        }
     
 }else if (reprintResponse == null && reprintErrorCode == -1) {
 
@@ -198,8 +230,16 @@ val intent = Intent(context, PrinterReceiptActivity::class.java)
 }
 
 if (cashOutResponse != null) {
-val intent = Intent(context, PrinterReceiptActivity::class.java)
-    context.startActivity(intent)
+TellerFundCashOutReceiptDialog(
+        response = cashOutResponse!!,
+        onDismiss = {
+            viewModelCashOutData.clearBetState()
+            activity.finish()
+        }
+    )
+    LaunchedEffect(cashOutResponse) {
+        printTellerCashoutResponse(context, cashOutResponse!!)
+        }
 
 }else if (cashOutErrorCode == -1) {
     PrintTellerCashOutErrorResults(cashOutResult){
@@ -208,8 +248,16 @@ val intent = Intent(context, PrinterReceiptActivity::class.java)
 }
 
 if (cashInResponse != null) {
-val intent = Intent(context, PrinterReceiptActivity::class.java)
-    context.startActivity(intent)
+TellerFundCashInReceiptDialog(
+        response = cashInResponse!!,
+        onDismiss = {
+            viewModelCashInData.clearBetState()
+            activity.finish()
+        }
+    )
+LaunchedEffect(cashInResponse) {
+        printTellerCashinResponse(context, cashInResponse!!)
+    }
 }else if (cashInErrorCode == -1) {
 
     PrintTellerCashInErrorResults(cashInResult){
