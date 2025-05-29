@@ -12,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.material3.icons.Icons
+import androidx.compose.material3.icons.filled.*
 import androidx.compose.material3.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,6 +27,16 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import androidx.activity.viewModels
+
+import androidx.compose.runtime.LaunchedEffect
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.compose.runtime.collectAsState
+
+import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.livedata.observeAsState
+
+import androidx.compose.ui.platform.LocalContext
 
 import com.noveleta.sabongbetting.ui.theme.*
 import com.noveleta.sabongbetting.Factory.*
@@ -56,9 +67,10 @@ class PrinterReceiptActivity : ComponentActivity() {
 
         setContent {
             MyComposeApplicationTheme {
-            
+            val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+
                 PrinterScreen(
-                    onBackPressed = { onBackPressedDispatcher.onBackPressed() }
+                    onBackPressed = { dispatcher.onBackPressed() }
                 )
             }
         }
