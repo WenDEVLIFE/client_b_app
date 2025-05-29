@@ -78,7 +78,7 @@ class LiveBettingViewModel : ViewModel() {
                 retryCount = 0
                 _errorMessage.value = null // Clear previous error
 
-                val subscribeMessage = """{"type": "androidDashboard", "roleID": 2}"""
+                val subscribeMessage = """{"type": "androidDashboard", "roleID": 2, "companyID": "${SessionManager.accountID}"}"""
                 webSocket.send(subscribeMessage)
                 Log.d("LiveWebSocket", "Sent subscription message: $subscribeMessage")
             }

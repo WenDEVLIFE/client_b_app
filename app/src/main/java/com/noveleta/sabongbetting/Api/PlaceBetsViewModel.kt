@@ -90,7 +90,7 @@ class PlaceBetsViewModel : ViewModel() {
 
                 // Send subscription messages ONCE
                 val subscribeMessages = listOf(
-                    """{"type": "androidViewBets", "roleID": 2}""",
+                    """{"type": "androidViewBets", "roleID": 2,"companyID": "${SessionManager.accountID}"}""",
                     """{"type": "transactionHistoryAndroid", "roleID": 2, "companyID": "${SessionManager.accountID}"}"""
                 )
                 for (message in subscribeMessages) {
