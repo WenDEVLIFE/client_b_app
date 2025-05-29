@@ -93,7 +93,7 @@ val activity = LocalContext.current as Activity
     val companyId = SessionManager.accountID ?: "500"
             
     val isDarkTheme = isSystemInDarkTheme()
-    
+    val viewModelCallWebsocket: CallWebsocketDashboard = viewModel()
     val viewModelPayoutData: SendPayoutViewModel = viewModel()
     val betResponse by viewModelPayoutData.betResponse.collectAsState()
     val betResult   by viewModelPayoutData.betResult.collectAsState()
@@ -111,6 +111,10 @@ val activity = LocalContext.current as Activity
     var scanFinishDeposit by remember { mutableStateOf(false) }
     
     if(betResponse != null){
+    viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
+    viewModelCallWebsocket.sendAndroidBetsTrigger()
+    viewModelCallWebsocket.sendAndroidDashboardTrigger()
         PayoutReceiptDialog(betResponse!!){
             viewModelPayoutData.clearBetState()
         }

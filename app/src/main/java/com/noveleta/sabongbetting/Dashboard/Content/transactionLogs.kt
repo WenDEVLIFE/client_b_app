@@ -76,12 +76,17 @@ fun transactionLogsUI(liveBetData: LiveBettingData) {
     val context = LocalContext.current
     
     val viewModelReprintBet: ReprintBetViewModel = viewModel()
+    val viewModelCallWebsocket: CallWebsocketDashboard = viewModel()
     
     val reprintResponse by viewModelReprintBet.betResponse.collectAsState()
     val reprintErrorCode by viewModelReprintBet.betErrorCode.collectAsState()
     val reprintResult by viewModelReprintBet.betResult.collectAsState()
     
     if (reprintResponse != null && reprintErrorCode == 0) {
+    viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
+    viewModelCallWebsocket.sendAndroidBetsTrigger()
+    viewModelCallWebsocket.sendAndroidDashboardTrigger()
     ReprintBetReceiptDialog(
         response = reprintResponse!!,
         onDismiss = {

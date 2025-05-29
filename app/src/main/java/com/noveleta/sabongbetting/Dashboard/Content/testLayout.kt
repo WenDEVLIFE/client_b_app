@@ -75,7 +75,7 @@ fun payoutUI() {
 val activity = LocalContext.current as Activity
     val context = LocalContext.current
     val isDarkTheme = isSystemInDarkTheme()
-    
+    val viewModelCallWebsocket: CallWebsocketDashboard = viewModel()
     val viewModelPayoutData: SendPayoutViewModel = viewModel()
     val betResponse by viewModelPayoutData.betResponse.collectAsState()
     val betResult   by viewModelPayoutData.betResult.collectAsState()
@@ -91,7 +91,10 @@ val activity = LocalContext.current as Activity
     val companyId = SessionManager.accountID ?: "500"
     
     if(betResponse != null){
-        
+        viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
+    viewModelCallWebsocket.sendAndroidBetsTrigger()
+    viewModelCallWebsocket.sendAndroidDashboardTrigger()
         viewModelPayoutData.setTransactionCode("")
         scanFinish = false
         PayoutReceiptDialog(betResponse!!){

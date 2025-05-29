@@ -55,6 +55,14 @@ class CallWebsocketDashboard : ViewModel() {
     fun sendBetsTrigger() {
         connectWebSocketOnce("bets")
     }
+    
+    fun sendAndroidBetsTrigger() {
+        connectWebSocketOnce("androidViewBets")
+    }
+    
+    fun sendAndroidDashboardTrigger() {
+        connectWebSocketOnce("androidDashboard")
+    }
 
     private fun connectWebSocketOnce(type: String) {
         val ip = SessionManager.ipAddress?.takeIf { it.isNotBlank() } ?: "192.168.8.100"

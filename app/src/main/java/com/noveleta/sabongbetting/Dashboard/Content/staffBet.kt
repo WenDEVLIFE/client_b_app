@@ -162,6 +162,8 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     //---------------------
     viewModelCallWebsocket.sendDashboardTrigger()
     viewModelCallWebsocket.sendBetsTrigger()
+    viewModelCallWebsocket.sendAndroidBetsTrigger()
+    viewModelCallWebsocket.sendAndroidDashboardTrigger()
                     
     BetReceiptDialog(
                         response = betResponse!!,
@@ -186,7 +188,10 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
 }
 
 if(printMOHResponse != null && printMOHResults == 0){
-
+viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
+    viewModelCallWebsocket.sendAndroidBetsTrigger()
+    viewModelCallWebsocket.sendAndroidDashboardTrigger()
 MoneyOnHandDialog(
         response = printMOHResponse!!,
         onPrint = {
@@ -205,7 +210,10 @@ PrintMOHError(printMOHResults){
 }
 
 if (reprintResponse != null && reprintErrorCode == 0) {
-    
+    viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
+    viewModelCallWebsocket.sendAndroidBetsTrigger()
+    viewModelCallWebsocket.sendAndroidDashboardTrigger()
 ReprintBetReceiptDialog(
         response = reprintResponse!!,
         onDismiss = {
@@ -225,6 +233,10 @@ LaunchedEffect(reprintResponse) {
 }
 
 if (cashOutResponse != null) {
+viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
+    viewModelCallWebsocket.sendAndroidBetsTrigger()
+    viewModelCallWebsocket.sendAndroidDashboardTrigger()
 TellerFundCashOutReceiptDialog(
         response = cashOutResponse!!,
         onDismiss = {
@@ -242,6 +254,10 @@ TellerFundCashOutReceiptDialog(
 }
 
 if (cashInResponse != null) {
+viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
+    viewModelCallWebsocket.sendAndroidBetsTrigger()
+    viewModelCallWebsocket.sendAndroidDashboardTrigger()
 TellerFundCashInReceiptDialog(
         response = cashInResponse!!,
         onDismiss = {
