@@ -34,8 +34,8 @@ import kotlinx.coroutines.delay
 
 class LiveBettingViewModel : ViewModel() {
 
-    private val _liveBettingData = MutableStateFlow<LiveBettingData?>(null)
-    val liveBettingData: StateFlow<LiveBettingData?> = _liveBettingData
+    private val _liveBettingData = MutableLiveData<LiveBettingData>()
+    val liveBettingData: LiveData<LiveBettingData> = _liveBettingData
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage

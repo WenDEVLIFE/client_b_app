@@ -119,7 +119,7 @@ fun MainWithDrawer() {
     val viewModelStaffBetData: PlaceBetsViewModel = viewModel()
     val viewModelPayoutData: SendPayoutViewModel = viewModel()
     
-    val errorMsg by viewModelDashboardData.errorMessage.observeAsState()
+    val errorMsg by viewModelDashboardData.errorMessage.collectAsState()
     val clipboard = LocalClipboardManager.current
     
     val betResponse by viewModelPayoutData.betResponse.collectAsState()
@@ -207,7 +207,8 @@ var showScanner by remember { mutableStateOf(false) }
     errorMsg?.let { message ->
         AlertDialog(
             onDismissRequest = {
-                viewModelDashboardData.clearError()
+                viewModelDashboardData.closeWebSocket()
+                viewModelStaffBetData.closeWebSocket()
                 activity?.finishAffinity()
             },
             title = { Text("WebSocket Error") },

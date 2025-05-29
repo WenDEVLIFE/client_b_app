@@ -109,14 +109,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/dashboardMain.kt",
       "selection": {
         "end": {
-          "column": 48,
-          "index": 8084,
-          "line": 217
+          "column": 42,
+          "index": 7861,
+          "line": 211
         },
         "start": {
-          "column": 48,
-          "index": 8084,
-          "line": 217
+          "column": 42,
+          "index": 7861,
+          "line": 211
         }
       }
     },
@@ -199,14 +199,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Network/NetworkMonitor.kt",
       "selection": {
         "end": {
-          "column": 0,
-          "index": 1899,
-          "line": 57
+          "column": 13,
+          "index": 1634,
+          "line": 48
         },
         "start": {
-          "column": 0,
-          "index": 1899,
-          "line": 57
+          "column": 13,
+          "index": 1634,
+          "line": 48
         }
       }
     },
@@ -214,14 +214,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/LiveBettingViewModel.kt",
       "selection": {
         "end": {
-          "column": 23,
-          "index": 1087,
-          "line": 37
+          "column": 24,
+          "index": 5326,
+          "line": 150
         },
         "start": {
-          "column": 8,
-          "index": 1072,
-          "line": 37
+          "column": 24,
+          "index": 5326,
+          "line": 150
         }
       }
     },
@@ -229,14 +229,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/PlaceBetsViewModel.kt",
       "selection": {
         "end": {
-          "column": 0,
-          "index": 7168,
-          "line": 187
+          "column": 13,
+          "index": 6983,
+          "line": 179
         },
         "start": {
-          "column": 0,
-          "index": 7168,
-          "line": 187
+          "column": 13,
+          "index": 6983,
+          "line": 179
         }
       }
     },
