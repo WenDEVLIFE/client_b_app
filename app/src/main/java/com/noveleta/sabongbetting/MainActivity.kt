@@ -8,7 +8,7 @@ import androidx.activity.viewModels
 import com.sunmi.peripheral.printer.*
 
 import com.noveleta.sabongbetting.ui.theme.*
-import com.noveleta.sabwongbetting.ui.*
+import com.noveleta.sabongbetting.ui.*
 import com.noveleta.sabongbetting.Factory.*
 import com.noveleta.sabongbetting.Model.*
 import com.noveleta.sabongbetting.Helper.*

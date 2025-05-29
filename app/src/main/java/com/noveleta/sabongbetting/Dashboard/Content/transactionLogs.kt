@@ -65,6 +65,7 @@ import com.noveleta.sabongbetting.widgets.*
 import com.noveleta.sabongbetting.SharedPreference.*
 import com.noveleta.sabongbetting.R
 import com.noveleta.sabongbetting.*
+import android.content.Intent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,7 +84,7 @@ fun transactionLogsUI(liveBetData: LiveBettingData) {
     
     if (reprintResponse != null && reprintErrorCode == 0) {
     val intent = Intent(context, PrinterReceiptActivity::class.java)
-    startActivity(intent)
+    context.startActivity(intent)
 }else if (reprintErrorCode == -1) {
     
     RePrintBetErrorResults(reprintResult){

@@ -76,6 +76,8 @@ import com.noveleta.sabongbetting.SharedPreference.*
 import com.noveleta.sabongbetting.R
 import com.noveleta.sabongbetting.*
 
+import android.content.Intent
+
 @Composable
 fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) { 
 
@@ -161,7 +163,7 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     
     digitDisplayState.value = "0"
     val intent = Intent(context, PrinterReceiptActivity::class.java)
-    startActivity(intent)
+    context.startActivity(intent)
 
 }else if (betResponse == null && betErrorCode == -1) {
 
@@ -174,7 +176,7 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
 if(printMOHResponse != null && printMOHResults == 0){
 
 val intent = Intent(context, PrinterReceiptActivity::class.java)
-    startActivity(intent)
+    context.startActivity(intent)
     
 }else if(printMOHResponse == null && printMOHErrorCode == -1){
 PrintMOHError(printMOHResults){
@@ -185,7 +187,7 @@ PrintMOHError(printMOHResults){
 if (reprintResponse != null && reprintErrorCode == 0) {
     
 val intent = Intent(context, PrinterReceiptActivity::class.java)
-    startActivity(intent)
+    context.startActivity(intent)
     
 }else if (reprintResponse == null && reprintErrorCode == -1) {
 
@@ -197,7 +199,7 @@ val intent = Intent(context, PrinterReceiptActivity::class.java)
 
 if (cashOutResponse != null) {
 val intent = Intent(context, PrinterReceiptActivity::class.java)
-    startActivity(intent)
+    context.startActivity(intent)
 
 }else if (cashOutErrorCode == -1) {
     PrintTellerCashOutErrorResults(cashOutResult){
@@ -207,7 +209,7 @@ val intent = Intent(context, PrinterReceiptActivity::class.java)
 
 if (cashInResponse != null) {
 val intent = Intent(context, PrinterReceiptActivity::class.java)
-    startActivity(intent)
+    context.startActivity(intent)
 }else if (cashInErrorCode == -1) {
 
     PrintTellerCashInErrorResults(cashInResult){

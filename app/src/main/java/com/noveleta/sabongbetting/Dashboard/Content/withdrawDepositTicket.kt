@@ -68,6 +68,7 @@ import com.noveleta.sabongbetting.SharedPreference.*
 import com.noveleta.sabongbetting.R
 import com.noveleta.sabongbetting.*
 
+import android.content.Intent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -136,7 +137,7 @@ val activity = LocalContext.current as Activity
       viewModelMobileDepositData.setTransactionCode("")
       scanFinishDeposit = false
       val intent = Intent(context, PrinterReceiptActivity::class.java)
-    startActivity(intent)
+    context.startActivity(intent)
     } else if (mobileDepositErrorCode == -1) {
       PrintDepositErrorResults(mobileDepositResult){
         viewModelMobileDepositData.clearBetState()
@@ -150,7 +151,7 @@ val activity = LocalContext.current as Activity
       viewModelMobileWithdrawData.setTransactionCode("")
       scanFinishWithdraw = false
       val intent = Intent(context, PrinterReceiptActivity::class.java)
-    startActivity(intent)
+    context.startActivity(intent)
     
     } else if (mobileWithdrawErrorCode == -1) {
       PrintWithdrawErrorResults(mobileWithdrawResult){
