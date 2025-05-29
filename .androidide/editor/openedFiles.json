@@ -34,14 +34,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/MainActivity.kt",
       "selection": {
         "end": {
-          "column": 55,
-          "index": 5295,
-          "line": 154
+          "column": 22,
+          "index": 5746,
+          "line": 171
         },
         "start": {
-          "column": 55,
-          "index": 5295,
-          "line": 154
+          "column": 22,
+          "index": 5746,
+          "line": 171
         }
       }
     },
@@ -94,14 +94,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/staffBet.kt",
       "selection": {
         "end": {
-          "column": 47,
-          "index": 8953,
-          "line": 249
+          "column": 33,
+          "index": 7168,
+          "line": 177
         },
         "start": {
-          "column": 47,
-          "index": 8953,
-          "line": 249
+          "column": 33,
+          "index": 7168,
+          "line": 177
         }
       }
     },

@@ -176,8 +176,6 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
                     }
     
     digitDisplayState.value = "0"
-    val intent = Intent(context, PrinterReceiptActivity::class.java)
-    context.startActivity(intent)
 
 }else if (betResponse == null && betErrorCode == -1) {
 

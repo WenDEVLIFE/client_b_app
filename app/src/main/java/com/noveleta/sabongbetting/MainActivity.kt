@@ -167,6 +167,14 @@ class MainActivity : ComponentActivity() {
         }
        networkMonitor.register() // Register here instead of onCreate
     }
+    
+    override fun onResume() {
+        super.onResume()
+        SunmiPrinterHelper.initSunmiPrinterService(this) {
+            // Printer is ready to use
+        }
+       networkMonitor.register() // Register here instead of onCreate
+    }
 
     override fun onStop() {
         super.onStop()
