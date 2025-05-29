@@ -11,9 +11,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.material3.icons.Icons
-import androidx.compose.material3.icons.filled.*
-import androidx.compose.material3.icons.filled.ArrowBack
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,10 +67,11 @@ class PrinterReceiptActivity : ComponentActivity() {
 
         setContent {
             MyComposeApplicationTheme {
-            val dispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-
+            val context = LocalContext.current
+            val activity = (context as PrinterReceiptActivity)
+            
                 PrinterScreen(
-                    onBackPressed = { dispatcher.onBackPressed() }
+                    onBackPressed = { activity.finish() }
                 )
             }
         }
@@ -82,6 +83,7 @@ fun PrinterScreen(
     onBackPressed: () -> Unit
 ) {
     val context = LocalContext.current
+    val activity = (context as PrinterReceiptActivity)
     
     val viewModel: BettingViewModel = viewModel()
     val viewModelCallWebsocket: CallWebsocketDashboard = viewModel()
@@ -172,7 +174,7 @@ fun PrinterScreen(
                         response = betResponse!!,
                         onDismiss = {
                             viewModel.clearBetState()
-                            onBackPressedDispatcher.onBackPressed()
+                            activity.finish()
                             }
                     )
                     
@@ -189,6 +191,7 @@ fun PrinterScreen(
         },
         onDismiss = {
             viewModelPrintMoneyOnHandReports.clearBetState()
+            activity.finish()
         }
     )
 
@@ -197,6 +200,7 @@ fun PrinterScreen(
         response = reprintResponse!!,
         onDismiss = {
             viewModelReprintBet.clearBetState()
+            activity.finish()
         }
     )
 LaunchedEffect(reprintResponse) {
@@ -207,6 +211,7 @@ LaunchedEffect(reprintResponse) {
         response = cashOutResponse!!,
         onDismiss = {
             viewModelCashOutData.clearBetState()
+            activity.finish()
         }
     )
     LaunchedEffect(cashOutResponse) {
@@ -217,6 +222,7 @@ TellerFundCashInReceiptDialog(
         response = cashInResponse!!,
         onDismiss = {
             viewModelCashInData.clearBetState()
+            activity.finish()
         }
     )
 LaunchedEffect(cashInResponse) {
@@ -226,6 +232,7 @@ LaunchedEffect(cashInResponse) {
     } else if (betPayoutResponse != null){
     PayoutReceiptDialog(betPayoutResponse!!){
             viewModelPayoutData.clearBetState()
+            activity.finish()
         }
     LaunchedEffect(betPayoutResponse) {
              printPayout(context, betPayoutResponse!!)
@@ -233,6 +240,7 @@ LaunchedEffect(cashInResponse) {
     }else if (mobileDepositResponse != null){
       MobileDepositReceiptDialog(mobileDepositResponse!!){
         viewModelMobileDepositData.clearBetState()
+        activity.finish()
       }
       
       LaunchedEffect(mobileDepositResponse) {
@@ -241,6 +249,7 @@ LaunchedEffect(cashInResponse) {
     }else if (mobileWithdrawResponse != null){
       MobileWithdrawReceiptDialog(mobileWithdrawResponse!!){
         viewModelMobileWithdrawData.clearBetState()
+        activity.finish()
       }
       
       LaunchedEffect(mobileWithdrawResponse) {
@@ -249,6 +258,7 @@ LaunchedEffect(cashInResponse) {
     }else if(betCancelResponse != null && betCancelErrorCode == 0){
             CancelReceiptDialog(betCancelResponse!!){
             viewModelCancelBetData.clearBetState()
+            activity.finish()
             }
             
             LaunchedEffect(betCancelResponse) {

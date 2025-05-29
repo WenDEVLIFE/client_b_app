@@ -76,7 +76,6 @@ import com.noveleta.sabongbetting.SharedPreference.*
 import com.noveleta.sabongbetting.R
 import com.noveleta.sabongbetting.*
 
-import android.content.Intent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
