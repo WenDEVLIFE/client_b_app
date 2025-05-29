@@ -34,7 +34,6 @@ class PlaceBetsViewModel : ViewModel() {
     private val _dashboardData = MutableLiveData<PlaceBetsData>()
     val dashboardData: LiveData<PlaceBetsData> = _dashboardData
 
-
     private val _newFightStarted = MutableLiveData<Boolean>()
     val newFightStarted: LiveData<Boolean> = _newFightStarted
 
@@ -43,180 +42,146 @@ class PlaceBetsViewModel : ViewModel() {
 
     private val _drawMax = MutableLiveData<Int>()
     val drawMax: LiveData<Int> = _drawMax
-    
+
     private val _transactionHistoryList = MutableLiveData<List<FightLogEntry>>()
-val transactionHistoryList: LiveData<List<FightLogEntry>> = _transactionHistoryList
+    val transactionHistoryList: LiveData<List<FightLogEntry>> = _transactionHistoryList
 
     private val _dashboardDataLive = MutableStateFlow<LiveBettingData?>(null)
     val dashboardDataLive: StateFlow<LiveBettingData?> = _dashboardDataLive
-    
-    private lateinit var webSocket: WebSocket
 
+    private lateinit var webSocket: WebSocket
+    private var isWebSocketConnected = false
     private var retryCount = 0
     private val maxRetries = 5
-    
-    private var updateJob: Job? = null
-
-private fun startPeriodicSubscription() {
-    updateJob = viewModelScope.launch {
-        while (isActive) {
-            delay(5000L) // every 5 seconds
-             val subscribeMessages = listOf(
-        """{"type": "androidViewBets", "roleID": 2}""",
-        """{"type": "transactionHistoryAndroid", "roleID": 2, "companyID": "${SessionManager.accountID}"}"""
-    )
-            for (message in subscribeMessages) {
-        Log.d("WebSocket", "Sending subscribe message: $message")
-        webSocket.send(message)
-    }
-            Log.d("WebSocket", "Periodic subscription sent")
-        }
-    }
-}
-
- fun stopPeriodicSubscription() {
-    updateJob?.cancel()
-}
-
 
     fun connectWebSocket() {
-    if (retryCount > maxRetries) {
-        Log.e("WebSocket", "Max retries reached, giving up.")
-        return
-    }
-    
-    val sessionId = SessionManager.sessionId
-    val ip = SessionManager.ipAddress?.takeIf { it.isNotBlank() } ?: "192.168.8.100"
-    val port = SessionManager.portAddress?.takeIf { it.isNotBlank() } ?: "8080"
-    
+        if (isWebSocketConnected) {
+            Log.d("WebSocket", "Already connected, skipping reconnect.")
+            return
+        }
 
-    Log.d("WebSocket", "Connecting WebSocket...")
-    Log.d("WebSocket", "Session ID: $sessionId")
+        if (retryCount > maxRetries) {
+            Log.e("WebSocket", "Max retries reached, giving up.")
+            return
+        }
 
-    val requestBuilder = Request.Builder()
-        .url("ws://$ip:$port")
+        val sessionId = SessionManager.sessionId
+        val ip = SessionManager.ipAddress?.takeIf { it.isNotBlank() } ?: "192.168.8.100"
+        val port = SessionManager.portAddress?.takeIf { it.isNotBlank() } ?: "8080"
 
-    sessionId?.let {
-        Log.d("WebSocket", "Attaching PHPSESSID: $it")
-        requestBuilder.addHeader("Cookie", "PHPSESSID=$it")
-    }
+        Log.d("WebSocket", "Connecting WebSocket...")
+        Log.d("WebSocket", "Session ID: $sessionId")
 
-    val request = requestBuilder.build()
-    val client = OkHttpClient()
+        val requestBuilder = Request.Builder().url("ws://$ip:$port")
+        sessionId?.let {
+            Log.d("WebSocket", "Attaching PHPSESSID: $it")
+            requestBuilder.addHeader("Cookie", "PHPSESSID=$it")
+        }
 
-    val listener = object : WebSocketListener() {
-    
-        override fun onOpen(webSocket: WebSocket, response: Response) {
-    Log.d("WebSocket", "Connection opened: ${response.message}")
+        val request = requestBuilder.build()
+        val client = OkHttpClient()
 
-    startPeriodicSubscription()
-    
-}
+        val listener = object : WebSocketListener() {
 
+            override fun onOpen(webSocket: WebSocket, response: Response) {
+                Log.d("WebSocket", "Connection opened: ${response.message}")
+                isWebSocketConnected = true
+                retryCount = 0
 
-        override fun onMessage(webSocket: WebSocket, text: String) {
-    Log.d("WebSocket", "Message received: $text")
-
-    try {
-        val jsonObject = JSONObject(text)
-        val success = jsonObject.optString("success")
-        Log.d("WebSocket", "Parsed success field: $success")
-
-        when (success) {
-            "drawSetting" -> {
-                Log.d("WebSocket", "Handling drawSetting event")
-                _drawSettingChanged.postValue(true)
-            }
-            
-             "androidDashboard" -> {
-                Log.d("WebSocket", "Handling androidDashboard event")
-                Log.d("WebSocket", "Full JSON from PHP: $text")
-                
-                // Attempt to parse the JSON with Gson
-                val dashboard = Gson().fromJson(text, LiveBettingData::class.java)
-
-                // Log parsed object and check individual fields
-                Log.d("WebSocket", "Parsed object: $dashboard")
-                Log.d("WebSocket", "Parsed fights: ${dashboard.fights}")
-                Log.d("WebSocket", "Parsed fightHistory: ${dashboard.fightHistory}")
-
-                viewModelScope.launch(Dispatchers.Main) {
-                 _dashboardDataLive.value = dashboard // FIXED
+                // Send subscription messages ONCE
+                val subscribeMessages = listOf(
+                    """{"type": "androidViewBets", "roleID": 2}""",
+                    """{"type": "transactionHistoryAndroid", "roleID": 2, "companyID": "${SessionManager.accountID}"}"""
+                )
+                for (message in subscribeMessages) {
+                    Log.d("WebSocket", "Sending subscribe message: $message")
+                    webSocket.send(message)
                 }
             }
 
-            "newFight" -> {
-                Log.d("WebSocket", "Handling newFight event")
-                _newFightStarted.postValue(true)
-            }
+            override fun onMessage(webSocket: WebSocket, text: String) {
+                Log.d("WebSocket", "Message received: $text")
+                try {
+                    val jsonObject = JSONObject(text)
+                    val success = jsonObject.optString("success")
+                    Log.d("WebSocket", "Parsed success field: $success")
 
-            "transactionHistoryAndroid" -> {
-        Log.d("WebSocket", "Handling transactionHistoryAndroid event")
-   
-}
+                    when (success) {
+                        "drawSetting" -> _drawSettingChanged.postValue(true)
 
-            "androidViewBets" -> {
-                Log.d("WebSocket", "Handling bets event")
-                val dashboard = Gson().fromJson(text, PlaceBetsData::class.java)
-                viewModelScope.launch(Dispatchers.Main) {
-                 _dashboardData.value = dashboard
+                        "androidDashboard" -> {
+                            val dashboard = Gson().fromJson(text, LiveBettingData::class.java)
+                            Log.d("WebSocket", "Parsed androidDashboard: $dashboard")
+                            viewModelScope.launch(Dispatchers.Main) {
+                                _dashboardDataLive.value = dashboard
+                            }
+                        }
+
+                        "newFight" -> _newFightStarted.postValue(true)
+
+                        "transactionHistoryAndroid" -> {
+                            Log.d("WebSocket", "Handling transactionHistoryAndroid event")
+                            // Optional: Parse and post to _transactionHistoryList if needed
+                        }
+
+                        "androidViewBets" -> {
+                            val dashboard = Gson().fromJson(text, PlaceBetsData::class.java)
+                            viewModelScope.launch(Dispatchers.Main) {
+                                _dashboardData.value = dashboard
+                            }
+                        }
+
+                        else -> {
+                            Log.w("WebSocket", "Unhandled or missing success type: '$success'")
+                            Log.w("WebSocket", "Full message: $text")
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e("WebSocket", "Failed to parse message: ${e.message}")
                 }
-                Log.d("WebSocket", "Posted betting dashboard data: $dashboard")
             }
 
-            else -> {
-    Log.w("WebSocket", "Unhandled success type or missing: '$success'")
-    Log.w("WebSocket", "Full message: $text")
-}
-
-        }
-
-    } catch (e: Exception) {
-        Log.e("WebSocket", "Failed to parse message: ${e.message}")
-    }
-}
-
-
-        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-            Log.e("WebSocket", "Connection failed: ${t.message}")
-            response?.let {
-                Log.e("WebSocket", "Response: ${it.code} - ${it.message}")
+            override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+                Log.e("WebSocket", "Connection failed: ${t.message}")
+                isWebSocketConnected = false
+                retryCount++
+                Handler(Looper.getMainLooper()).postDelayed({
+                    connectWebSocket()
+                }, 3000)
             }
-            retryCount++
-            Handler(Looper.getMainLooper()).postDelayed({
-                connectWebSocket()
-            }, 3000) // Retry 3 seconds
+
+            override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
+                Log.d("WebSocket", "Connection closing: Code=$code Reason=$reason")
+                isWebSocketConnected = false
+                webSocket.close(1000, null)
+            }
+
+            override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+                Log.d("WebSocket", "Connection closed: Code=$code Reason=$reason")
+                isWebSocketConnected = false
+            }
         }
 
-        override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-            Log.d("WebSocket", "Connection closing: Code=$code Reason=$reason")
-            webSocket.close(1000, null)
-        }
-
-        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-            Log.d("WebSocket", "Connection closed: Code=$code Reason=$reason")
-        }
+        webSocket = client.newWebSocket(request, listener)
     }
-
-    webSocket = client.newWebSocket(request, listener)
-}
-
 
     override fun onCleared() {
         super.onCleared()
-        stopPeriodicSubscription()
         Log.d("WebSocket", "ViewModel cleared - closing WebSocket")
-        webSocket.cancel()
+        if (::webSocket.isInitialized) webSocket.cancel()
+        isWebSocketConnected = false
     }
-    
+
     fun closeWebSocket() {
-    try {
-        webSocket.close(1000, "App backgrounded or stopped")
-        Log.d("WebSocket", "WebSocket closed manually")
-    } catch (e: Exception) {
-        Log.e("WebSocket", "Error closing WebSocket: ${e.message}")
+        try {
+            if (::webSocket.isInitialized) {
+                webSocket.close(1000, "App backgrounded or stopped")
+                Log.d("WebSocket", "WebSocket closed manually")
+            }
+        } catch (e: Exception) {
+            Log.e("WebSocket", "Error closing WebSocket: ${e.message}")
+        } finally {
+            isWebSocketConnected = false
+        }
     }
 }
-
-}
-
