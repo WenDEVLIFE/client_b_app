@@ -97,6 +97,8 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     var cashInOrOut by remember { mutableStateOf("Cash In") } 
     
     val viewModel: BettingViewModel = viewModel()
+    val viewModelDashboardData: LiveBettingViewModel = viewModel()
+    val viewModelStaffBetData: PlaceBetsViewModel = viewModel()
     val viewModelCallWebsocket: CallWebsocketDashboard = viewModel()
     val viewModelStaffBetData: PlaceBetsViewModel = viewModel()
     val viewModelPrintMoneyOnHandReports: SendMoneyOnHandViewModel = viewModel()
@@ -162,8 +164,10 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     //---------------------
     viewModelCallWebsocket.sendDashboardTrigger()
     viewModelCallWebsocket.sendBetsTrigger()
-    viewModelCallWebsocket.sendAndroidBetsTrigger()
-    viewModelCallWebsocket.sendAndroidDashboardTrigger()
+    viewModelDashboardData.closeWebSocket()
+    viewModelDashboardData.connectWebSocket()
+    viewModelStaffBetData.closeWebSocket()
+    viewModelStaffBetData.connectWebSocket()
                     
     BetReceiptDialog(
                         response = betResponse!!,
