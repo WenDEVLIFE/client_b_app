@@ -298,9 +298,9 @@ LaunchedEffect(cashInResponse) {
     }
 
     val items = listOf(
-        BetItemCards("Meron", staffBetData?.payoutMeron ?: "", staffBetData?.meronTotalBetAmount ?: "", Color(0xFFB12D36)),
-        BetItemCards("Draw", staffBetData?.payoutDraw ?: "", staffBetData?.drawTotalBetAmount ?: "", Color(0xFF2EB132)),
-        BetItemCards("Wala", staffBetData?.payoutWala ?: "", staffBetData?.walaTotalBetAmount ?: "", Color(0xFF2070E1))
+        BetItemCards("Meron", liveBetData?.meronText ?: "", liveBetData?.meronTotalBetAmount ?: "", Color(0xFFB12D36)),
+        BetItemCards("Draw", liveBetData?.drawText ?: "", liveBetData?.drawTotalBetAmount ?: "", Color(0xFF2EB132)),
+        BetItemCards("Wala", liveBetData?.walaText ?: "", liveBetData?.walaTotalBetAmount ?: "", Color(0xFF2070E1))
     )
     
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {

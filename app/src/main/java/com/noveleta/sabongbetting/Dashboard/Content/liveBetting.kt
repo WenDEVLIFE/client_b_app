@@ -394,6 +394,7 @@ val fightHistoryGridData: List<Pair<Int, String>> = data?.fights?.mapNotNull { e
                 // TRIGGER TIMER AS SOON RESULT AND BET CLOSSED
                 //
                 */
+                
                 if(data.isBettingWinner == "1"){
                  //Current Fight Num
                 
@@ -439,7 +440,7 @@ val fightHistoryGridData: List<Pair<Int, String>> = data?.fights?.mapNotNull { e
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "RESULT\nWALA",
+                    text = "RESULT\n WALA",
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -464,7 +465,7 @@ val fightHistoryGridData: List<Pair<Int, String>> = data?.fights?.mapNotNull { e
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "RESULT\nDRAW",
+                    text = "RESULT\n DRAW",
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White

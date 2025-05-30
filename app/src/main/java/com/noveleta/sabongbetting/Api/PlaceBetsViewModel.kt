@@ -56,7 +56,7 @@ class PlaceBetsViewModel : ViewModel() {
     private val maxRetries = 5
 
     fun connectWebSocket(forceReconnect: Boolean = false) {
-        if (isWebSocketConnected) {
+       /* if (isWebSocketConnected) {
             if (forceReconnect) {
                 Log.d("WebSocket", "Forcing reconnection...")
                 closeWebSocket()
@@ -64,7 +64,7 @@ class PlaceBetsViewModel : ViewModel() {
                 Log.d("WebSocket", "Already connected, skipping reconnect.")
                 return
             }
-        }
+        }*/
 
         if (retryCount > maxRetries) {
             Log.e("WebSocket", "Max retries reached, giving up.")
