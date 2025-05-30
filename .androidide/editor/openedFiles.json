@@ -139,14 +139,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/build.gradle",
       "selection": {
         "end": {
-          "column": 4,
-          "index": 3595,
-          "line": 113
+          "column": 0,
+          "index": 4102,
+          "line": 122
         },
         "start": {
-          "column": 4,
-          "index": 3595,
-          "line": 113
+          "column": 0,
+          "index": 4102,
+          "line": 122
         }
       }
     },

@@ -112,6 +112,11 @@ dependencies {
     //Sunmi Printing POS
     implementation "com.sunmi:printerlibrary:1.0.18"
     
+    implementation("io.ktor:ktor-server-core:2.3.0")
+    implementation("io.ktor:ktor-server-netty:2.3.0")
+    implementation("io.ktor:ktor-server-websockets:2.3.0")
+    implementation("io.ktor:ktor-server-cio:2.3.0") // better for Android
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     // Ktor client core and CIO engine
 implementation("io.ktor:ktor-client-core:2.3.0")
 implementation("io.ktor:ktor-client-cio:2.3.0") // You can also use `ktor-client-okhttp` for Android
