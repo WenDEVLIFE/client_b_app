@@ -94,14 +94,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/WebsocketServerPOS.kt",
       "selection": {
         "end": {
-          "column": 4,
-          "index": 1082,
-          "line": 35
+          "column": 25,
+          "index": 869,
+          "line": 25
         },
         "start": {
-          "column": 4,
-          "index": 1082,
-          "line": 35
+          "column": 25,
+          "index": 869,
+          "line": 25
         }
       }
     },
@@ -110,13 +110,13 @@
       "selection": {
         "end": {
           "column": 35,
-          "index": 459,
-          "line": 11
+          "index": 717,
+          "line": 20
         },
         "start": {
           "column": 0,
-          "index": 41,
-          "line": 2
+          "index": 461,
+          "line": 13
         }
       }
     },
@@ -166,5 +166,5 @@
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/SettingsUi.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/WebsocketServerPOS.kt"
 }
