@@ -129,6 +129,7 @@ implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.0")
 // Kotlinx Serialization
 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
+implementation 'org.nanohttpd:nanohttpd-websocket:2.3.1'
 
 }
 

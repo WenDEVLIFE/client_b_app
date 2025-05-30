@@ -11,74 +11,70 @@ import com.noveleta.sabongbetting.Network.*
 import com.noveleta.sabongbetting.Enter.*
 import com.noveleta.sabongbetting.*
 
-import io.ktor.server.engine.*
-import io.ktor.server.cio.*
-import io.ktor.server.application.*
-import io.ktor.server.routing.*
-import io.ktor.server.websocket.*
-import io.ktor.websocket.*
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.websocket.*
-import kotlinx.coroutines.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
-import java.time.Duration
+import fi.iki.elonen.NanoWSD
+import fi.iki.elonen.NanoHTTPD
+import java.io.IOException
 
-
-    /*
-    // ------------------------------------
-    // 
-    // DEDICATED ONLY FOR POS DEVICES TO RECIEVE PRINT
-    //
-    // ------------------------------------
-    */
-    
 object WebsocketServerPOS {
-    private var server: ApplicationEngine? = null
+    private var server: POSWebSocketServer? = null
 
     fun start(port: Int = 8080) {
-        if (server != null) return // Already running
+        if (server != null) return // Already started
 
-        server = embeddedServer(CIO, port = port, host = "0.0.0.0") {
-            install(WebSockets) {
-                pingPeriod = Duration.ofSeconds(15)
-                timeout = Duration.ofSeconds(30)
-                maxFrameSize = Long.MAX_VALUE
-                masking = false
-            }
-
-            routing {
-                webSocket("/ws") {
-                    val json = Json { ignoreUnknownKeys = true }
-
-                    for (frame in incoming) {
-                        if (frame is Frame.Text) {
-                            val message = frame.readText()
-                            try {
-                                val payload = json.decodeFromString<BarcodePayload>(message)
-                                println("Received: ${payload.data} from ${payload.from}")
-
-                                // Echo or respond
-                                val response = json.encodeToString(payload.copy(from = "pos"))
-                                send(Frame.Text(response))
-                            } catch (e: Exception) {
-                                println("Invalid JSON: $message")
-                            }
-                        }
-                    }
-                }
-            }
-        }.start(wait = false)
+        server = POSWebSocketServer(port)
+        try {
+            server!!.start()
+            println("POS WebSocket server started on port $port")
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 
     fun stop() {
         server?.stop()
         server = null
+        println("POS WebSocket server stopped")
     }
 
-    // Corrected client definition
-    val client = HttpClient(CIO) {
-        install(WebSockets) // must use install { } even if no config
+    private class POSWebSocketServer(port: Int) : NanoWSD(port) {
+        override fun openWebSocket(handshake: NanoHTTPD.IHTTPSession?): WebSocket {
+            return POSWebSocket(handshake)
+        }
+    }
+
+    private class POSWebSocket(handshakeRequest: NanoHTTPD.IHTTPSession?) : NanoWSD.WebSocket(handshakeRequest) {
+        private val json = Json { ignoreUnknownKeys = true }
+
+        override fun onOpen() {
+            println("Client connected")
+        }
+
+        override fun onClose(code: WebSocketFrame.CloseCode?, reason: String?, initiatedByRemote: Boolean) {
+            println("Client disconnected: $reason")
+        }
+
+        override fun onMessage(message: WebSocketFrame?) {
+            val text = message?.textPayload ?: return
+            println("Received message: $text")
+            try {
+                val payload = json.decodeFromString<BarcodePayload>(text)
+                println("Parsed from: ${payload.from}, type: ${payload.type}, data: ${payload.data}")
+
+                val response = payload.copy(from = "pos")
+                val responseJson = json.encodeToString(response)
+                send(responseJson)
+            } catch (e: Exception) {
+                println("Invalid JSON or error parsing: ${e.localizedMessage}")
+                send("""{"from":"pos","type":"error","data":"Invalid payload"}""")
+            }
+        }
+
+        override fun onPong(pong: WebSocketFrame?) {}
+
+        override fun onException(exception: Exception?) {
+            println("WebSocket exception: ${exception?.message}")
+        }
     }
 }
