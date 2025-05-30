@@ -91,8 +91,8 @@ fun SettingsDialog(
     // ------------------------------------
     */
     
-    val localIpAddress = remember { getLocalIpAddress() ?: "Unavailable" }
-    val localPort = ""
+    var localIpAddress = remember { getLocalIpAddress() ?: "Unavailable" }
+    var localPort = ""
     
     
     val backgroundColor = MaterialTheme.colorScheme.background
@@ -165,6 +165,7 @@ fun SettingsDialog(
                     value = "$localPort",
                     onValueChange = {localPort = it},
                     label = { Text("808...", color = textColor.copy(alpha = 0.5f)) },
+                    singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     colors = textFieldColors
                 )

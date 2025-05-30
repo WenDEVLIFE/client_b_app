@@ -79,14 +79,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/SettingsUi.kt",
       "selection": {
         "end": {
-          "column": 60,
-          "index": 5782,
-          "line": 154
+          "column": 7,
+          "index": 3283,
+          "line": 94
         },
         "start": {
-          "column": 60,
-          "index": 5782,
-          "line": 154
+          "column": 7,
+          "index": 3283,
+          "line": 94
         }
       }
     },
@@ -94,14 +94,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/WebsocketServerPOS.kt",
       "selection": {
         "end": {
-          "column": 38,
-          "index": 38,
-          "line": 0
+          "column": 4,
+          "index": 1082,
+          "line": 35
         },
         "start": {
-          "column": 38,
-          "index": 38,
-          "line": 0
+          "column": 4,
+          "index": 1082,
+          "line": 35
         }
       }
     },
@@ -139,14 +139,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/build.gradle",
       "selection": {
         "end": {
-          "column": 0,
-          "index": 4102,
-          "line": 122
+          "column": 4,
+          "index": 3600,
+          "line": 114
         },
         "start": {
-          "column": 0,
-          "index": 4102,
-          "line": 122
+          "column": 4,
+          "index": 3600,
+          "line": 114
         }
       }
     },
@@ -166,5 +166,5 @@
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/build.gradle"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/SettingsUi.kt"
 }
