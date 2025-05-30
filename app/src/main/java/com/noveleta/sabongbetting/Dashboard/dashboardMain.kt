@@ -469,7 +469,7 @@ Image(
 
 composable(DrawerScreen.claimPayout.route) {
     if (dashboardData != null) {
-        payoutUI()
+        payoutUI(viewModelDashboardData, viewModelStaffBetData)
     } else {
         Box(
             modifier = Modifier
@@ -484,7 +484,7 @@ composable(DrawerScreen.claimPayout.route) {
 
 composable(DrawerScreen.cancelBet.route) {
 if (dashboardData != null) {
-        cancelBetUI()
+        cancelBetUI(viewModelDashboardData, viewModelStaffBetData)
     } else {
         Box(
             modifier = Modifier
