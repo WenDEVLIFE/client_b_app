@@ -63,7 +63,9 @@ fun SettingsDialog(
 ) {
     var ipAddress by remember { mutableStateOf(initialIp) }
     var portNumber by remember { mutableStateOf(initialPort) }
-    
+    var targetPosIp by remember { mutableStateOf("") }
+var targetPosPort by remember { mutableStateOf("") }
+
     fun getLocalIpAddress(): String? {
     try {
         val interfaces = NetworkInterface.getNetworkInterfaces()
@@ -151,32 +153,69 @@ fun SettingsDialog(
                 
                 Divider()
 
-                Text(text = "Configure POS Websocket Address Here. (for POS Devices Only)", color = textColor)
-                Text(text = "IP Address", color = textColor)
-                TextField(
-                    value = "$localIpAddress",
-                    onValueChange = {localIpAddress = it},
-                    label = { Text("192.168.8.xxx", color = textColor.copy(alpha = 0.5f)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = textFieldColors
-                )
-                Text(text = "Port Number", color = textColor)
-                TextField(
-                    value = "$localPort",
-                    onValueChange = {localPort = it},
-                    label = { Text("808...", color = textColor.copy(alpha = 0.5f)) },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = textFieldColors
-                )
+Divider(thickness = 1.dp, color = textColor.copy(alpha = 0.2f))
+Spacer(modifier = Modifier.height(12.dp))
+Text(
+    text = "Connect to Sunmi POS Device (For Android Devices only)",
+    color = MaterialTheme.colorScheme.primary,
+    style = MaterialTheme.typography.titleMedium
+)
+Spacer(modifier = Modifier.height(8.dp))
+
+Text(text = "Target POS IP Address", color = textColor)
+TextField(
+    value = targetPosIp,
+    onValueChange = { targetPosIp = it },
+    placeholder = { Text("e.g. 192.168.8.101", color = textColor.copy(alpha = 0.5f)) },
+    singleLine = true,
+    modifier = Modifier.fillMaxWidth(),
+    colors = textFieldColors
+)
+
+Text(text = "Target POS Port Number", color = textColor)
+TextField(
+    value = targetPosPort,
+    onValueChange = { targetPosPort = it },
+    placeholder = { Text("e.g. 8080", color = textColor.copy(alpha = 0.5f)) },
+    singleLine = true,
+    modifier = Modifier.fillMaxWidth(),
+    colors = textFieldColors
+)
+Text(
+    text = "IP Address POS Server (For POS Devices Only)",
+    color = MaterialTheme.colorScheme.primary,
+    style = MaterialTheme.typography.titleMedium
+)
+
+Text(text = "POS Device IP Address", color = textColor)
+
+TextField(
+    value = localIpAddress,
+    onValueChange = { localIpAddress = it },
+    placeholder = { Text("192.168.8.xxx", color = textColor.copy(alpha = 0.5f)) },
+    singleLine = true,
+    modifier = Modifier.fillMaxWidth(),
+    colors = textFieldColors
+)
+
+Text(text = "POS Device Port Number", color = textColor)
+TextField(
+    value = localPort,
+    onValueChange = { localPort = it },
+    placeholder = { Text("808..", color = textColor.copy(alpha = 0.5f)) },
+    singleLine = true,
+    modifier = Modifier.fillMaxWidth(),
+    colors = textFieldColors
+)
+
             }
         },
         confirmButton = {
             TextButton(onClick = {
                 SessionManager.ipAddress = ipAddress
                 SessionManager.portAddress = portNumber
-                SessionManager.posIpAddress = localIpAddress
-                SessionManager.posPortAddress = localPort
+                SessionManager.posIpAddress = targetPosIp
+                SessionManager.posPortAddress = targetPosPort
                 onDismiss()
             }) {
                 Text("Save", color = MaterialTheme.colorScheme.primary)
