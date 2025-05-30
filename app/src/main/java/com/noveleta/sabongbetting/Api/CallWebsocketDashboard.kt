@@ -45,7 +45,7 @@ class CallWebsocketDashboard : ViewModel() {
         val data: String = "trigger",
         val type: String,
         val roleID: Int,
-        val userID: Int
+        val companyID: Int
     )
 
     fun sendDashboardTrigger() {
