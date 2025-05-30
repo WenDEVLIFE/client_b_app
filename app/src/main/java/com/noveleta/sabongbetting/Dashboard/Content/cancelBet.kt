@@ -69,7 +69,7 @@ import com.noveleta.sabongbetting.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun cancelBetUI() {
+fun cancelBetUI(viewModelDashboardData: LiveBettingViewModel, viewModelStaffBetData: PlaceBetsViewModel) { 
     val context = LocalContext.current
     val isDarkTheme = isSystemInDarkTheme()
     
@@ -87,10 +87,7 @@ fun cancelBetUI() {
     val companyId = SessionManager.accountID ?: "500"
     
     if(betResponse != null && betErrorCode == 0){
-            viewModelCallWebsocket.sendDashboardTrigger()
-    viewModelCallWebsocket.sendBetsTrigger()
-    viewModelCallWebsocket.sendAndroidBetsTrigger()
-    viewModelCallWebsocket.sendAndroidDashboardTrigger()
+            
             viewModelCancelBetData.setTransactionCode("")
         scanFinish = false
             CancelReceiptDialog(betResponse!!){
@@ -98,6 +95,10 @@ fun cancelBetUI() {
             }
             
             LaunchedEffect(betResponse) {
+            viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
+    viewModelDashboardData.connectWebSocket()
+    viewModelStaffBetData.refreshWebSocket()
         printCancelledBetting(context, betResponse!!)
         }
             }else if (betErrorCode == -1) {

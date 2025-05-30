@@ -71,7 +71,7 @@ import com.noveleta.sabongbetting.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun payoutUI() {
+fun payoutUI(viewModelDashboardData: LiveBettingViewModel, viewModelStaffBetData: PlaceBetsViewModel) { 
 val activity = LocalContext.current as Activity
     val context = LocalContext.current
     val isDarkTheme = isSystemInDarkTheme()
@@ -91,16 +91,16 @@ val activity = LocalContext.current as Activity
     val companyId = SessionManager.accountID ?: "500"
     
     if(betResponse != null){
-        viewModelCallWebsocket.sendDashboardTrigger()
-    viewModelCallWebsocket.sendBetsTrigger()
-    viewModelCallWebsocket.sendAndroidBetsTrigger()
-    viewModelCallWebsocket.sendAndroidDashboardTrigger()
         viewModelPayoutData.setTransactionCode("")
         scanFinish = false
         PayoutReceiptDialog(betResponse!!){
             viewModelPayoutData.clearBetState()
         }
     LaunchedEffect(betResponse) {
+    viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
+    viewModelDashboardData.connectWebSocket()
+    viewModelStaffBetData.refreshWebSocket()
              printPayout(context, betResponse!!)
              }
     }else if (betErrorCode == -1) {

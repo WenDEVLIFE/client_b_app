@@ -93,7 +93,7 @@ val fightHistoryGridData: List<Pair<Int, String>> = data?.fights?.mapNotNull { e
    val currentFight = data?.fightNumber?.toIntOrNull() ?: 0
 
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().background(Color(0xFF19181B))) {
         Column(
             modifier = Modifier
                 .fillMaxSize(),
