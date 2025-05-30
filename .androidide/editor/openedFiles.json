@@ -64,14 +64,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Enter/login.kt",
       "selection": {
         "end": {
-          "column": 29,
-          "index": 10660,
-          "line": 285
+          "column": 0,
+          "index": 1138,
+          "line": 29
         },
         "start": {
-          "column": 15,
-          "index": 10646,
-          "line": 285
+          "column": 0,
+          "index": 1138,
+          "line": 29
         }
       }
     },
@@ -136,5 +136,5 @@
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/WebsocketServerPOS.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Enter/login.kt"
 }
