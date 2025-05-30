@@ -94,14 +94,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/staffBet.kt",
       "selection": {
         "end": {
-          "column": 4,
-          "index": 3031,
-          "line": 83
+          "column": 44,
+          "index": 4277,
+          "line": 105
         },
         "start": {
-          "column": 0,
-          "index": 2899,
-          "line": 79
+          "column": 44,
+          "index": 4277,
+          "line": 105
         }
       }
     },
@@ -109,14 +109,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/dashboardMain.kt",
       "selection": {
         "end": {
-          "column": 62,
-          "index": 4432,
-          "line": 119
+          "column": 48,
+          "index": 7479,
+          "line": 200
         },
         "start": {
-          "column": 0,
-          "index": 4068,
-          "line": 111
+          "column": 8,
+          "index": 7439,
+          "line": 200
         }
       }
     },
@@ -229,14 +229,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/PlaceBetsViewModel.kt",
       "selection": {
         "end": {
-          "column": 0,
-          "index": 1028,
-          "line": 35
+          "column": 22,
+          "index": 6816,
+          "line": 174
         },
         "start": {
-          "column": 4,
-          "index": 902,
-          "line": 33
+          "column": 8,
+          "index": 6802,
+          "line": 174
         }
       }
     },

@@ -100,7 +100,7 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     val viewModelDashboardData: LiveBettingViewModel = viewModel()
     val viewModelStaffBetData: PlaceBetsViewModel = viewModel()
     val viewModelCallWebsocket: CallWebsocketDashboard = viewModel()
-    val viewModelStaffBetData: PlaceBetsViewModel = viewModel()
+    
     val viewModelPrintMoneyOnHandReports: SendMoneyOnHandViewModel = viewModel()
     val viewModelCashInData: SendCashInTellerViewModel = viewModel()
     val viewModelCashOutData: SendCashOutTellerViewModel = viewModel()
@@ -162,12 +162,6 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     // TODO:: Call Live Dashboard on PC Side after Betting
     //
     //---------------------
-    viewModelCallWebsocket.sendDashboardTrigger()
-    viewModelCallWebsocket.sendBetsTrigger()
-    viewModelDashboardData.closeWebSocket()
-    viewModelDashboardData.connectWebSocket()
-    viewModelStaffBetData.closeWebSocket()
-    viewModelStaffBetData.connectWebSocket()
                     
     BetReceiptDialog(
                         response = betResponse!!,
@@ -182,6 +176,12 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
                     }
     
     digitDisplayState.value = "0"
+    viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
+    viewModelDashboardData.closeWebSocket()
+    viewModelStaffBetData.closeWebSocket()
+    viewModelDashboardData.connectWebSocket()
+    viewModelStaffBetData.connectWebSocket()
 
 }else if (betResponse == null && betErrorCode == -1) {
 
