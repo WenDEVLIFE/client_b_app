@@ -15,9 +15,12 @@ object SessionManager {
     private const val KEY_ODDS_SETTINGS = "oddsSettings"
     private const val KEY_SPECIAL_TELLER = "specialTeller"
     private const val KEY_PAYOUT_SETTINGS = "payoutSettings"
-    
+
     private const val KEY_IP_ADDRESS = "ipaddress"
     private const val KEY_PORT = "portaddress"
+    
+    private const val KEY_POS_IP_ADDRESS = "posIpAddress"
+    private const val KEY_POS_PORT_ADDRESS = "posPortAddress"
 
     private lateinit var prefs: SharedPreferences
 
@@ -28,7 +31,7 @@ object SessionManager {
     var sessionId: String?
         get() = prefs.getString(KEY_SESSION_ID, null)
         set(value) = prefs.edit().putString(KEY_SESSION_ID, value).apply()
-        
+
     var ipAddress: String?
         get() = prefs.getString(KEY_IP_ADDRESS, null)
         set(value) = prefs.edit().putString(KEY_IP_ADDRESS, value).apply()
@@ -36,6 +39,14 @@ object SessionManager {
     var portAddress: String?
         get() = prefs.getString(KEY_PORT, null)
         set(value) = prefs.edit().putString(KEY_PORT, value).apply()
+
+    var posIpAddress: String?
+        get() = prefs.getString(KEY_POS_IP_ADDRESS, null)
+        set(value) = prefs.edit().putString(KEY_POS_IP_ADDRESS, value).apply()
+
+    var posPortAddress: String?
+        get() = prefs.getString(KEY_POS_PORT_ADDRESS, null)
+        set(value) = prefs.edit().putString(KEY_POS_PORT_ADDRESS, value).apply()
 
     val isLoggedIn: Boolean
         get() = !sessionId.isNullOrEmpty()
@@ -69,9 +80,9 @@ object SessionManager {
 
     val roleID: String?
         get() = prefs.getString(KEY_ROLE_ID, null)
-        
+
     val systemName: String?
-        get() = prefs.getString(KEY_SYSTEMNAME, null)    
+        get() = prefs.getString(KEY_SYSTEMNAME, null)
 
     val betTypeId: String?
         get() = prefs.getString(KEY_BET_TYPE_ID, null)

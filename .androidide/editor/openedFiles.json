@@ -59,7 +59,82 @@
           "line": 442
         }
       }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Enter/login.kt",
+      "selection": {
+        "end": {
+          "column": 29,
+          "index": 10660,
+          "line": 285
+        },
+        "start": {
+          "column": 15,
+          "index": 10646,
+          "line": 285
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/SettingsUi.kt",
+      "selection": {
+        "end": {
+          "column": 60,
+          "index": 5782,
+          "line": 154
+        },
+        "start": {
+          "column": 60,
+          "index": 5782,
+          "line": 154
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/WebsocketServerPOS.kt",
+      "selection": {
+        "end": {
+          "column": 38,
+          "index": 38,
+          "line": 0
+        },
+        "start": {
+          "column": 38,
+          "index": 38,
+          "line": 0
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/printWebsocketPOS.kt",
+      "selection": {
+        "end": {
+          "column": 35,
+          "index": 459,
+          "line": 11
+        },
+        "start": {
+          "column": 0,
+          "index": 41,
+          "line": 2
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Model/ExampleModelTest.kt",
+      "selection": {
+        "end": {
+          "column": 0,
+          "index": 261,
+          "line": 10
+        },
+        "start": {
+          "column": 0,
+          "index": 261,
+          "line": 10
+        }
+      }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/liveBetting.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/WebsocketServerPOS.kt"
 }

@@ -164,6 +164,7 @@ class MainActivity : ComponentActivity() {
         super.onStart()
         SunmiPrinterHelper.initSunmiPrinterService(this) {
             // Printer is ready to use
+            WebsocketServerPOS.start(8080)
         }
        networkMonitor.register() // Register here instead of onCreate
     }

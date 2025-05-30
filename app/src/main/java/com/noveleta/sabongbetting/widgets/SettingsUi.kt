@@ -45,6 +45,9 @@ import androidx.compose.ui.unit.*
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 
+import java.net.Inet4Address
+import java.net.NetworkInterface
+
 import com.noveleta.sabongbetting.SharedPreference.*
 import com.noveleta.sabongbetting.R
 import com.noveleta.sabongbetting.ui.theme.*
@@ -52,7 +55,6 @@ import com.noveleta.sabongbetting.ui.theme.*
 object SettingsUi {
 
 @OptIn(ExperimentalMaterial3Api::class)
-
 @Composable
 fun SettingsDialog(
     onDismiss: () -> Unit,
@@ -61,7 +63,38 @@ fun SettingsDialog(
 ) {
     var ipAddress by remember { mutableStateOf(initialIp) }
     var portNumber by remember { mutableStateOf(initialPort) }
+    
+    fun getLocalIpAddress(): String? {
+    try {
+        val interfaces = NetworkInterface.getNetworkInterfaces()
+        while (interfaces.hasMoreElements()) {
+            val intf = interfaces.nextElement()
+            val addresses = intf.inetAddresses
+            while (addresses.hasMoreElements()) {
+                val addr = addresses.nextElement()
+                if (!addr.isLoopbackAddress && addr is Inet4Address) {
+                    return addr.hostAddress
+                }
+            }
+        }
+    } catch (ex: Exception) {
+        ex.printStackTrace() // Or Log.e("IP", "Error getting IP", ex)
+    }
+    return null
+}
 
+    /*
+    // ------------------------------------
+    // 
+    // IP ADDRESS DISPLAY FOR SUNMI DEVICES SIDE
+    //
+    // ------------------------------------
+    */
+    
+    val localIpAddress = remember { getLocalIpAddress() ?: "Unavailable" }
+    val localPort = ""
+    
+    
     val backgroundColor = MaterialTheme.colorScheme.background
     val textColor = MaterialTheme.colorScheme.onBackground
     val textFieldColors = TextFieldDefaults.colors(
@@ -110,8 +143,28 @@ fun SettingsDialog(
                 TextField(
                     value = portNumber,
                     onValueChange = { portNumber = it },
-                    placeholder = { Text("8080", color = textColor.copy(alpha = 0.5f)) },
+                    placeholder = { Text("808...", color = textColor.copy(alpha = 0.5f)) },
                     singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = textFieldColors
+                )
+                
+                Divider()
+
+                Text(text = "Configure POS Websocket Address Here. (for POS Devices Only)", color = textColor)
+                Text(text = "IP Address", color = textColor)
+                TextField(
+                    value = "$localIpAddress",
+                    onValueChange = {localIpAddress = it},
+                    label = { Text("192.168.8.xxx", color = textColor.copy(alpha = 0.5f)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = textFieldColors
+                )
+                Text(text = "Port Number", color = textColor)
+                TextField(
+                    value = "$localPort",
+                    onValueChange = {localPort = it},
+                    label = { Text("808...", color = textColor.copy(alpha = 0.5f)) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = textFieldColors
                 )
@@ -121,6 +174,8 @@ fun SettingsDialog(
             TextButton(onClick = {
                 SessionManager.ipAddress = ipAddress
                 SessionManager.portAddress = portNumber
+                SessionManager.posIpAddress = localIpAddress
+                SessionManager.posPortAddress = localPort
                 onDismiss()
             }) {
                 Text("Save", color = MaterialTheme.colorScheme.primary)
@@ -136,3 +191,5 @@ fun SettingsDialog(
 
 
 }
+
+
