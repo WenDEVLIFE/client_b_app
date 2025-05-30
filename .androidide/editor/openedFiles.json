@@ -94,14 +94,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/WebsocketServerPOS.kt",
       "selection": {
         "end": {
-          "column": 0,
-          "index": 614,
-          "line": 18
+          "column": 26,
+          "index": 613,
+          "line": 17
         },
         "start": {
-          "column": 0,
-          "index": 614,
-          "line": 18
+          "column": 26,
+          "index": 613,
+          "line": 17
         }
       }
     },

@@ -16,12 +16,17 @@ import kotlinx.serialization.json.*
 import fi.iki.elonen.NanoWSD
 import fi.iki.elonen.NanoHTTPD
 import java.io.IOException
+import fi.iki.elonen.NanoWSD.WebSocketFrame
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.io.IOException
 
 object WebsocketServerPOS {
     private var server: POSWebSocketServer? = null
 
     fun start(port: Int = 8080) {
-        if (server != null) return // Already started
+        if (server != null) return
 
         server = POSWebSocketServer(port)
         try {
@@ -55,8 +60,8 @@ object WebsocketServerPOS {
             println("Client disconnected: $reason")
         }
 
-        override fun onMessage(message: WebSocketFrame?) {
-            val text = message?.textPayload ?: return
+        override fun onMessage(message: WebSocketFrame) {
+            val text = message.textPayload
             println("Received message: $text")
             try {
                 val payload = json.decodeFromString<BarcodePayload>(text)
@@ -71,10 +76,12 @@ object WebsocketServerPOS {
             }
         }
 
-        override fun onPong(pong: WebSocketFrame?) {}
+        override fun onPong(pong: WebSocketFrame?) {
+            // Optional: handle pongs
+        }
 
-        override fun onException(exception: Exception?) {
-            println("WebSocket exception: ${exception?.message}")
+        override fun onException(exception: IOException) {
+            println("WebSocket exception: ${exception.message}")
         }
     }
 }
