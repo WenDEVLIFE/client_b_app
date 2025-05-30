@@ -103,17 +103,18 @@ class LiveBettingViewModel : ViewModel() {
                 _errorMessage.value = "WebSocket failed: ${t.message}"
                 webSocket = null
                 retryCount++
-                reconnectWithDelay()
             }
 
             override fun onClosing(ws: WebSocket, code: Int, reason: String) {
                 Log.d("LiveWebSocket", "Closing: $code / $reason")
                 ws.close(1000, null)
+                _errorMessage.value = "WebSocket Suddenly Closed: $code / $reason"
                 webSocket = null
             }
 
             override fun onClosed(ws: WebSocket, code: Int, reason: String) {
                 Log.d("LiveWebSocket", "Closed: $code / $reason")
+                _errorMessage.value = "WebSocket Forced Closed: $code / $reason"
                 webSocket = null
             }
         }
