@@ -94,14 +94,14 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/WebsocketServerPOS.kt",
       "selection": {
         "end": {
-          "column": 26,
-          "index": 613,
-          "line": 17
+          "column": 30,
+          "index": 586,
+          "line": 16
         },
         "start": {
-          "column": 26,
-          "index": 613,
-          "line": 17
+          "column": 30,
+          "index": 586,
+          "line": 16
         }
       }
     },
@@ -166,5 +166,5 @@
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/build.gradle"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/WebsocketServerPOS.kt"
 }

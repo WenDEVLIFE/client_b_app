@@ -15,7 +15,6 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import fi.iki.elonen.NanoWSD
 import fi.iki.elonen.NanoHTTPD
-import java.io.IOException
 import fi.iki.elonen.NanoWSD.WebSocketFrame
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
