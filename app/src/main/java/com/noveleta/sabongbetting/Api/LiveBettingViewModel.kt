@@ -46,10 +46,10 @@ class LiveBettingViewModel : ViewModel() {
 
     fun connectWebSocket() {
         // Prevent reconnect if already open
-        if (webSocket != null) {
+       /* if (webSocket != null) {
             Log.d("LiveWebSocket", "WebSocket already initialized")
-            return
-        }
+            return 
+        }*/
 
         if (retryCount > maxRetries) {
             _errorMessage.value = "Max retries exceeded. Please check your connection."

@@ -174,7 +174,7 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData, viewMode
                             // only runs a single time per distinct betResponse
                             viewModelCallWebsocket.sendDashboardTrigger()
     viewModelCallWebsocket.sendBetsTrigger()
-    viewModelDashboardData.reconnectWithDelay()
+    viewModelDashboardData.connectWebSocket()
     viewModelStaffBetData.refreshWebSocket()
                             printBetResponse(context, betResponse!!)
                     }
