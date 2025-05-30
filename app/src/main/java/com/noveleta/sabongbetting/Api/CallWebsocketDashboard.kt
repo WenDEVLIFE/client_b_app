@@ -82,7 +82,7 @@ class CallWebsocketDashboard : ViewModel() {
             override fun onOpen(ws: WebSocket, resp: Response) {
                 Log.d("WebSocket", "Connected, sending trigger: $type")
 
-                val payload = TriggerPayload(type = type, roleID = roleId, userID = userId)
+                val payload = TriggerPayload(type = type, roleID = roleId, companyID = userId)
                 val json = Gson().toJson(payload)
 
                 ws.send(json)
