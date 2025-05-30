@@ -19,14 +19,29 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/LiveBettingViewModel.kt",
       "selection": {
         "end": {
-          "column": 0,
-          "index": 5107,
-          "line": 147
+          "column": 94,
+          "index": 5139,
+          "line": 144
         },
         "start": {
-          "column": 0,
-          "index": 5107,
-          "line": 147
+          "column": 94,
+          "index": 5139,
+          "line": 144
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/SettingsUi.kt",
+      "selection": {
+        "end": {
+          "column": 106,
+          "index": 4828,
+          "line": 132
+        },
+        "start": {
+          "column": 106,
+          "index": 4828,
+          "line": 132
         }
       }
     }

@@ -142,6 +142,7 @@ class LiveBettingViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         closeWebSocket()
+        _errorMessage.value = "Websocket Closed: Reconnect again or Contact System Developers!"
         Log.d("LiveWebSocket", "ViewModel destroyed")
     }
 }

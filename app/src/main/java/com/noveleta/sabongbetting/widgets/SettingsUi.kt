@@ -130,7 +130,7 @@ var targetPosPort by remember { mutableStateOf("") }
             }
         },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp).verticalScroll(rememberScrollState())) {
                 Text(text = "IP Address", color = textColor)
                 TextField(
                     value = ipAddress,
