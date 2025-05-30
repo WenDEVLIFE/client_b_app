@@ -31,6 +31,7 @@ import com.google.gson.reflect.TypeToken
 
 
 class PlaceBetsViewModel : ViewModel() {
+
     private val _dashboardData = MutableLiveData<PlaceBetsData>()
     val dashboardData: LiveData<PlaceBetsData> = _dashboardData
 
@@ -54,10 +55,15 @@ class PlaceBetsViewModel : ViewModel() {
     private var retryCount = 0
     private val maxRetries = 5
 
-    fun connectWebSocket() {
+    fun connectWebSocket(forceReconnect: Boolean = false) {
         if (isWebSocketConnected) {
-            Log.d("WebSocket", "Already connected, skipping reconnect.")
-            return
+            if (forceReconnect) {
+                Log.d("WebSocket", "Forcing reconnection...")
+                closeWebSocket()
+            } else {
+                Log.d("WebSocket", "Already connected, skipping reconnect.")
+                return
+            }
         }
 
         if (retryCount > maxRetries) {
@@ -82,13 +88,11 @@ class PlaceBetsViewModel : ViewModel() {
         val client = OkHttpClient()
 
         val listener = object : WebSocketListener() {
-
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 Log.d("WebSocket", "Connection opened: ${response.message}")
                 isWebSocketConnected = true
                 retryCount = 0
 
-                // Send subscription messages ONCE
                 val subscribeMessages = listOf(
                     """{"type": "androidViewBets", "roleID": 2,"companyID": "${SessionManager.accountID}"}""",
                     """{"type": "transactionHistoryAndroid", "roleID": 2, "companyID": "${SessionManager.accountID}"}"""
@@ -111,7 +115,6 @@ class PlaceBetsViewModel : ViewModel() {
 
                         "androidDashboard" -> {
                             val dashboard = Gson().fromJson(text, LiveBettingData::class.java)
-                            Log.d("WebSocket", "Parsed androidDashboard: $dashboard")
                             viewModelScope.launch(Dispatchers.Main) {
                                 _dashboardDataLive.value = dashboard
                             }
@@ -121,7 +124,7 @@ class PlaceBetsViewModel : ViewModel() {
 
                         "transactionHistoryAndroid" -> {
                             Log.d("WebSocket", "Handling transactionHistoryAndroid event")
-                            // Optional: Parse and post to _transactionHistoryList if needed
+                            // Optional: handle parsing and post to _transactionHistoryList
                         }
 
                         "androidViewBets" -> {
@@ -165,11 +168,8 @@ class PlaceBetsViewModel : ViewModel() {
         webSocket = client.newWebSocket(request, listener)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        Log.d("WebSocket", "ViewModel cleared - closing WebSocket")
-        if (::webSocket.isInitialized) webSocket.cancel()
-        isWebSocketConnected = false
+    fun refreshWebSocket() {
+        connectWebSocket(forceReconnect = true)
     }
 
     fun closeWebSocket() {
@@ -183,5 +183,12 @@ class PlaceBetsViewModel : ViewModel() {
         } finally {
             isWebSocketConnected = false
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("WebSocket", "ViewModel cleared - closing WebSocket")
+        if (::webSocket.isInitialized) webSocket.cancel()
+        isWebSocketConnected = false
     }
 }

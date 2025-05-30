@@ -79,7 +79,7 @@ import com.noveleta.sabongbetting.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) { 
+fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData, viewModelDashboardData: LiveBettingViewModel, viewModelStaffBetData: PlaceBetsViewModel) { 
 
     val cashHandlers = liveBetData.cashHandlerNames ?: emptyList()
     
@@ -97,8 +97,8 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
     var cashInOrOut by remember { mutableStateOf("Cash In") } 
     
     val viewModel: BettingViewModel = viewModel()
-    val viewModelDashboardData: LiveBettingViewModel = viewModel()
-    val viewModelStaffBetData: PlaceBetsViewModel = viewModel()
+    
+    
     val viewModelCallWebsocket: CallWebsocketDashboard = viewModel()
     
     val viewModelPrintMoneyOnHandReports: SendMoneyOnHandViewModel = viewModel()
@@ -172,16 +172,15 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData) {
                     
                     LaunchedEffect(betResponse) {
                             // only runs a single time per distinct betResponse
+                            viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
+    viewModelDashboardData.reconnectWithDelay()
+    viewModelStaffBetData.refreshWebSocket()
                             printBetResponse(context, betResponse!!)
                     }
     
     digitDisplayState.value = "0"
-    viewModelCallWebsocket.sendDashboardTrigger()
-    viewModelCallWebsocket.sendBetsTrigger()
-    viewModelDashboardData.closeWebSocket()
-    viewModelStaffBetData.closeWebSocket()
-    viewModelDashboardData.connectWebSocket()
-    viewModelStaffBetData.connectWebSocket()
+    
 
 }else if (betResponse == null && betErrorCode == -1) {
 

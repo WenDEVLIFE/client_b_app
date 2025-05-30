@@ -452,7 +452,7 @@ Image(
     val logs = historyTransactionLogs
    // testLayout()
     if (staffData != null && dashboardData != null) {
-       staffBet(staffData, dashboardData!!)
+       staffBet(staffData, dashboardData!!, viewModelDashboardData, viewModelStaffBetData)
     } else {
         // Loading state or placeholder
         Box(

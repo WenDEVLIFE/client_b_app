@@ -40,54 +40,50 @@ class LiveBettingViewModel : ViewModel() {
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage
 
-    private lateinit var webSocket: WebSocket
-    private var isWebSocketConnected = false
     private var retryCount = 0
     private val maxRetries = 5
+    private var webSocket: WebSocket? = null
 
     fun connectWebSocket() {
-        if (isWebSocketConnected) {
-            Log.d("LiveWebSocket", "Already connected")
+        // Prevent reconnect if already open
+        if (webSocket != null) {
+            Log.d("LiveWebSocket", "WebSocket already initialized")
             return
         }
 
         if (retryCount > maxRetries) {
-            val msg = "Max retries exceeded. Please check your connection."
-            Log.e("LiveWebSocket", msg)
-            _errorMessage.value = msg
+            _errorMessage.value = "Max retries exceeded. Please check your connection."
             return
         }
 
-        val sessionId = SessionManager.sessionId
         val ip = SessionManager.ipAddress?.takeIf { it.isNotBlank() } ?: "192.168.8.100"
         val port = SessionManager.portAddress?.takeIf { it.isNotBlank() } ?: "8080"
+        val sessionId = SessionManager.sessionId
+        val companyID = SessionManager.accountID
 
         val requestBuilder = Request.Builder().url("ws://$ip:$port")
-        sessionId?.let {
-            requestBuilder.addHeader("Cookie", "PHPSESSID=$it")
-        }
+        sessionId?.let { requestBuilder.addHeader("Cookie", "PHPSESSID=$it") }
 
-        val request = requestBuilder.build()
         val client = OkHttpClient()
+        val request = requestBuilder.build()
 
         val listener = object : WebSocketListener() {
 
-            override fun onOpen(webSocket: WebSocket, response: Response) {
+            override fun onOpen(ws: WebSocket, response: Response) {
                 Log.d("LiveWebSocket", "Connected: ${response.message}")
-                isWebSocketConnected = true
                 retryCount = 0
-                _errorMessage.value = null // Clear previous error
+                _errorMessage.value = null
+                webSocket = ws
 
-                val subscribeMessage = """{"type": "androidDashboard", "roleID": 2, "companyID": "${SessionManager.accountID}"}"""
-                webSocket.send(subscribeMessage)
-                Log.d("LiveWebSocket", "Sent subscription message: $subscribeMessage")
+                val subscribeMessage = """{"type": "androidDashboard", "roleID": 2, "companyID": "$companyID"}"""
+                ws.send(subscribeMessage)
             }
 
-            override fun onMessage(webSocket: WebSocket, text: String) {
+            override fun onMessage(ws: WebSocket, text: String) {
                 Log.d("LiveWebSocket", "Message received: $text")
                 try {
-                    val jsonObject = JSONObject(text)
-                    val success = jsonObject.optString("success")
+                    val json = JSONObject(text)
+                    val success = json.optString("success")
 
                     if (success == "androidDashboard") {
                         val dashboard = Gson().fromJson(text, LiveBettingData::class.java)
@@ -95,54 +91,50 @@ class LiveBettingViewModel : ViewModel() {
                             _liveBettingData.value = dashboard
                         }
                     } else {
-                        Log.w("LiveWebSocket", "Unhandled type: $success")
+                        Log.w("LiveWebSocket", "Unhandled message type: $success")
                     }
-
                 } catch (e: Exception) {
-                    val error = "Parsing error: ${e.message}"
-                    Log.e("LiveWebSocket", error)
-                    _errorMessage.value = error
+                    _errorMessage.value = "Parsing error: ${e.message}"
                 }
             }
 
-            override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                val error = "WebSocket failed: ${t.message}"
-                Log.e("LiveWebSocket", error)
-                isWebSocketConnected = false
-                _errorMessage.value = error
+            override fun onFailure(ws: WebSocket, t: Throwable, response: Response?) {
+                Log.e("LiveWebSocket", "WebSocket failed: ${t.message}")
+                _errorMessage.value = "WebSocket failed: ${t.message}"
+                webSocket = null
                 retryCount++
-                Handler(Looper.getMainLooper()).postDelayed({
-                    connectWebSocket()
-                }, 3000)
+                reconnectWithDelay()
             }
 
-            override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
+            override fun onClosing(ws: WebSocket, code: Int, reason: String) {
                 Log.d("LiveWebSocket", "Closing: $code / $reason")
-                isWebSocketConnected = false
-                webSocket.close(1000, null)
+                ws.close(1000, null)
+                webSocket = null
             }
 
-            override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+            override fun onClosed(ws: WebSocket, code: Int, reason: String) {
                 Log.d("LiveWebSocket", "Closed: $code / $reason")
-                isWebSocketConnected = false
+                webSocket = null
             }
         }
 
-        webSocket = client.newWebSocket(request, listener)
+        client.newWebSocket(request, listener)
+    }
+
+    private fun reconnectWithDelay() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            connectWebSocket()
+        }, 3000)
     }
 
     fun closeWebSocket() {
         try {
-            if (::webSocket.isInitialized) {
-                webSocket.close(1000, "Manual close")
-                Log.d("LiveWebSocket", "Closed manually")
-            }
+            webSocket?.close(1000, "Manual close")
+            Log.d("LiveWebSocket", "Closed manually")
         } catch (e: Exception) {
-            val error = "Close error: ${e.message}"
-            Log.e("LiveWebSocket", error)
-            _errorMessage.value = error
+            _errorMessage.value = "Close error: ${e.message}"
         } finally {
-            isWebSocketConnected = false
+            webSocket = null
         }
     }
 
