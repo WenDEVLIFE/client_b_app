@@ -21,6 +21,14 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.IOException
 
+// Android Context
+import android.content.Context
+
+// Kotlin Coroutines
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 object WebsocketServerPOS {
     private var server: POSWebSocketServer? = null
 
