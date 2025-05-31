@@ -9,6 +9,7 @@ object SessionManager {
 
     private const val KEY_ACCOUNT_ID = "accountID"
     private const val KEY_CNAME = "cname"
+    private const val KEY_USERPASSWORD = "userpass"
     private const val KEY_SYSTEMNAME = "systemName"
     private const val KEY_ROLE_ID = "roleID"
     private const val KEY_BET_TYPE_ID = "betTypeId"
@@ -54,6 +55,7 @@ object SessionManager {
     fun saveUserData(
         accountID: String,
         cname: String,
+        password: String,
         roleID: String,
         betTypeId: String,
         oddsSettings: String,
@@ -63,6 +65,7 @@ object SessionManager {
         prefs.edit().apply {
             putString(KEY_ACCOUNT_ID, accountID)
             putString(KEY_CNAME, cname)
+            putString(KEY_USERPASSWORD, password)
             putString(KEY_ROLE_ID, roleID)
             putString(KEY_BET_TYPE_ID, betTypeId)
             putString(KEY_ODDS_SETTINGS, oddsSettings)
@@ -77,6 +80,9 @@ object SessionManager {
 
     val cname: String?
         get() = prefs.getString(KEY_CNAME, null)
+        
+    val userpassword: String?
+        get() = prefs.getString(KEY_USERPASSWORD, null)    
 
     val roleID: String?
         get() = prefs.getString(KEY_ROLE_ID, null)

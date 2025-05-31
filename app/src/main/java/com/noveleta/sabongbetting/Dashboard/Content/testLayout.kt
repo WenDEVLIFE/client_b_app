@@ -115,7 +115,9 @@ val activity = LocalContext.current as Activity
         printWebsocketPOS.connectToServer(
             ip = SessionManager.posIpAddress ?: "192.168.8.100",
             port = SessionManager.posPortAddress ?: "8080",
-            payoutResponse = betResponse!!
+            payoutResponse = betResponse!!,
+            SessionManager.cname ?: "",
+            SessionManager.userpassword ?: ""
         )
     }
 }

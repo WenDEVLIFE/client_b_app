@@ -26,7 +26,13 @@ private val client = HttpClient(CIO) {
     install(WebSockets)
 }
 
-suspend fun connectToServer(ip: String, port: String, payoutResponse: BetPayoutResponse) {
+suspend fun connectToServer(
+    ip: String,
+    port: String,
+    payoutResponse: BetPayoutResponse,
+    username: String,
+    password: String
+) {
     val json = Json { ignoreUnknownKeys = true }
 
     client.webSocket("ws://$ip:$port/ws") {
@@ -36,14 +42,18 @@ suspend fun connectToServer(ip: String, port: String, payoutResponse: BetPayoutR
             BarcodePayload(
                 from = "phone",
                 type = "payoutbetresponse",
-                data = payoutJson
+                data = payoutJson,
+                username = username,
+                password = password
             )
         } else {
             // Fallback test payload
             BarcodePayload(
                 from = "phone",
                 type = "barcode",
-                data = "1234567890"
+                data = "1234567890",
+                username = username,
+                password = password
             )
         }
 
@@ -65,6 +75,7 @@ suspend fun connectToServer(ip: String, port: String, payoutResponse: BetPayoutR
         }
     }
 }
+
 
 
 }

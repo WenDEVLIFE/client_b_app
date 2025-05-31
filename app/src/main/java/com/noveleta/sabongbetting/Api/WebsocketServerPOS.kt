@@ -74,42 +74,54 @@ object WebsocketServerPOS {
         }
 
         override fun onMessage(message: WebSocketFrame) {
-            val text = message.textPayload
-            println("Received message: $text")
-            try {
-                val payload = json.decodeFromString<BarcodePayload>(text)
-                println("Parsed from: ${payload.from}, type: ${payload.type}, data: ${payload.data}")
+    val text = message.textPayload
+    println("Received message: $text")
+    try {
+        val payload = json.decodeFromString<BarcodePayload>(text)
+        println("Parsed from: ${payload.from}, type: ${payload.type}, data: ${payload.data}")
 
-                when (payload.type) {
-                    "barcode" -> {
-                        val response = payload.copy(from = "pos")
-                        send(json.encodeToString(response))
+        // Check authentication here:
+        val incomingUsername = payload.username ?: ""
+        val incomingPassword = payload.password ?: ""
+
+        if (incomingUsername != SessionManager.cname ?: "" || incomingPassword != SessionManager.userpassword ?: "") {
+            println("Authentication failed for user: $incomingUsername")
+            send("""{"from":"pos","type":"error","data":"Authentication failed"}""")
+            return
+        }
+
+        // Proceed only if authenticated
+        when (payload.type) {
+            "barcode" -> {
+                val response = payload.copy(from = "pos")
+                send(json.encodeToString(response))
+            }
+
+            "payoutbetresponse" -> {
+                try {
+                    val payoutResponse = json.decodeFromString<BetPayoutResponse>(payload.data)
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        printPayout(context, payoutResponse)
                     }
 
-                    "payoutbetresponse" -> {
-                        try {
-                            val payoutResponse = json.decodeFromString<BetPayoutResponse>(payload.data)
-
-                            CoroutineScope(Dispatchers.IO).launch {
-                                printPayout(context, payoutResponse)
-                            }
-
-                            send(json.encodeToString(payload.copy(from = "pos", data = "payout printed")))
-                        } catch (e: Exception) {
-                            println("Error parsing payoutbetresponse: ${e.localizedMessage}")
-                            send(json.encodeToString(payload.copy(from = "pos", data = "invalid payout response")))
-                        }
-                    }
-
-                    else -> {
-                        send("""{"from":"pos","type":"error","data":"Unknown type"}""")
-                    }
+                    send(json.encodeToString(payload.copy(from = "pos", data = "payout printed")))
+                } catch (e: Exception) {
+                    println("Error parsing payoutbetresponse: ${e.localizedMessage}")
+                    send(json.encodeToString(payload.copy(from = "pos", data = "invalid payout response")))
                 }
-            } catch (e: Exception) {
-                println("Invalid JSON or error parsing: ${e.localizedMessage}")
-                send("""{"from":"pos","type":"error","data":"Invalid payload"}""")
+            }
+
+            else -> {
+                send("""{"from":"pos","type":"error","data":"Unknown type"}""")
             }
         }
+    } catch (e: Exception) {
+        println("Invalid JSON or error parsing: ${e.localizedMessage}")
+        send("""{"from":"pos","type":"error","data":"Invalid payload"}""")
+    }
+}
+
 
         override fun onPong(pong: WebSocketFrame?) {}
         override fun onException(exception: IOException) {

@@ -54,6 +54,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                                 saveUserData(
                                     accountID = jsonObject.optString("accountID"),
                                     cname = jsonObject.optString("cname"),
+                                    password = password.value,
                                     roleID = jsonObject.optString("roleID"),
                                     betTypeId = jsonObject.optString("betTypeId"),
                                     oddsSettings = jsonObject.optString("oddsSettings"),

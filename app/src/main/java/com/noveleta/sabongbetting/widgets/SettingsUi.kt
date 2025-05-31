@@ -94,7 +94,7 @@ var targetPosPort by remember { mutableStateOf("") }
     */
     
     var localIpAddress = remember { getLocalIpAddress() ?: "Unavailable" }
-    var localPort = ""
+    var localPort = "8080"
     
     
     val backgroundColor = MaterialTheme.colorScheme.background
@@ -155,8 +155,6 @@ var targetPosPort by remember { mutableStateOf("") }
                     colors = textFieldColors
                 )
                 
-                Divider()
-
 Divider(thickness = 1.dp, color = textColor.copy(alpha = 0.2f))
 Spacer(modifier = Modifier.height(12.dp))
 Text(

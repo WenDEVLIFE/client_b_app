@@ -6,5 +6,7 @@ import kotlinx.serialization.Serializable
 data class BarcodePayload(
     val from: String, // e.g., "phone"
     val type: String, // e.g., "barcode"
-    val data: String  // e.g., actual barcode string
+    val data: String, // e.g., actual barcode string
+    val username: String? = null,
+    val password: String? = null
 )
