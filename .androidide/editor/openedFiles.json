@@ -1,125 +1,35 @@
 {
   "allFiles": [
     {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/dashboardMain.kt",
-      "selection": {
-        "end": {
-          "column": 5,
-          "index": 8315,
-          "line": 224
-        },
-        "start": {
-          "column": 4,
-          "index": 8045,
-          "line": 218
-        }
-      }
-    },
-    {
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Enter/login.kt",
       "selection": {
         "end": {
-          "column": 5,
-          "index": 3840,
-          "line": 104
+          "column": 73,
+          "index": 2721,
+          "line": 73
         },
         "start": {
-          "column": 5,
-          "index": 3840,
-          "line": 104
+          "column": 73,
+          "index": 2721,
+          "line": 73
         }
       }
     },
     {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Network/NetworkMonitor.kt",
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/dashboardMain.kt",
       "selection": {
         "end": {
-          "column": 3,
-          "index": 1776,
-          "line": 50
+          "column": 35,
+          "index": 580,
+          "line": 14
         },
         "start": {
-          "column": 3,
-          "index": 1776,
-          "line": 50
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/ui/AppNavHost.kt",
-      "selection": {
-        "end": {
-          "column": 18,
-          "index": 1525,
-          "line": 44
-        },
-        "start": {
-          "column": 4,
-          "index": 1511,
-          "line": 44
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/res/drawable/ic_wifi_high.xml",
-      "selection": {
-        "end": {
-          "column": 34,
-          "index": 270,
-          "line": 8
-        },
-        "start": {
-          "column": 34,
-          "index": 270,
-          "line": 8
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/res/drawable/ic_wifi_mid.xml",
-      "selection": {
-        "end": {
-          "column": 34,
-          "index": 270,
-          "line": 8
-        },
-        "start": {
-          "column": 34,
-          "index": 270,
-          "line": 8
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/res/drawable/ic_wifi_low.xml",
-      "selection": {
-        "end": {
-          "column": 34,
-          "index": 270,
-          "line": 8
-        },
-        "start": {
-          "column": 28,
-          "index": 264,
-          "line": 8
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/res/drawable/ic_wifi_off.xml",
-      "selection": {
-        "end": {
-          "column": 34,
-          "index": 270,
-          "line": 8
-        },
-        "start": {
-          "column": 34,
-          "index": 270,
-          "line": 8
+          "column": 35,
+          "index": 580,
+          "line": 14
         }
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Enter/login.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/dashboardMain.kt"
 }

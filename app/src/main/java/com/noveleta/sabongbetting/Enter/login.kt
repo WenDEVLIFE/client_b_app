@@ -71,7 +71,7 @@ import coil.size.Size
 import androidx.compose.runtime.collectAsState
 
 @Composable
-fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit, networkMonitor: NetworkMonitor) {
+fun EnterFormUI(viewModel: LoginViewModel, networkMonitor: NetworkMonitor, onSuccess: () -> Unit) {
     val context = LocalContext.current
     val loginState by viewModel.loginState
     

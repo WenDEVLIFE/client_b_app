@@ -151,7 +151,7 @@ if (showOfflineDialog) {
             ) {
                 composable("login") {
                     val vm: LoginViewModel = viewModel(factory = viewModelFactory)
-                    EnterFormUI(vm) {
+                    EnterFormUI(vm, networkMonitor) {
                         navController.navigate("main") {
                             popUpTo("login") { inclusive = true }
                         }

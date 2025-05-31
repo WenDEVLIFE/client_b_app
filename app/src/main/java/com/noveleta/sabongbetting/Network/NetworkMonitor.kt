@@ -8,7 +8,7 @@ import android.net.NetworkRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-
+import android.net.wifi.WifiManager
 class NetworkMonitor(context: Context) {
 
     private val connectivityManager =
