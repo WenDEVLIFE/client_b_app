@@ -93,16 +93,33 @@ val activity = LocalContext.current as Activity
     if(betResponse != null){
         viewModelPayoutData.setTransactionCode("")
         scanFinish = false
+        connectToServer(SessionManager.posIpAddress ?: "192.168.8.xxx", SessionManager.posPortAddress ?: "8080")
         PayoutReceiptDialog(betResponse!!){
             viewModelPayoutData.clearBetState()
         }
-    LaunchedEffect(betResponse) {
+   /* LaunchedEffect(betResponse) {
     viewModelCallWebsocket.sendDashboardTrigger()
     viewModelCallWebsocket.sendBetsTrigger()
     viewModelDashboardData.connectWebSocket()
     viewModelStaffBetData.refreshWebSocket()
              printPayout(context, betResponse!!)
-             }
+             }*/
+             
+             LaunchedEffect(betResponse) {
+             viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
+    viewModelDashboardData.connectWebSocket()
+    viewModelStaffBetData.refreshWebSocket()
+    printPayout(context, betResponse!!)
+    if (betResponse != null) {
+        printWebsocketPOS.connectToServer(
+            ip = SessionManager.posIpAddress ?: "192.168.8.100",
+            port = SessionManager.posPortAddress ?: "8080",
+            payoutResponse = betResponse!!
+        )
+    }
+}
+
     }else if (betErrorCode == -1) {
     
       PrintBetPayoutErrorResults(betResult){

@@ -24,10 +24,10 @@ import java.io.IOException
 object WebsocketServerPOS {
     private var server: POSWebSocketServer? = null
 
-    fun start(port: Int = 8080) {
+    fun start(context: Context, port: Int = 8080) {
         if (server != null) return
 
-        server = POSWebSocketServer(port)
+        server = POSWebSocketServer(port, context.applicationContext)
         try {
             server!!.start()
             println("POS WebSocket server started on port $port")
@@ -42,13 +42,19 @@ object WebsocketServerPOS {
         println("POS WebSocket server stopped")
     }
 
-    private class POSWebSocketServer(port: Int) : NanoWSD(port) {
+    private class POSWebSocketServer(
+        port: Int,
+        private val context: Context
+    ) : NanoWSD(port) {
         override fun openWebSocket(handshake: NanoHTTPD.IHTTPSession?): WebSocket {
-            return POSWebSocket(handshake)
+            return POSWebSocket(handshake, context)
         }
     }
 
-    private class POSWebSocket(handshakeRequest: NanoHTTPD.IHTTPSession?) : NanoWSD.WebSocket(handshakeRequest) {
+    private class POSWebSocket(
+        handshakeRequest: NanoHTTPD.IHTTPSession?,
+        val context: Context
+    ) : NanoWSD.WebSocket(handshakeRequest) {
         private val json = Json { ignoreUnknownKeys = true }
 
         override fun onOpen() {
@@ -66,19 +72,38 @@ object WebsocketServerPOS {
                 val payload = json.decodeFromString<BarcodePayload>(text)
                 println("Parsed from: ${payload.from}, type: ${payload.type}, data: ${payload.data}")
 
-                val response = payload.copy(from = "pos")
-                val responseJson = json.encodeToString(response)
-                send(responseJson)
+                when (payload.type) {
+                    "barcode" -> {
+                        val response = payload.copy(from = "pos")
+                        send(json.encodeToString(response))
+                    }
+
+                    "payoutbetresponse" -> {
+                        try {
+                            val payoutResponse = json.decodeFromString<BetPayoutResponse>(payload.data)
+
+                            CoroutineScope(Dispatchers.IO).launch {
+                                printPayout(context, payoutResponse)
+                            }
+
+                            send(json.encodeToString(payload.copy(from = "pos", data = "payout printed")))
+                        } catch (e: Exception) {
+                            println("Error parsing payoutbetresponse: ${e.localizedMessage}")
+                            send(json.encodeToString(payload.copy(from = "pos", data = "invalid payout response")))
+                        }
+                    }
+
+                    else -> {
+                        send("""{"from":"pos","type":"error","data":"Unknown type"}""")
+                    }
+                }
             } catch (e: Exception) {
                 println("Invalid JSON or error parsing: ${e.localizedMessage}")
                 send("""{"from":"pos","type":"error","data":"Invalid payload"}""")
             }
         }
 
-        override fun onPong(pong: WebSocketFrame?) {
-            // Optional: handle pongs
-        }
-
+        override fun onPong(pong: WebSocketFrame?) {}
         override fun onException(exception: IOException) {
             println("WebSocket exception: ${exception.message}")
         }

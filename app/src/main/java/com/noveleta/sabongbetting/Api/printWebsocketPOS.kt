@@ -26,20 +26,32 @@ private val client = HttpClient(CIO) {
     install(WebSockets)
 }
 
-suspend fun connectToServer(ip: String, port: String) {
+suspend fun connectToServer(ip: String, port: String, payoutResponse: BetPayoutResponse) {
     val json = Json { ignoreUnknownKeys = true }
 
     client.webSocket("ws://$ip:$port/ws") {
-        // Send JSON-encoded message
-        val payload = BarcodePayload(
-            from = "phone",
-            type = "barcode",
-            data = "1234567890"
-        )
+        val payload: BarcodePayload = if (payoutResponse != null) {
+            // Serialize BetPayoutResponse and wrap it in BarcodePayload
+            val payoutJson = json.encodeToString(payoutResponse)
+            BarcodePayload(
+                from = "phone",
+                type = "payoutbetresponse",
+                data = payoutJson
+            )
+        } else {
+            // Fallback test payload
+            BarcodePayload(
+                from = "phone",
+                type = "barcode",
+                data = "1234567890"
+            )
+        }
+
         val jsonString = json.encodeToString(payload)
         send(Frame.Text(jsonString))
+        println("Sent: $jsonString")
 
-        // Receive and decode messages
+        // Receive loop
         for (message in incoming) {
             if (message is Frame.Text) {
                 val text = message.readText()
@@ -53,5 +65,6 @@ suspend fun connectToServer(ip: String, port: String) {
         }
     }
 }
+
 
 }

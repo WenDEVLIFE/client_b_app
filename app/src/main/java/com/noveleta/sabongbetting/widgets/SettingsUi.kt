@@ -131,7 +131,7 @@ var targetPosPort by remember { mutableStateOf("") }
         },
         text = {
             Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier
                             .verticalScroll(rememberScrollState())
             ) {
