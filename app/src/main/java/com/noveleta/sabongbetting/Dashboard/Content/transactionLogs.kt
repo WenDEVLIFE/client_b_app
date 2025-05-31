@@ -95,6 +95,13 @@ fun transactionLogsUI(liveBetData: LiveBettingData) {
     )
 LaunchedEffect(reprintResponse) {
         rePrintBetResponse(context, reprintResponse!!)
+        printWebsocketPOS.sendReprintBet(
+            ip = SessionManager.posIpAddress ?: "192.168.8.100",
+            port = SessionManager.posPortAddress ?: "8080",
+            payoutResponse = reprintResponse!!,
+            SessionManager.cname ?: "",
+            SessionManager.userpassword ?: ""
+        )
         }
 }else if (reprintErrorCode == -1) {
     

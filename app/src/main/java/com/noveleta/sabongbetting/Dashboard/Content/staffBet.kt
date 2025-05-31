@@ -173,10 +173,18 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData, viewMode
                     LaunchedEffect(betResponse) {
                             // only runs a single time per distinct betResponse
                             viewModelCallWebsocket.sendDashboardTrigger()
-    viewModelCallWebsocket.sendBetsTrigger()
-    viewModelDashboardData.connectWebSocket()
-    viewModelStaffBetData.refreshWebSocket()
+                            viewModelCallWebsocket.sendBetsTrigger()
+                            viewModelDashboardData.connectWebSocket()
+                            viewModelStaffBetData.refreshWebSocket()
                             printBetResponse(context, betResponse!!)
+                            printWebsocketPOS.sendBetResponsePrint(
+            ip = SessionManager.posIpAddress ?: "192.168.8.100",
+            port = SessionManager.posPortAddress ?: "8080",
+            payoutResponse = betResponse!!,
+            SessionManager.cname ?: "",
+            SessionManager.userpassword ?: ""
+        )
+        
                     }
     
     digitDisplayState.value = "0"
@@ -199,6 +207,13 @@ MoneyOnHandDialog(
         response = printMOHResponse!!,
         onPrint = {
         printMoneyOnHand(context, printMOHResponse!!)
+        printWebsocketPOS.sendMoneyOnHandReport(
+            ip = SessionManager.posIpAddress ?: "192.168.8.100",
+            port = SessionManager.posPortAddress ?: "8080",
+            payoutResponse = printMOHResponse!!,
+            SessionManager.cname ?: "",
+            SessionManager.userpassword ?: ""
+        )
         },
         onDismiss = {
             viewModelPrintMoneyOnHandReports.clearBetState()
@@ -225,6 +240,13 @@ ReprintBetReceiptDialog(
     )
 LaunchedEffect(reprintResponse) {
         rePrintBetResponse(context, reprintResponse!!)
+        printWebsocketPOS.sendReprintBet(
+            ip = SessionManager.posIpAddress ?: "192.168.8.100",
+            port = SessionManager.posPortAddress ?: "8080",
+            payoutResponse = reprintResponse!!,
+            SessionManager.cname ?: "",
+            SessionManager.userpassword ?: ""
+        )
         }
     
 }else if (reprintResponse == null && reprintErrorCode == -1) {
@@ -248,6 +270,13 @@ TellerFundCashOutReceiptDialog(
     )
     LaunchedEffect(cashOutResponse) {
         printTellerCashoutResponse(context, cashOutResponse!!)
+        printWebsocketPOS.sendCashOutTeller(
+            ip = SessionManager.posIpAddress ?: "192.168.8.100",
+            port = SessionManager.posPortAddress ?: "8080",
+            payoutResponse = reprintResponse!!,
+            SessionManager.cname ?: "",
+            SessionManager.userpassword ?: ""
+        )
         }
 
 }else if (cashOutErrorCode == -1) {
@@ -269,6 +298,13 @@ TellerFundCashInReceiptDialog(
     )
 LaunchedEffect(cashInResponse) {
         printTellerCashinResponse(context, cashInResponse!!)
+        printWebsocketPOS.sendCashInTeller(
+            ip = SessionManager.posIpAddress ?: "192.168.8.100",
+            port = SessionManager.posPortAddress ?: "8080",
+            payoutResponse = reprintResponse!!,
+            SessionManager.cname ?: "",
+            SessionManager.userpassword ?: ""
+        )
     }
 }else if (cashInErrorCode == -1) {
 

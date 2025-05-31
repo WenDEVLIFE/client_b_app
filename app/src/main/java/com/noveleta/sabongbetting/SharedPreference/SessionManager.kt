@@ -19,9 +19,11 @@ object SessionManager {
 
     private const val KEY_IP_ADDRESS = "ipaddress"
     private const val KEY_PORT = "portaddress"
-    
+
     private const val KEY_POS_IP_ADDRESS = "posIpAddress"
     private const val KEY_POS_PORT_ADDRESS = "posPortAddress"
+
+    private const val KEY_IS_SUNMI_DEVICE = "isSunmiDevice"  // <-- added key
 
     private lateinit var prefs: SharedPreferences
 
@@ -48,6 +50,10 @@ object SessionManager {
     var posPortAddress: String?
         get() = prefs.getString(KEY_POS_PORT_ADDRESS, null)
         set(value) = prefs.edit().putString(KEY_POS_PORT_ADDRESS, value).apply()
+
+    var isSunmiDevice: Boolean
+        get() = prefs.getBoolean(KEY_IS_SUNMI_DEVICE, false)
+        set(value) = prefs.edit().putBoolean(KEY_IS_SUNMI_DEVICE, value).apply()
 
     val isLoggedIn: Boolean
         get() = !sessionId.isNullOrEmpty()
@@ -80,9 +86,9 @@ object SessionManager {
 
     val cname: String?
         get() = prefs.getString(KEY_CNAME, null)
-        
+
     val userpassword: String?
-        get() = prefs.getString(KEY_USERPASSWORD, null)    
+        get() = prefs.getString(KEY_USERPASSWORD, null)
 
     val roleID: String?
         get() = prefs.getString(KEY_ROLE_ID, null)

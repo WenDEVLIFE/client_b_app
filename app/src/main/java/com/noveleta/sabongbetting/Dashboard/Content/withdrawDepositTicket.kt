@@ -146,6 +146,13 @@ val activity = LocalContext.current as Activity
       
       LaunchedEffect(mobileDepositResponse) {
         printMobileDeposit(context, mobileDepositResponse!!)
+        printWebsocketPOS.sendMobileDepositPrint(
+            ip = SessionManager.posIpAddress ?: "192.168.8.100",
+            port = SessionManager.posPortAddress ?: "8080",
+            payoutResponse = mobileDepositResponse!!,
+            SessionManager.cname ?: "",
+            SessionManager.userpassword ?: ""
+        )
     }
     } else if (mobileDepositErrorCode == -1) {
       PrintDepositErrorResults(mobileDepositResult){
@@ -166,6 +173,13 @@ val activity = LocalContext.current as Activity
       
       LaunchedEffect(mobileWithdrawResponse) {
         printMobileWithdraw(context, mobileWithdrawResponse!!)
+        printWebsocketPOS.sendMobileWithdrawPrint(
+            ip = SessionManager.posIpAddress ?: "192.168.8.100",
+            port = SessionManager.posPortAddress ?: "8080",
+            payoutResponse = mobileWithdrawResponse!!,
+            SessionManager.cname ?: "",
+            SessionManager.userpassword ?: ""
+        )
     }
     
     } else if (mobileWithdrawErrorCode == -1) {

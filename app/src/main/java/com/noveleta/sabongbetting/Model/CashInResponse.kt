@@ -1,5 +1,8 @@
 package com.noveleta.sabongbetting.Model;
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class CashinResponse(
     val success: Boolean,
     val message: String,

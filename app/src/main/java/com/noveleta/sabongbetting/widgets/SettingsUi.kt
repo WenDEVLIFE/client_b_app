@@ -164,7 +164,7 @@ Text(
 )
 Spacer(modifier = Modifier.height(8.dp))
 
-Text(text = "Target POS IP Address", color = textColor)
+Text(text = "POS IP Address", color = textColor)
 TextField(
     value = targetPosIp,
     onValueChange = { targetPosIp = it },
@@ -174,7 +174,7 @@ TextField(
     colors = textFieldColors
 )
 
-Text(text = "Target POS Port Number", color = textColor)
+Text(text = "POS Port Number", color = textColor)
 TextField(
     value = targetPosPort,
     onValueChange = { targetPosPort = it },
@@ -183,32 +183,7 @@ TextField(
     modifier = Modifier.fillMaxWidth(),
     colors = textFieldColors
 )
-Text(
-    text = "IP Address POS Server (For POS Devices Only)",
-    color = MaterialTheme.colorScheme.primary,
-    style = MaterialTheme.typography.titleMedium
-)
 
-Text(text = "POS Device IP Address", color = textColor)
-
-TextField(
-    value = localIpAddress,
-    onValueChange = { localIpAddress = it },
-    placeholder = { Text("192.168.8.xxx", color = textColor.copy(alpha = 0.5f)) },
-    singleLine = true,
-    modifier = Modifier.fillMaxWidth(),
-    colors = textFieldColors
-)
-
-Text(text = "POS Device Port Number", color = textColor)
-TextField(
-    value = localPort,
-    onValueChange = { localPort = it },
-    placeholder = { Text("808..", color = textColor.copy(alpha = 0.5f)) },
-    singleLine = true,
-    modifier = Modifier.fillMaxWidth(),
-    colors = textFieldColors
-)
 
             }
         },
@@ -229,6 +204,96 @@ TextField(
             }
         }
     )
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SunmiInfoDialog(
+    onDismiss: () -> Unit
+) {
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val textColor = MaterialTheme.colorScheme.onBackground
+    
+    fun getLocalIpAddress(): String? {
+    return try {
+        val interfaces = NetworkInterface.getNetworkInterfaces()
+        while (interfaces.hasMoreElements()) {
+            val intf = interfaces.nextElement()
+            val addresses = intf.inetAddresses
+            while (addresses.hasMoreElements()) {
+                val addr = addresses.nextElement()
+                if (!addr.isLoopbackAddress && addr is Inet4Address) {
+                    return addr.hostAddress
+                }
+            }
+        }
+        null
+    } catch (ex: Exception) {
+        ex.printStackTrace()
+        null
+    }
+}
+    // Read local IP and default port
+    val localIpAddress = remember { getLocalIpAddress() ?: "Unavailable" }
+    val localPort = "8080"
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = backgroundColor,
+        shape = RoundedCornerShape(16.dp),
+        title = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_back_ios),
+                    contentDescription = "Back",
+                    tint = textColor,
+                    modifier = Modifier
+                        .size(20.dp)
+                        .clickable { onDismiss() }
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(text = "POS Info", color = textColor, style = MaterialTheme.typography.titleLarge)
+            }
+        },
+        text = {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Text(
+                    text = "WebSocket Server IP for Sunmi POS",
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                InfoRow(label = "IP Address", value = localIpAddress, textColor = textColor)
+                InfoRow(label = "Port", value = localPort, textColor = textColor)
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Close", color = MaterialTheme.colorScheme.primary)
+            }
+        }
+    )
+}
+
+@Composable
+fun InfoRow(label: String, value: String, textColor: Color) {
+    Column {
+        Text(text = label, color = textColor.copy(alpha = 0.7f), style = MaterialTheme.typography.labelMedium)
+        Text(
+            text = value,
+            color = textColor,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
+        )
+    }
 }
 
 

@@ -1,5 +1,8 @@
 package com.noveleta.sabongbetting.Model;
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class SummaryReport(
     val errorCode: Int,
     val reportTitle: String,

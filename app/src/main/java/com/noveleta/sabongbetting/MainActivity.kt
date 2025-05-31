@@ -17,6 +17,7 @@ import com.noveleta.sabongbetting.widgets.*
 import com.noveleta.sabongbetting.Network.*
 import com.noveleta.sabongbetting.Enter.*
 import com.noveleta.sabongbetting.*
+import com.noveleta.sabongbetting.SharedPreference.*
 
 import android.os.Build
 import android.util.Log
@@ -164,8 +165,8 @@ class MainActivity : ComponentActivity() {
         super.onStart()
         SunmiPrinterHelper.initSunmiPrinterService(this) {
             // Printer is ready to use
-            WebsocketServerPOS.start(context = this) // or applicationContext
-
+            WebsocketServerPOS.start(context = this)
+            SessionManager.isSunmiDevice = true
         }
        networkMonitor.register() // Register here instead of onCreate
     }
@@ -174,6 +175,8 @@ class MainActivity : ComponentActivity() {
         super.onResume()
         SunmiPrinterHelper.initSunmiPrinterService(this) {
             // Printer is ready to use
+            WebsocketServerPOS.start(context = this)
+            SessionManager.isSunmiDevice = true
         }
        networkMonitor.register() // Register here instead of onCreate
     }

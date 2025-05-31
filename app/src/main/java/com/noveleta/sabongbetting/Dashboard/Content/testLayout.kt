@@ -111,15 +111,13 @@ val activity = LocalContext.current as Activity
     viewModelDashboardData.connectWebSocket()
     viewModelStaffBetData.refreshWebSocket()
     printPayout(context, betResponse!!)
-    if (betResponse != null) {
-        printWebsocketPOS.connectToServer(
+        printWebsocketPOS.sendPayoutPrint(
             ip = SessionManager.posIpAddress ?: "192.168.8.100",
             port = SessionManager.posPortAddress ?: "8080",
             payoutResponse = betResponse!!,
             SessionManager.cname ?: "",
             SessionManager.userpassword ?: ""
         )
-    }
 }
 
     }else if (betErrorCode == -1) {

@@ -1,5 +1,8 @@
 package com.noveleta.sabongbetting.Model;
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class CancelledBetResponse(
     val barcode: String,
     val dateTime: String,

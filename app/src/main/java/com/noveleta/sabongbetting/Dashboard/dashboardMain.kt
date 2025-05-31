@@ -149,6 +149,13 @@ if(betResponse != null){
         scanFinish = false
             LaunchedEffect(betResponse) {
              printPayout(context, betResponse!!)
+             printWebsocketPOS.sendPayoutPrint(
+            ip = SessionManager.posIpAddress ?: "192.168.8.100",
+            port = SessionManager.posPortAddress ?: "8080",
+            payoutResponse = betResponse!!,
+            SessionManager.cname ?: "",
+            SessionManager.userpassword ?: ""
+        )
             }
             }else if (betErrorCode == -1) {
             

@@ -77,7 +77,9 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
     var passwordError by remember { mutableStateOf(false) }
     
     var showSettingsDialog by remember { mutableStateOf(false) }
+    var showInfoDialog by remember { mutableStateOf(false) }
     var showWarningDialog by remember { mutableStateOf(false) }
+    val isSunmi = SessionManager.isSunmiDevice
     
     Box(
     modifier = Modifier
@@ -94,21 +96,36 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 16.dp),
+    verticalAlignment = Alignment.CenterVertically
+) {
+    if (isSunmi) {
+        IconButton(
+            onClick = { showInfoDialog = true }
         ) {
-            IconButton(
-                onClick = { showSettingsDialog = true },
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Icon(
+            Icon(
+                imageVector = Icons.Default.Info,
+                contentDescription = "Info",
+                tint = Color.White
+            )
+        }
+    }
+
+    Spacer(modifier = Modifier.weight(1f)) // Pushes next icon to the end
+
+    IconButton(
+        onClick = { showSettingsDialog = true }
+    ) {
+            Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = "Settings",
                     tint = Color.White
                 )
             }
         }
+
         
         Spacer(modifier = Modifier.height(80.dp))
         
@@ -289,6 +306,12 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
         initialIp = ip ?: "",
         initialPort = port ?: ""
     )
+}
+
+if (showInfoDialog){
+   SettingsUi.SunmiInfoDialog(
+   onDismiss = { showInfoDialog = false }
+   )
 }
 
 if (showWarningDialog) {
