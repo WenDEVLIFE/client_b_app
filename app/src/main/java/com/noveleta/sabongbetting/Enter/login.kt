@@ -90,7 +90,7 @@ fun EnterFormUI(viewModel: LoginViewModel, networkMonitor: NetworkMonitor, onSuc
     LaunchedEffect(isConnected) {
         if (isConnected) {
             while (true) {
-                signalLevel = networkMonitor.getWifiSignalLevel(context)
+                signalLevel = networkMonitor.getSignalLevel()
                 delay(3000) // Check every 3 seconds
             }
         }
