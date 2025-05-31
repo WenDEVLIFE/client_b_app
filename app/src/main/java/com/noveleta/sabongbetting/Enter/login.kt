@@ -68,8 +68,10 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
 
+import androidx.compose.runtime.collectAsState
+
 @Composable
-fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
+fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit, networkMonitor: NetworkMonitor) {
     val context = LocalContext.current
     val loginState by viewModel.loginState
     
@@ -80,6 +82,27 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
     var showInfoDialog by remember { mutableStateOf(false) }
     var showWarningDialog by remember { mutableStateOf(false) }
     val isSunmi = SessionManager.isSunmiDevice
+    
+    val isConnected by networkMonitor.isConnected.collectAsState()
+
+    var signalLevel by remember { mutableStateOf(0) }
+
+    LaunchedEffect(isConnected) {
+        if (isConnected) {
+            while (true) {
+                signalLevel = networkMonitor.getWifiSignalLevel(context)
+                delay(3000) // Check every 3 seconds
+            }
+        }
+    }
+
+    val iconRes = when {
+        !isConnected -> R.drawable.ic_wifi_low
+        signalLevel >= 3 -> R.drawable.ic_wifi_high
+        signalLevel == 2 -> R.drawable.ic_wifi_mid
+        signalLevel == 1 -> R.drawable.ic_wifi_mid_low
+        else -> R.drawable.ic_wifi_off
+    }
     
     Box(
     modifier = Modifier
@@ -101,6 +124,7 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
         .padding(top = 16.dp),
     verticalAlignment = Alignment.CenterVertically
 ) {
+    
     if (isSunmi) {
         IconButton(
             onClick = { showInfoDialog = true }
@@ -113,18 +137,32 @@ fun EnterFormUI(viewModel: LoginViewModel, onSuccess: () -> Unit) {
         }
     }
 
-    Spacer(modifier = Modifier.weight(1f)) // Pushes next icon to the end
+    Spacer(modifier = Modifier.weight(1f))
 
-    IconButton(
-        onClick = { showSettingsDialog = true }
+    Row(
+        verticalAlignment = Alignment.CenterVertically
     ) {
+        Icon(
+            painter = painterResource(id = iconRes),
+            contentDescription = "WiFi Signal Strength",
+            modifier = Modifier.size(24.dp),
+            tint = if (isConnected) Color.Green else Color.Red
+        )
+
+        Spacer(modifier = Modifier.width(8.dp)) // space between icons
+
+        IconButton(
+            onClick = { showSettingsDialog = true }
+        ) {
             Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = "Settings",
-                    tint = Color.White
-                )
-            }
+                imageVector = Icons.Default.Settings,
+                contentDescription = "Settings",
+                tint = Color.White
+            )
         }
+    }
+}
+
 
         
         Spacer(modifier = Modifier.height(80.dp))

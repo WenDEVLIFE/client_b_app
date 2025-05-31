@@ -90,6 +90,7 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData, viewMode
     var showCashInTellerDialog by remember { mutableStateOf(false) }
     var showCashOutTellerDialog by remember { mutableStateOf(false) }
     var showMeronClosed by remember { mutableStateOf(false) }
+    var isPrintMOH by remember { mutableStateOf(false) }
     var showEmptyAmount by remember { mutableStateOf(false) }
     var showWalaClosed by remember { mutableStateOf(false) }
     var showDrawClosed by remember { mutableStateOf(false) }
@@ -206,7 +207,16 @@ viewModelCallWebsocket.sendDashboardTrigger()
 MoneyOnHandDialog(
         response = printMOHResponse!!,
         onPrint = {
-        printMoneyOnHand(context, printMOHResponse!!)
+        isPrintMOH = true
+        },
+        onDismiss = {
+            viewModelPrintMoneyOnHandReports.clearBetState()
+        }
+    )
+
+    if(isPrintMOH){
+    printMoneyOnHand(context, printMOHResponse!!)
+        LaunchedEffect(printMOHResponse) {
         printWebsocketPOS.sendMoneyOnHandReport(
             ip = SessionManager.posIpAddress ?: "192.168.8.100",
             port = SessionManager.posPortAddress ?: "8080",
@@ -214,13 +224,9 @@ MoneyOnHandDialog(
             SessionManager.cname ?: "",
             SessionManager.userpassword ?: ""
         )
-        },
-        onDismiss = {
-            viewModelPrintMoneyOnHandReports.clearBetState()
+        isPrintMOH = false
         }
-    )
-
-    
+    }
 }else if(printMOHResponse == null && printMOHErrorCode == -1){
 PrintMOHError(printMOHResults){
     viewModelPrintMoneyOnHandReports.clearBetState()
@@ -273,7 +279,7 @@ TellerFundCashOutReceiptDialog(
         printWebsocketPOS.sendCashOutTeller(
             ip = SessionManager.posIpAddress ?: "192.168.8.100",
             port = SessionManager.posPortAddress ?: "8080",
-            payoutResponse = reprintResponse!!,
+            payoutResponse = cashOutResponse!!,
             SessionManager.cname ?: "",
             SessionManager.userpassword ?: ""
         )
@@ -301,7 +307,7 @@ LaunchedEffect(cashInResponse) {
         printWebsocketPOS.sendCashInTeller(
             ip = SessionManager.posIpAddress ?: "192.168.8.100",
             port = SessionManager.posPortAddress ?: "8080",
-            payoutResponse = reprintResponse!!,
+            payoutResponse = cashInResponse!!,
             SessionManager.cname ?: "",
             SessionManager.userpassword ?: ""
         )

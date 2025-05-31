@@ -111,7 +111,7 @@ fun MainWithDrawer() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainWithDrawer() {
+fun MainWithDrawer(networkMonitor: NetworkMonitor) {
     
     val activity = LocalContext.current as Activity
     val context = LocalContext.current
@@ -201,6 +201,29 @@ var showScanner by remember { mutableStateOf(false) }
         barcodeResult = transactionCode
       )
     }
+    
+    val isConnected by networkMonitor.isConnected.collectAsState()
+
+    var signalLevel by remember { mutableStateOf(0) }
+
+    // Periodically update signal strength
+    LaunchedEffect(isConnected) {
+        if (isConnected) {
+            while (true) {
+                signalLevel = networkMonitor.getWifiSignalLevel(context)
+                delay(3000) // Check every 3 seconds
+            }
+        }
+    }
+
+    val iconRes = when {
+        !isConnected -> R.drawable.ic_wifi_low
+        signalLevel >= 3 -> R.drawable.ic_wifi_high
+        signalLevel == 2 -> R.drawable.ic_wifi_mid
+        signalLevel == 1 -> R.drawable.ic_wifi_mid_low
+        else -> R.drawable.ic_wifi_off
+    }
+
     
     LaunchedEffect(Unit) {
         // Connect websockets and hide connecting dialog when done
@@ -376,47 +399,55 @@ var showScanner by remember { mutableStateOf(false) }
         Scaffold(
     topBar = {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color(0xFF19181B))
-                .height(56.dp) // typical AppBar height
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                Icon(
-                    imageVector = Icons.Filled.Menu,
-                    contentDescription = "Open drawer",
-                    tint = Color.White,
-                    modifier = Modifier.size(30.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Text(
-                text = "Sabong Betting",
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.White,
-                modifier = Modifier.weight(1f)
-            )
-
-            IconButton(onClick = { /* Do something for the end icon */
-             navController.navigate("barcode_scanner")
-            }) {
-Image(
-    painter = painterResource(id = R.drawable.ic_scan_barcode),
-    contentDescription = "Scan Barcode",
-    colorFilter = ColorFilter.tint(Color(0xFFFFFFFF)),
     modifier = Modifier
-        .size(30.dp)
-        .clickable {
-            navController.navigate("barcode_scanner")
-        }
-)
+        .fillMaxWidth()
+        .background(Color(0xFF19181B))
+        .height(56.dp)
+        .padding(horizontal = 16.dp),
+    verticalAlignment = Alignment.CenterVertically
+) {
+    IconButton(onClick = { scope.launch { drawerState.open() } }) {
+        Icon(
+            imageVector = Icons.Filled.Menu,
+            contentDescription = "Open drawer",
+            tint = Color.White,
+            modifier = Modifier.size(30.dp)
+        )
+    }
 
-            }
+    Spacer(modifier = Modifier.width(16.dp))
+
+    Text(
+        text = "Sabong Betting",
+        style = MaterialTheme.typography.titleMedium,
+        color = Color.White,
+        modifier = Modifier.weight(1f) // takes available space
+    )
+
+    // Icons grouped at end
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            painter = painterResource(id = iconRes),
+            contentDescription = "WiFi Signal Strength",
+            modifier = Modifier.size(24.dp),
+            tint = if (isConnected) Color.Green else Color.Red
+        )
+
+        Spacer(modifier = Modifier.width(12.dp))
+
+        IconButton(onClick = {
+            navController.navigate("barcode_scanner")
+        }) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_scan_barcode),
+                contentDescription = "Scan Barcode",
+                colorFilter = ColorFilter.tint(Color.White),
+                modifier = Modifier.size(30.dp)
+            )
         }
+    }
+}
+
     }
 ) { innerPadding ->
             NavHost(

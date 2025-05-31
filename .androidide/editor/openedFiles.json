@@ -1,137 +1,17 @@
 {
   "allFiles": [
     {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/printWebsocketPOS.kt",
-      "selection": {
-        "end": {
-          "column": 3,
-          "index": 12175,
-          "line": 384
-        },
-        "start": {
-          "column": 3,
-          "index": 12175,
-          "line": 384
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/testLayout.kt",
-      "selection": {
-        "end": {
-          "column": 9,
-          "index": 4812,
-          "line": 119
-        },
-        "start": {
-          "column": 8,
-          "index": 4513,
-          "line": 113
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/staffBet.kt",
-      "selection": {
-        "end": {
-          "column": 42,
-          "index": 11319,
-          "line": 300
-        },
-        "start": {
-          "column": 42,
-          "index": 11319,
-          "line": 300
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/transactionLogs.kt",
-      "selection": {
-        "end": {
-          "column": 9,
-          "index": 4090,
-          "line": 103
-        },
-        "start": {
-          "column": 8,
-          "index": 3788,
-          "line": 97
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Model/CashOutResponse.kt",
-      "selection": {
-        "end": {
-          "column": 26,
-          "index": 126,
-          "line": 5
-        },
-        "start": {
-          "column": 11,
-          "index": 111,
-          "line": 5
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Model/CashInResponse.kt",
-      "selection": {
-        "end": {
-          "column": 25,
-          "index": 125,
-          "line": 5
-        },
-        "start": {
-          "column": 11,
-          "index": 111,
-          "line": 5
-        }
-      }
-    },
-    {
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/dashboardMain.kt",
       "selection": {
         "end": {
-          "column": 9,
-          "index": 6131,
-          "line": 157
+          "column": 5,
+          "index": 8315,
+          "line": 224
         },
         "start": {
-          "column": 9,
-          "index": 6131,
-          "line": 157
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/SharedPreference/SessionManager.kt",
-      "selection": {
-        "end": {
-          "column": 0,
-          "index": 3784,
-          "line": 114
-        },
-        "start": {
-          "column": 0,
-          "index": 3784,
-          "line": 114
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/MainActivity.kt",
-      "selection": {
-        "end": {
-          "column": 0,
-          "index": 724,
-          "line": 20
-        },
-        "start": {
-          "column": 0,
-          "index": 724,
-          "line": 20
+          "column": 4,
+          "index": 8045,
+          "line": 218
         }
       }
     },
@@ -139,14 +19,104 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Enter/login.kt",
       "selection": {
         "end": {
+          "column": 5,
+          "index": 3840,
+          "line": 104
+        },
+        "start": {
+          "column": 5,
+          "index": 3840,
+          "line": 104
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Network/NetworkMonitor.kt",
+      "selection": {
+        "end": {
           "column": 3,
-          "index": 11265,
-          "line": 313
+          "index": 1776,
+          "line": 50
         },
         "start": {
           "column": 3,
-          "index": 11265,
-          "line": 313
+          "index": 1776,
+          "line": 50
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/ui/AppNavHost.kt",
+      "selection": {
+        "end": {
+          "column": 18,
+          "index": 1525,
+          "line": 44
+        },
+        "start": {
+          "column": 4,
+          "index": 1511,
+          "line": 44
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/res/drawable/ic_wifi_high.xml",
+      "selection": {
+        "end": {
+          "column": 34,
+          "index": 270,
+          "line": 8
+        },
+        "start": {
+          "column": 34,
+          "index": 270,
+          "line": 8
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/res/drawable/ic_wifi_mid.xml",
+      "selection": {
+        "end": {
+          "column": 34,
+          "index": 270,
+          "line": 8
+        },
+        "start": {
+          "column": 34,
+          "index": 270,
+          "line": 8
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/res/drawable/ic_wifi_low.xml",
+      "selection": {
+        "end": {
+          "column": 34,
+          "index": 270,
+          "line": 8
+        },
+        "start": {
+          "column": 28,
+          "index": 264,
+          "line": 8
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/res/drawable/ic_wifi_off.xml",
+      "selection": {
+        "end": {
+          "column": 34,
+          "index": 270,
+          "line": 8
+        },
+        "start": {
+          "column": 34,
+          "index": 270,
+          "line": 8
         }
       }
     }

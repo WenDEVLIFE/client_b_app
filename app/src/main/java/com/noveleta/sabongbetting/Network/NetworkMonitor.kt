@@ -43,6 +43,14 @@ class NetworkMonitor(context: Context) {
         connectivityManager.registerNetworkCallback(request, networkCallback)
         isRegistered = true
     }
+    
+    fun getWifiSignalLevel(context: Context): Int {
+      val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+      val info = wifiManager.connectionInfo
+   
+      return WifiManager.calculateSignalLevel(info.rssi, 4) // 0 (worst) to 3 (best)
+    }
+
 
     fun unregister() {
         if (!isRegistered) return

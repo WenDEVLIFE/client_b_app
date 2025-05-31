@@ -158,7 +158,7 @@ if (showOfflineDialog) {
                     }
                 }
                 composable("main") {
-                    MainWithDrawer()
+                    MainWithDrawer(networkMonitor)
                 }
         }
     }
