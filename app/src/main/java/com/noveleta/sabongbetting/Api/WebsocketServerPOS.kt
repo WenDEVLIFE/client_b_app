@@ -112,6 +112,127 @@ object WebsocketServerPOS {
                     send(json.encodeToString(payload.copy(from = "pos", data = "invalid payout response")))
                 }
             }
+            
+            "cancelbetresponse" -> {
+                try {
+                    val payoutResponse = json.decodeFromString<CancelledBetResponse>(payload.data)
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        printCancelledBetting(context, payoutResponse)
+                    }
+
+                    send(json.encodeToString(payload.copy(from = "pos", data = "payout printed")))
+                } catch (e: Exception) {
+                    println("Error parsing payoutbetresponse: ${e.localizedMessage}")
+                    send(json.encodeToString(payload.copy(from = "pos", data = "invalid payout response")))
+                }
+            }
+            
+            "reprintbetresponse" -> {
+                try {
+                    val payoutResponse = json.decodeFromString<ReprintBetResponse>(payload.data)
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        rePrintBetResponse(context, payoutResponse)
+                    }
+
+                    send(json.encodeToString(payload.copy(from = "pos", data = "payout printed")))
+                } catch (e: Exception) {
+                    println("Error parsing payoutbetresponse: ${e.localizedMessage}")
+                    send(json.encodeToString(payload.copy(from = "pos", data = "invalid payout response")))
+                }
+            }
+            
+            "mobilewithddrawresponse" -> {
+                try {
+                    val payoutResponse = json.decodeFromString<MobileWithdrawResponse>(payload.data)
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        printMobileWithdraw(context, payoutResponse)
+                    }
+
+                    send(json.encodeToString(payload.copy(from = "pos", data = "payout printed")))
+                } catch (e: Exception) {
+                    println("Error parsing payoutbetresponse: ${e.localizedMessage}")
+                    send(json.encodeToString(payload.copy(from = "pos", data = "invalid payout response")))
+                }
+            }
+            
+            "mobiledepositresponse" -> {
+                try {
+                    val payoutResponse = json.decodeFromString<MobileDepositResponse>(payload.data)
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        printMobileDeposit(context, payoutResponse)
+                    }
+
+                    send(json.encodeToString(payload.copy(from = "pos", data = "payout printed")))
+                } catch (e: Exception) {
+                    println("Error parsing payoutbetresponse: ${e.localizedMessage}")
+                    send(json.encodeToString(payload.copy(from = "pos", data = "invalid payout response")))
+                }
+            }
+            
+            "betresponse" -> {
+                try {
+                    val payoutResponse = json.decodeFromString<BetResponse>(payload.data)
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        printBetResponse(context, payoutResponse)
+                    }
+
+                    send(json.encodeToString(payload.copy(from = "pos", data = "payout printed")))
+                } catch (e: Exception) {
+                    println("Error parsing payoutbetresponse: ${e.localizedMessage}")
+                    send(json.encodeToString(payload.copy(from = "pos", data = "invalid payout response")))
+                }
+            }
+            
+            "mohreport" -> {
+                try {
+                    val payoutResponse = json.decodeFromString<SummaryReport>(payload.data)
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        printMoneyOnHand(context, payoutResponse)
+                    }
+
+                    send(json.encodeToString(payload.copy(from = "pos", data = "payout printed")))
+                } catch (e: Exception) {
+                    println("Error parsing payoutbetresponse: ${e.localizedMessage}")
+                    send(json.encodeToString(payload.copy(from = "pos", data = "invalid payout response")))
+                }
+            }
+            
+            "cashouttellerresponse" -> {
+                try {
+                    val payoutResponse = json.decodeFromString<CashoutResponse>(payload.data)
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        printTellerCashoutResponse(context, payoutResponse)
+                    }
+
+                    send(json.encodeToString(payload.copy(from = "pos", data = "payout printed")))
+                } catch (e: Exception) {
+                    println("Error parsing payoutbetresponse: ${e.localizedMessage}")
+                    send(json.encodeToString(payload.copy(from = "pos", data = "invalid payout response")))
+                }
+            }
+            
+            "cashintellerresponse" -> {
+                try {
+                    val payoutResponse = json.decodeFromString<CashinResponse>(payload.data)
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        printTellerCashinResponse(context, payoutResponse)
+                    }
+
+                    send(json.encodeToString(payload.copy(from = "pos", data = "payout printed")))
+                } catch (e: Exception) {
+                    println("Error parsing payoutbetresponse: ${e.localizedMessage}")
+                    send(json.encodeToString(payload.copy(from = "pos", data = "invalid payout response")))
+                }
+            }
+
 
             else -> {
                 send("""{"from":"pos","type":"error","data":"Unknown type"}""")

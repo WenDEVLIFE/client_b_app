@@ -100,7 +100,7 @@ fun EnterFormUI(viewModel: LoginViewModel, networkMonitor: NetworkMonitor, onSuc
         !isConnected -> R.drawable.ic_wifi_low
         signalLevel >= 3 -> R.drawable.ic_wifi_high
         signalLevel == 2 -> R.drawable.ic_wifi_mid
-        signalLevel == 1 -> R.drawable.ic_wifi_mid_low
+        signalLevel == 1 -> R.drawable.ic_wifi_low
         else -> R.drawable.ic_wifi_off
     }
     
