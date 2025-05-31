@@ -93,7 +93,7 @@ val activity = LocalContext.current as Activity
     if(betResponse != null){
         viewModelPayoutData.setTransactionCode("")
         scanFinish = false
-        connectToServer(SessionManager.posIpAddress ?: "192.168.8.xxx", SessionManager.posPortAddress ?: "8080")
+        
         PayoutReceiptDialog(betResponse!!){
             viewModelPayoutData.clearBetState()
         }
