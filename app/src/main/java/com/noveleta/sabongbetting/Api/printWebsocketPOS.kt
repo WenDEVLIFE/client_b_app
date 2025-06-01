@@ -32,51 +32,61 @@ suspend fun sendConnectedStatusToPOS(
     username: String,
     password: String,
     onAuthFailed: suspend () -> Unit,
+    onNotConnected: suspend () -> Unit,
     onAuthSuccess: suspend () -> Unit,
 ) {
     val json = Json { ignoreUnknownKeys = true }
 
-    client.webSocket("ws://$ip:$port/ws") {
-        val connectPayload = BarcodePayload(
-            from = "phone",
-            type = "connected",
-            data = "Client connected successfully",
-            username = username,
-            password = password
-        )
+    try {
+        client.webSocket("ws://$ip:$port/ws") {
+            val connectPayload = BarcodePayload(
+                from = "phone",
+                type = "connected",
+                data = "Client connected successfully",
+                username = username,
+                password = password
+            )
 
-        val connectJson = json.encodeToString(connectPayload)
-        send(Frame.Text(connectJson))
-        println("Sent connection notification: $connectJson")
+            val connectJson = json.encodeToString(connectPayload)
+            send(Frame.Text(connectJson))
+            println("Sent connection notification: $connectJson")
 
-        // Listen for responses
-        for (message in incoming) {
-            if (message is Frame.Text) {
-                val text = message.readText()
-                try {
-                    val received = json.decodeFromString<BarcodePayload>(text)
-                    println("From: ${received.from}, Type: ${received.type}, Data: ${received.data}")
+            for (message in incoming) {
+                if (message is Frame.Text) {
+                    val text = message.readText()
+                    try {
+                        val received = json.decodeFromString<BarcodePayload>(text)
+                        println("From: ${received.from}, Type: ${received.type}, Data: ${received.data}")
 
-                    if (received.type == "error" && received.data.contains("Authentication failed", ignoreCase = true)) {
-                        println("Authentication failed message received")
-                        onAuthFailed() 
-                        break
+                        if (received.type == "error" &&
+                            received.data.contains("Authentication failed", ignoreCase = true)
+                        ) {
+                            println("Authentication failed message received")
+                            onAuthFailed()
+                            break
+                        }
+
+                        if (received.type == "acknowledge" &&
+                            received.data.contains("Authenticated and connected", ignoreCase = true)
+                        ) {
+                            println("Authentication connected message received")
+                            onAuthSuccess()
+                            break
+                        }
+
+                    } catch (e: Exception) {
+                        println("Received non-decodable message: $text")
+                        onNotConnected()
                     }
-                    
-                    if (received.type == "acknowledge" && received.data.contains("Authenticated and connected", ignoreCase = true)) {
-                        println("Authentication connected message received")
-                        onAuthSuccess() 
-                        break
-                    }
-
-                   
-                } catch (e: Exception) {
-                    println("Received non-decodable message: $text")
                 }
             }
         }
+    } catch (e: Exception) {
+        println("WebSocket connection failed: ${e.localizedMessage}")
+        onNotConnected()
     }
 }
+
 
 
 suspend fun sendPayoutPrint(

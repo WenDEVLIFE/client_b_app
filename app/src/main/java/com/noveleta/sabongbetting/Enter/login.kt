@@ -273,7 +273,7 @@ fun EnterFormUI(viewModel: LoginViewModel, networkMonitor: NetworkMonitor, onSuc
                          if (!userError && !passwordError) {
                             if (ipIsEmpty || portIsEmpty) {
                                showWarningDialog = true
-                               }else if (ip.isNullOrBlank() && port.isNullOrBlank()) {
+                               }else if (!SessionManager.isSunmiDevice && ip.isNullOrBlank() && port.isNullOrBlank()) {
                                showPOSWarningDialog = true
                                }else {
                                viewModel.logInUser()
@@ -328,6 +328,17 @@ fun EnterFormUI(viewModel: LoginViewModel, networkMonitor: NetworkMonitor, onSuc
                             onAuthFailed = {
                                 showPOSAuthenticationDialog = true
                             },
+                            onNotConnected = {
+                                    withContext(Dispatchers.Main) {
+                                    Toast.makeText(
+                                        context,
+                                        "POS Server not Connected!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    onSuccess() 
+                                    viewModel.resetState()
+                                }
+                            },
                             onAuthSuccess = {
                                 withContext(Dispatchers.Main) {
                                     Toast.makeText(
@@ -335,7 +346,7 @@ fun EnterFormUI(viewModel: LoginViewModel, networkMonitor: NetworkMonitor, onSuc
                                         "Connected to POS successfully.",
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                    onSuccess()
+                                    onSuccess() 
                                     viewModel.resetState()
                                 }
                             }
