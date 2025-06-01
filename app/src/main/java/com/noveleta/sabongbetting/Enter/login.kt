@@ -370,6 +370,8 @@ fun EnterFormUI(viewModel: LoginViewModel, networkMonitor: NetworkMonitor, onSuc
             }
         }
     }
+ }
+
 }
     
     var ip = SessionManager.ipAddress
@@ -378,7 +380,7 @@ fun EnterFormUI(viewModel: LoginViewModel, networkMonitor: NetworkMonitor, onSuc
     if (showSettingsDialog) {
         if (ip.isNullOrEmpty()) {
             ip = getWifiIpAddress(context)
-    }
+        }
     SettingsUi.SettingsDialog(
         onDismiss = { showSettingsDialog = false },
         initialIp = ip ?: "",
