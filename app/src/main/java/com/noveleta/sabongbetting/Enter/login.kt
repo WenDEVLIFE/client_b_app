@@ -61,6 +61,7 @@ import com.noveleta.sabongbetting.SharedPreference.*
 import com.noveleta.sabongbetting.Helper.*
 import com.noveleta.sabongbetting.Network.*
 import com.noveleta.sabongbetting.widgets.*
+import com.noveleta.sabongbetting.Api.*
 import com.noveleta.sabongbetting.R
 import com.noveleta.sabongbetting.*
 
@@ -310,16 +311,16 @@ fun EnterFormUI(viewModel: LoginViewModel, networkMonitor: NetworkMonitor, onSuc
 
         // Handle navigation on success, with a LaunchedEffect
         LaunchedEffect(loginState) {
-    if (loginState is LoginState.Success) {
-        val code = loginState.code
-        when (code) {
+            if (loginState is LoginState.Success) {
+                val code = (loginState as LoginState.Success).code
+                when (code) {
             1, 2 -> {
                 if (!SessionManager.isSunmiDevice) {
                     val ip = SessionManager.posIpAddress ?: ""
                     val port = SessionManager.posPortAddress ?: ""
 
                     if (ip.isNotBlank() && port.isNotBlank()) {
-                        sendConnectedStatusToPOS(
+                        printWebsocketPOS.sendConnectedStatusToPOS(
                             ip = ip,
                             port = port,
                             username = SessionManager.cname ?: "",
