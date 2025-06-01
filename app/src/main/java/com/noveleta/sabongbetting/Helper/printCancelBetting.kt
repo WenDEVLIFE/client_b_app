@@ -29,14 +29,14 @@ if (!SunmiPrinterHelper.isPrinterReady()) {
         
         SunmiPrinterHelper.printLabelValue("Cashier: ", betResponse.cashier)
         SunmiPrinterHelper.printLabelValue("CANCELLED TICKET BET", "")
-        SunmiPrinterHelper.print3Line()
+        
         // Print Title
         
         SunmiPrinterHelper.printLabelValue("Fight #: ", betResponse.fightNumber)
         SunmiPrinterHelper.printLabelValue("SIDE: ", betResponse.side)
         SunmiPrinterHelper.printLabelValue("AMOUNT: ", betResponse.amount)
         SunmiPrinterHelper.print3Line()
-        
+        SunmiPrinterHelper.print3Line()
         SunmiPrinterHelper.cutpaper()
     SunmiPrinterHelper.feedPaper()
 }

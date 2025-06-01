@@ -21,11 +21,13 @@ fun printTellerCashoutResponse(context: Context, betResponse: CashoutResponse) {
         
         SunmiPrinterHelper.printLabelValue("Cashier: ", betResponse.cashier)
         SunmiPrinterHelper.printLabelValue("-------- Cash Out --------", "")
-        SunmiPrinterHelper.print3Line()
+        
         
         // Print Title
         SunmiPrinterHelper.printLabelValue("Amount: ", betResponse.cashoutAmount)
         SunmiPrinterHelper.printLabelValue("Cash Handler Name: ", betResponse.cashHandler)
+        SunmiPrinterHelper.print3Line()
+        SunmiPrinterHelper.print3Line()
         SunmiPrinterHelper.print3Line()
         // Cut paper and feed
         SunmiPrinterHelper.cutpaper()
@@ -50,9 +52,11 @@ fun printTellerCashinResponse(context: Context, betResponse: CashinResponse) {
         SunmiPrinterHelper.printLabelValue("Cashier: ", betResponse.cashierUsername)
         
         SunmiPrinterHelper.printLabelValue("-------- Cash In --------", "")
-        SunmiPrinterHelper.print3Line()
+        
         SunmiPrinterHelper.printLabelValue("Amount: ", betResponse.cashinAmount)
         SunmiPrinterHelper.printLabelValue("Cash Handler Name: ", betResponse.cashinHandlerUsername)
+        SunmiPrinterHelper.print3Line()
+        SunmiPrinterHelper.print3Line()
         SunmiPrinterHelper.print3Line()
         // Cut paper and feed
         SunmiPrinterHelper.cutpaper()
@@ -85,7 +89,7 @@ SunmiPrinterHelper.printQr(
                     "CLAIMED" -> "CLAIMED"
                     else -> "CLAIMED"
         }, "")
-        SunmiPrinterHelper.print3Line()
+        
         if(betResponse.status == "REFUNDED"){
         SunmiPrinterHelper.printLabelValue("FIGHT #: ", betResponse.fightNumber.toString())
 SunmiPrinterHelper.printLabelValue("SIDE: ", betResponse.side)
@@ -103,7 +107,7 @@ SunmiPrinterHelper.printLabelValue("PAYOUT: ", betResponse.payout)
 
 
 SunmiPrinterHelper.print3Line()
-        
+        SunmiPrinterHelper.print3Line()
         // Cut paper and feed
         SunmiPrinterHelper.cutpaper()
         SunmiPrinterHelper.feedPaper()

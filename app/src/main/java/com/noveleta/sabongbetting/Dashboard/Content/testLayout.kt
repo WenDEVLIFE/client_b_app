@@ -218,7 +218,6 @@ val activity = LocalContext.current as Activity
             onScanResult = { code ->
               viewModelPayoutData.setTransactionCode(code)
               scanFinish = true
-      showScannerDialog = false
             },
             onCancel = {
               showScannerDialog = false

@@ -27,7 +27,7 @@ fun printBetResponse(context: Context, betResponse: BetResponse) {
     SunmiPrinterHelper.printLabelValue("${betResponse.systemName}","")
     SunmiPrinterHelper.printLabelValue("Cashier: ",    betResponse.cashier)
     SunmiPrinterHelper.printLabelValue("BET", "")
-    SunmiPrinterHelper.print3Line()
+    
     // Label/value pairs
     SunmiPrinterHelper.printLabelValue("AMOUNT: ",    betResponse.amount)
     SunmiPrinterHelper.printLabelValue("FIGHT #: ",   betResponse.fightNumber.toString())
@@ -36,6 +36,7 @@ fun printBetResponse(context: Context, betResponse: BetResponse) {
         2 -> "WALA"
         else -> "DRAW"
     })
+    SunmiPrinterHelper.print3Line()
 SunmiPrinterHelper.print3Line()
     // Finish
     SunmiPrinterHelper.cutpaper()
@@ -67,10 +68,10 @@ fun rePrintBetResponse(context: Context, betResponse: ReprintBetResponse) {
         
         SunmiPrinterHelper.printLabelValue("Cashier: ", betResponse.cashier)
         SunmiPrinterHelper.printLabelValue("REPRINT BET", "")
-        SunmiPrinterHelper.print3Line()
         SunmiPrinterHelper.printLabelValue("AMOUNT: ", betResponse.amount)
         SunmiPrinterHelper.printLabelValue("FIGHT #: ", betResponse.fightNumber)
         SunmiPrinterHelper.printLabelValue("SIDE: ", betResponse.betType)
+        SunmiPrinterHelper.print3Line()
         SunmiPrinterHelper.print3Line()
         // Cut paper and feed
         SunmiPrinterHelper.cutpaper()

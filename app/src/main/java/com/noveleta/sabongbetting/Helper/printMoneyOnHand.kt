@@ -65,6 +65,7 @@ fun printMoneyOnHand(context: Context, betResponse: SummaryReport) {
         SunmiPrinterHelper.printLabelValue("${betResponse.totalDrawPayoutUnclaimed}", "")
 
         SunmiPrinterHelper.print3Line()
+        SunmiPrinterHelper.print3Line()
         
         // Cut paper and feed
         SunmiPrinterHelper.cutpaper()
