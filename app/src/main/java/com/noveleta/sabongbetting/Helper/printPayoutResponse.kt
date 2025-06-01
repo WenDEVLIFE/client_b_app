@@ -20,8 +20,8 @@ fun printTellerCashoutResponse(context: Context, betResponse: CashoutResponse) {
         SunmiPrinterHelper.printLabelValue("${betResponse.systemName}","")
         
         SunmiPrinterHelper.printLabelValue("Cashier: ", betResponse.cashier)
-        SunmiPrinterHelper.printLabelValue("Cash Out", "")
-        
+        SunmiPrinterHelper.printLabelValue("-------- Cash Out --------", "")
+        SunmiPrinterHelper.print3Line()
         
         // Print Title
         SunmiPrinterHelper.printLabelValue("Amount: ", betResponse.cashoutAmount)
@@ -48,8 +48,9 @@ fun printTellerCashinResponse(context: Context, betResponse: CashinResponse) {
         SunmiPrinterHelper.printLabelValue("${betResponse.systemName}","")
         
         SunmiPrinterHelper.printLabelValue("Cashier: ", betResponse.cashierUsername)
-        SunmiPrinterHelper.printLabelValue("Cash In", "")
         
+        SunmiPrinterHelper.printLabelValue("-------- Cash In --------", "")
+        SunmiPrinterHelper.print3Line()
         SunmiPrinterHelper.printLabelValue("Amount: ", betResponse.cashinAmount)
         SunmiPrinterHelper.printLabelValue("Cash Handler Name: ", betResponse.cashinHandlerUsername)
         SunmiPrinterHelper.print3Line()
