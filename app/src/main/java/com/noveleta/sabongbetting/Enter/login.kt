@@ -125,7 +125,7 @@ fun EnterFormUI(viewModel: LoginViewModel, networkMonitor: NetworkMonitor, onSuc
     verticalAlignment = Alignment.CenterVertically
 ) {
     
-    if (isSunmi) {
+    if (SessionManager.isSunmiDevice) {
         IconButton(
             onClick = { showInfoDialog = true }
         ) {

@@ -145,7 +145,7 @@ val activity = LocalContext.current as Activity
       }
       
       LaunchedEffect(mobileDepositResponse) {
-        printMobileDeposit(context, mobileDepositResponse!!)
+      if (!SessionManager.isSunmiDevice) {
         printWebsocketPOS.sendMobileDepositPrint(
             ip = SessionManager.posIpAddress ?: "192.168.8.100",
             port = SessionManager.posPortAddress ?: "8080",
@@ -153,6 +153,11 @@ val activity = LocalContext.current as Activity
             SessionManager.cname ?: "",
             SessionManager.userpassword ?: ""
         )
+                            }else{
+                            printMobileDeposit(context, mobileDepositResponse!!)
+                            }
+        
+        
     }
     } else if (mobileDepositErrorCode == -1) {
       PrintDepositErrorResults(mobileDepositResult){
@@ -172,7 +177,7 @@ val activity = LocalContext.current as Activity
       }
       
       LaunchedEffect(mobileWithdrawResponse) {
-        printMobileWithdraw(context, mobileWithdrawResponse!!)
+      if (!SessionManager.isSunmiDevice) {
         printWebsocketPOS.sendMobileWithdrawPrint(
             ip = SessionManager.posIpAddress ?: "192.168.8.100",
             port = SessionManager.posPortAddress ?: "8080",
@@ -180,6 +185,10 @@ val activity = LocalContext.current as Activity
             SessionManager.cname ?: "",
             SessionManager.userpassword ?: ""
         )
+                            }else{
+                            printMobileWithdraw(context, mobileWithdrawResponse!!)
+                            }
+        
     }
     
     } else if (mobileWithdrawErrorCode == -1) {

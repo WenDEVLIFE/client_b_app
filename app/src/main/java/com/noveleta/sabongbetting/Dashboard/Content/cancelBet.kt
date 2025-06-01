@@ -99,7 +99,7 @@ fun cancelBetUI(viewModelDashboardData: LiveBettingViewModel, viewModelStaffBetD
     viewModelCallWebsocket.sendBetsTrigger()
     viewModelDashboardData.connectWebSocket()
     viewModelStaffBetData.refreshWebSocket()
-        printCancelledBetting(context, betResponse!!)
+     if (!SessionManager.isSunmiDevice) {
         printWebsocketPOS.sendCancelBetPrint(
             ip = SessionManager.posIpAddress ?: "192.168.8.100",
             port = SessionManager.posPortAddress ?: "8080",
@@ -107,6 +107,11 @@ fun cancelBetUI(viewModelDashboardData: LiveBettingViewModel, viewModelStaffBetD
             SessionManager.cname ?: "",
             SessionManager.userpassword ?: ""
         )
+                            }else{
+                            printCancelledBetting(context, betResponse!!)
+                            }
+        
+        
         }
             }else if (betErrorCode == -1) {
             

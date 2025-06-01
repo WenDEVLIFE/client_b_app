@@ -61,10 +61,11 @@ fun SettingsDialog(
     initialIp: String = "",
     initialPort: String = ""
 ) {
+
     var ipAddress by remember { mutableStateOf(initialIp) }
     var portNumber by remember { mutableStateOf(initialPort) }
-    var targetPosIp by remember { mutableStateOf("") }
-var targetPosPort by remember { mutableStateOf("") }
+    var targetPosIp by remember { mutableStateOf(SessionManager.posIpAddress ?: "") }
+    var targetPosPort by remember { mutableStateOf(SessionManager.posPortAddress ?: "") }
 
     fun getLocalIpAddress(): String? {
     try {

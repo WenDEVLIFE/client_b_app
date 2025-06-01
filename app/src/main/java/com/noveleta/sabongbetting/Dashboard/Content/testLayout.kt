@@ -110,7 +110,7 @@ val activity = LocalContext.current as Activity
     viewModelCallWebsocket.sendBetsTrigger()
     viewModelDashboardData.connectWebSocket()
     viewModelStaffBetData.refreshWebSocket()
-    printPayout(context, betResponse!!)
+    if (!SessionManager.isSunmiDevice) {
         printWebsocketPOS.sendPayoutPrint(
             ip = SessionManager.posIpAddress ?: "192.168.8.100",
             port = SessionManager.posPortAddress ?: "8080",
@@ -118,6 +118,11 @@ val activity = LocalContext.current as Activity
             SessionManager.cname ?: "",
             SessionManager.userpassword ?: ""
         )
+                            }else{
+                            printPayout(context, betResponse!!)
+                            }
+    
+        
 }
 
     }else if (betErrorCode == -1) {

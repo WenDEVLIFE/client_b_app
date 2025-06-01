@@ -177,14 +177,17 @@ fun staffBet(staffBetData: PlaceBetsData, liveBetData: LiveBettingData, viewMode
                             viewModelCallWebsocket.sendBetsTrigger()
                             viewModelDashboardData.connectWebSocket()
                             viewModelStaffBetData.refreshWebSocket()
-                            printBetResponse(context, betResponse!!)
-                            printWebsocketPOS.sendBetResponsePrint(
+                            if (!SessionManager.isSunmiDevice) {
+        printWebsocketPOS.sendBetResponsePrint(
             ip = SessionManager.posIpAddress ?: "192.168.8.100",
             port = SessionManager.posPortAddress ?: "8080",
             payoutResponse = betResponse!!,
             SessionManager.cname ?: "",
             SessionManager.userpassword ?: ""
         )
+                            }else{
+                            printBetResponse(context, betResponse!!)
+                            }
         
                     }
     
@@ -215,8 +218,8 @@ MoneyOnHandDialog(
     )
 
     if(isPrintMOH){
-    printMoneyOnHand(context, printMOHResponse!!)
         LaunchedEffect(printMOHResponse) {
+        if (!SessionManager.isSunmiDevice) {
         printWebsocketPOS.sendMoneyOnHandReport(
             ip = SessionManager.posIpAddress ?: "192.168.8.100",
             port = SessionManager.posPortAddress ?: "8080",
@@ -224,6 +227,10 @@ MoneyOnHandDialog(
             SessionManager.cname ?: "",
             SessionManager.userpassword ?: ""
         )
+                            }else{
+                            printMoneyOnHand(context, printMOHResponse!!)
+                            }
+        
         isPrintMOH = false
         }
     }
@@ -245,7 +252,7 @@ ReprintBetReceiptDialog(
         }
     )
 LaunchedEffect(reprintResponse) {
-        rePrintBetResponse(context, reprintResponse!!)
+if (!SessionManager.isSunmiDevice) {
         printWebsocketPOS.sendReprintBet(
             ip = SessionManager.posIpAddress ?: "192.168.8.100",
             port = SessionManager.posPortAddress ?: "8080",
@@ -253,6 +260,11 @@ LaunchedEffect(reprintResponse) {
             SessionManager.cname ?: "",
             SessionManager.userpassword ?: ""
         )
+                            }else{
+                            rePrintBetResponse(context, reprintResponse!!)
+                            }
+        
+        
         }
     
 }else if (reprintResponse == null && reprintErrorCode == -1) {
@@ -275,7 +287,7 @@ TellerFundCashOutReceiptDialog(
         }
     )
     LaunchedEffect(cashOutResponse) {
-        printTellerCashoutResponse(context, cashOutResponse!!)
+    if (!SessionManager.isSunmiDevice) {
         printWebsocketPOS.sendCashOutTeller(
             ip = SessionManager.posIpAddress ?: "192.168.8.100",
             port = SessionManager.posPortAddress ?: "8080",
@@ -283,6 +295,9 @@ TellerFundCashOutReceiptDialog(
             SessionManager.cname ?: "",
             SessionManager.userpassword ?: ""
         )
+                            }else{
+                            printTellerCashoutResponse(context, cashOutResponse!!)
+                            }
         }
 
 }else if (cashOutErrorCode == -1) {
@@ -303,7 +318,7 @@ TellerFundCashInReceiptDialog(
         }
     )
 LaunchedEffect(cashInResponse) {
-        printTellerCashinResponse(context, cashInResponse!!)
+if (!SessionManager.isSunmiDevice) {
         printWebsocketPOS.sendCashInTeller(
             ip = SessionManager.posIpAddress ?: "192.168.8.100",
             port = SessionManager.posPortAddress ?: "8080",
@@ -311,6 +326,9 @@ LaunchedEffect(cashInResponse) {
             SessionManager.cname ?: "",
             SessionManager.userpassword ?: ""
         )
+                            }else{
+                            printTellerCashinResponse(context, cashInResponse!!)
+                            }
     }
 }else if (cashInErrorCode == -1) {
 

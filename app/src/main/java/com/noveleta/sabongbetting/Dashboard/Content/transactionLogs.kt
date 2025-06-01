@@ -94,7 +94,7 @@ fun transactionLogsUI(liveBetData: LiveBettingData) {
         }
     )
 LaunchedEffect(reprintResponse) {
-        rePrintBetResponse(context, reprintResponse!!)
+if (!SessionManager.isSunmiDevice) {
         printWebsocketPOS.sendReprintBet(
             ip = SessionManager.posIpAddress ?: "192.168.8.100",
             port = SessionManager.posPortAddress ?: "8080",
@@ -102,6 +102,9 @@ LaunchedEffect(reprintResponse) {
             SessionManager.cname ?: "",
             SessionManager.userpassword ?: ""
         )
+                            }else{
+                            rePrintBetResponse(context, reprintResponse!!)
+                            }
         }
 }else if (reprintErrorCode == -1) {
     
