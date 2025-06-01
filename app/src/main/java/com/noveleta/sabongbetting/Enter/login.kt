@@ -80,6 +80,8 @@ fun EnterFormUI(viewModel: LoginViewModel, networkMonitor: NetworkMonitor, onSuc
     
     var showSettingsDialog by remember { mutableStateOf(false) }
     var showInfoDialog by remember { mutableStateOf(false) }
+    var showPOSWarningDialog by remember { mutableStateOf(false) }
+    var showPOSAuthenticationDialog by remember { mutableStateOf(false) }
     var showWarningDialog by remember { mutableStateOf(false) }
     val isSunmi = SessionManager.isSunmiDevice
     
@@ -264,11 +266,15 @@ fun EnterFormUI(viewModel: LoginViewModel, networkMonitor: NetworkMonitor, onSuc
 
                          val ipIsEmpty = SessionManager.ipAddress.isNullOrBlank()
                          val portIsEmpty = SessionManager.portAddress.isNullOrBlank()
-
+                         val ip = SessionManager.posIpAddress ?: ""
+                         val port = SessionManager.posPortAddress ?: ""
+                         
                          if (!userError && !passwordError) {
                             if (ipIsEmpty || portIsEmpty) {
                                showWarningDialog = true
-                               } else {
+                               }else if (ip.isNullOrBlank() && port.isNullOrBlank()) {
+                               showPOSWarningDialog = true
+                               }else {
                                viewModel.logInUser()
                              }
                            }
@@ -304,33 +310,67 @@ fun EnterFormUI(viewModel: LoginViewModel, networkMonitor: NetworkMonitor, onSuc
 
         // Handle navigation on success, with a LaunchedEffect
         LaunchedEffect(loginState) {
-            if (loginState is LoginState.Success) {
-                val code = (loginState as LoginState.Success).code
-                when (code) {
-                    1, 2 -> {
-                        onSuccess()
-                        viewModel.resetState()
+    if (loginState is LoginState.Success) {
+        val code = loginState.code
+        when (code) {
+            1, 2 -> {
+                if (!SessionManager.isSunmiDevice) {
+                    val ip = SessionManager.posIpAddress ?: ""
+                    val port = SessionManager.posPortAddress ?: ""
+
+                    if (ip.isNotBlank() && port.isNotBlank()) {
+                        sendConnectedStatusToPOS(
+                            ip = ip,
+                            port = port,
+                            username = SessionManager.cname ?: "",
+                            password = SessionManager.userpassword ?: "",
+                            onAuthFailed = {
+                                showPOSAuthenticationDialog = true
+                            },
+                            onAuthSuccess = {
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(
+                                        context,
+                                        "Connected to POS successfully.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    onSuccess()
+                                    viewModel.resetState()
+                                }
+                            }
+                        )
+                    } else {
+                        // Show a message or dialog that POS IP or port is not set
+                        showPOSWarningDialog = true
                     }
-                    6 -> {
-                        Toast.makeText(context, "System Access is not y8et available!", Toast.LENGTH_SHORT).show()
-                        viewModel.resetState()
-                    }
-                    8 -> {
-                        Toast.makeText(context, "No event for today. Access to system is limited.", Toast.LENGTH_SHORT).show()
-                        viewModel.resetState()
-                    }
-                    10 -> {
-                        Toast.makeText(context, "Server might be offline, please try again later.", Toast.LENGTH_SHORT).show()
-                        viewModel.resetState()
-                    }
-                    else -> {
-                        Toast.makeText(context, "Login Credentials are Invalid!", Toast.LENGTH_SHORT).show()
-                        viewModel.resetState()
-                    }
+                }else{
+                    onSuccess()
+                    viewModel.resetState()
                 }
+            }
+
+            6 -> {
+                Toast.makeText(context, "System Access is not yet available!", Toast.LENGTH_SHORT).show()
+                viewModel.resetState()
+            }
+
+            8 -> {
+                Toast.makeText(context, "No event for today. Access to system is limited.", Toast.LENGTH_SHORT).show()
+                viewModel.resetState()
+            }
+
+            10 -> {
+                Toast.makeText(context, "Server might be offline, please try again later.", Toast.LENGTH_SHORT).show()
+                viewModel.resetState()
+            }
+
+            else -> {
+                Toast.makeText(context, "Login credentials are invalid!", Toast.LENGTH_SHORT).show()
+                viewModel.resetState()
             }
         }
     }
+}
     
     var ip = SessionManager.ipAddress
     val port = SessionManager.portAddress
@@ -374,6 +414,51 @@ if (showWarningDialog) {
         text = { Text("Please set up your IP address and port number before logging in.") }
     )
 }
+
+if (showPOSWarningDialog) {
+    AlertDialog(
+        onDismissRequest = { showPOSWarningDialog = false },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    showPOSWarningDialog = false
+                    showSettingsDialog = true
+                }
+            ) {
+                Text("Go to Settings")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { showPOSWarningDialog = false }) {
+                Text("Cancel")
+            }
+        },
+        title = { Text("Missing POS Configuration!") },
+        text = { Text("Please set up your POS IP address and port number before logging in.") }
+    )
+}
+
+ if (showPOSAuthenticationDialog){
+     AlertDialog(
+        onDismissRequest = { showPOSAuthenticationDialog = false },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    showPOSAuthenticationDialog = false
+                }
+            ) {
+                Text("Okay")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { showPOSAuthenticationDialog = false }) {
+                Text("Cancel")
+            }
+        },
+        title = { Text("POS Login failed!") },
+        text = { Text("ERROR! Authentication failed. Username and password do not match the POS account!") }
+    )
+ }
 
     
 }

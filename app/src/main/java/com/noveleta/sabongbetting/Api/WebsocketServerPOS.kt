@@ -81,7 +81,6 @@ object WebsocketServerPOS {
         val payload = json.decodeFromString<BarcodePayload>(text)
         println("Parsed from: ${payload.from}, type: ${payload.type}, data: ${payload.data}")
 
-        // Check authentication here:
         val incomingUsername = payload.username ?: ""
         val incomingPassword = payload.password ?: ""
 
@@ -91,8 +90,22 @@ object WebsocketServerPOS {
             return
         }
 
-        // Proceed only if authenticated
         when (payload.type) {
+            "connected" -> {
+                println("Client authenticated and connected: $incomingUsername")
+                send(
+                    json.encodeToString(
+                        BarcodePayload(
+                            from = "pos",
+                            type = "acknowledge",
+                            data = "Authenticated and connected",
+                            username = null,
+                            password = null
+                        )
+                    )
+                )
+            }
+
             "barcode" -> {
                 val response = payload.copy(from = "pos")
                 send(json.encodeToString(response))
