@@ -30,6 +30,7 @@ fun printMobileWithdraw(context: Context, betResponse: MobileWithdrawResponse) {
         
         SunmiPrinterHelper.printLabelValue("Cashier: ", betResponse.cashier)
         SunmiPrinterHelper.printLabelValue("POINTS WITHDRAWN", "")
+        SunmiPrinterHelper.print3Line()
         
         SunmiPrinterHelper.printLabelValue("ACCOUNT: ", betResponse.accountID)
         SunmiPrinterHelper.printLabelValue("CURRENT POINTS: ", betResponse.currentBalance)
@@ -68,6 +69,7 @@ if (!SunmiPrinterHelper.isPrinterReady()) {
         
         SunmiPrinterHelper.printLabelValue("Cashier: ", betResponse.cashier)
         SunmiPrinterHelper.printLabelValue("POINTS DEPOSITED", "")
+        SunmiPrinterHelper.print3Line()
         
         SunmiPrinterHelper.printLabelValue("ACCOUNT: ", betResponse.accountID)
         SunmiPrinterHelper.printLabelValue("CURRENT POINTS: ", betResponse.currentBalance)

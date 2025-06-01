@@ -85,7 +85,7 @@ SunmiPrinterHelper.printQr(
                     "CLAIMED" -> "CLAIMED"
                     else -> "CLAIMED"
         }, "")
-        
+        SunmiPrinterHelper.print3Line()
         if(betResponse.status == "REFUNDED"){
         SunmiPrinterHelper.printLabelValue("FIGHT #: ", betResponse.fightNumber.toString())
 SunmiPrinterHelper.printLabelValue("SIDE: ", betResponse.side)

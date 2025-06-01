@@ -44,6 +44,7 @@ fun printMoneyOnHand(context: Context, betResponse: SummaryReport) {
         if(betResponse.commSettings == "0"){
            SunmiPrinterHelper.print3Line()
         }else{
+        SunmiPrinterHelper.print3Line()
            SunmiPrinterHelper.printLabelValue("", "Commission: ${betResponse.commisionBody}")
         }
         
