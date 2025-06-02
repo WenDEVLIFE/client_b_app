@@ -27,7 +27,7 @@ jobs:
     - name: Copy APK to release folder
       run: |
         mkdir -p app/release
-        cp app/build/outputs/apk/debug/*.apk app/release/
+        cp app/build/outputs/apk/release/*.apk app/release/
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
