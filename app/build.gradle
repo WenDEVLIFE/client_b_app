@@ -140,6 +140,7 @@ implementation 'org.slf4j:slf4j-simple:1.7.36'
 
 // For BlockHound (if you're using it)
 implementation 'io.projectreactor.tools:blockhound:1.0.7.RELEASE'
+implementation 'com.google.auto.service:auto-service:1.1.1'
 
 }
 
