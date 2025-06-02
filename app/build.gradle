@@ -135,6 +135,12 @@ implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
 implementation 'org.nanohttpd:nanohttpd-websocket:2.3.1'
 
+// For SLF4J logging
+implementation 'org.slf4j:slf4j-simple:1.7.36'
+
+// For BlockHound (if you're using it)
+implementation 'io.projectreactor.tools:blockhound:1.0.7.RELEASE'
+
 }
 
 kapt {
