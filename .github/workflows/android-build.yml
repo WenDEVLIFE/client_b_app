@@ -22,7 +22,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build APK
-      run: ./gradlew assembleDebug
+      run: ./gradlew assembleRelease
 
     - name: Copy APK to release folder
       run: |
