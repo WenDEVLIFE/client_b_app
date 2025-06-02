@@ -461,8 +461,6 @@ var showScanner by remember { mutableStateOf(false) }
             onScanResult = { code ->
                 viewModelPayoutData.setTransactionCode(code)
                 scanFinish = true
-                // When done scanning, navigate back
-                navController.popBackStack()
             },
             onCancel = {
                 navController.popBackStack()
