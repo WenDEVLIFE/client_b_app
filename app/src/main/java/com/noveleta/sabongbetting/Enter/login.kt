@@ -332,11 +332,9 @@ fun EnterFormUI(viewModel: LoginViewModel, networkMonitor: NetworkMonitor, onSuc
                                     withContext(Dispatchers.Main) {
                                     Toast.makeText(
                                         context,
-                                        "POS Server not Connected!",
+                                        "POS Server not Connected, or POS IP Address and Port Number doesn't match",
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                    onSuccess() 
-                                    viewModel.resetState()
                                 }
                             },
                             onAuthSuccess = {
