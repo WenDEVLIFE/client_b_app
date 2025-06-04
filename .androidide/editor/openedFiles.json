@@ -109,13 +109,13 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/.github/workflows/android-build.yml",
       "selection": {
         "end": {
-          "column": 54,
-          "index": 565,
+          "column": 56,
+          "index": 567,
           "line": 29
         },
         "start": {
-          "column": 54,
-          "index": 565,
+          "column": 56,
+          "index": 567,
           "line": 29
         }
       }
