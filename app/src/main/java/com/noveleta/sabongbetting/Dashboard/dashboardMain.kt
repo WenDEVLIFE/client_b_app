@@ -285,6 +285,18 @@ var showScanner by remember { mutableStateOf(false) }
         )
     }
     
+    if(showScannerDialog){
+    BarcodeScannerScreen(
+            onScanResult = { code ->
+                viewModelPayoutData.setTransactionCode(code)
+                scanFinish = true
+            },
+            onCancel = {
+            
+                showScannerDialog = false
+            }
+        )
+    }
      
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -438,11 +450,7 @@ var showScanner by remember { mutableStateOf(false) }
         Spacer(modifier = Modifier.width(12.dp))
 
         IconButton(onClick = {
-            navController.navigate("barcode_scanner") {
-    launchSingleTop = true      // Prevents multiple instances of scanner if already on top
-    restoreState = true         // (Optional) restores previous state if reselected in bottom nav
-}
-
+            showScannerDialog = true
         }) {
             Image(
                 painter = painterResource(id = R.drawable.ic_scan_barcode),
@@ -462,18 +470,6 @@ var showScanner by remember { mutableStateOf(false) }
                 modifier = Modifier.padding(innerPadding)
             ) {
             
-    composable("barcode_scanner") {
-        BarcodeScannerScreen(
-            onScanResult = { code ->
-                viewModelPayoutData.setTransactionCode(code)
-                scanFinish = true
-            },
-            onCancel = {
-                navController.popBackStack()
-            }
-        )
-    }
-    
     composable(DrawerScreen.liveBet.route) {
     if (dashboardData != null) {
         liveBetting(dashboardData!!)

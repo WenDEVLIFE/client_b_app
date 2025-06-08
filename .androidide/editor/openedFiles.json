@@ -19,17 +19,17 @@
       "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/dashboardMain.kt",
       "selection": {
         "end": {
-          "column": 33,
-          "index": 17023,
-          "line": 468
+          "column": 12,
+          "index": 16923,
+          "line": 471
         },
         "start": {
-          "column": 33,
-          "index": 17023,
-          "line": 468
+          "column": 12,
+          "index": 16923,
+          "line": 471
         }
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/ScannerActivity.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/dashboardMain.kt"
 }
