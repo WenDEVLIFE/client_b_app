@@ -5,13 +5,13 @@
       "selection": {
         "end": {
           "column": 0,
-          "index": 2713,
-          "line": 83
+          "index": 9304,
+          "line": 273
         },
         "start": {
           "column": 0,
-          "index": 2713,
-          "line": 83
+          "index": 9304,
+          "line": 273
         }
       }
     },
@@ -31,5 +31,5 @@
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/dashboardMain.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/ScannerActivity.kt"
 }
