@@ -156,8 +156,9 @@ if(betResponse != null){
             SessionManager.cname ?: "",
             SessionManager.userpassword ?: ""
         )
+        navController.navigate("barcode_scanner")
             }
-            navController.navigate("barcode_scanner")
+            
             }else if (betErrorCode == -1) {
             
             PrintBetPayoutErrorResults(betResult){
