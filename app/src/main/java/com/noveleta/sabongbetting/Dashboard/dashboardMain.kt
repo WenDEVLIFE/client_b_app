@@ -141,31 +141,6 @@ fun MainWithDrawer(networkMonitor: NetworkMonitor) {
     val companyId = SessionManager.accountID ?: "500"
     val navController = rememberNavController()
 
-if(betResponse != null){
-            PayoutReceiptDialog(betResponse!!){
-            viewModelPayoutData.clearBetState()
-            }
-            viewModelPayoutData.setTransactionCode("")
-        scanFinish = false
-            LaunchedEffect(betResponse) {
-             printPayout(context, betResponse!!)
-             printWebsocketPOS.sendPayoutPrint(
-            ip = SessionManager.posIpAddress ?: "192.168.8.100",
-            port = SessionManager.posPortAddress ?: "8080",
-            payoutResponse = betResponse!!,
-            SessionManager.cname ?: "",
-            SessionManager.userpassword ?: ""
-            )
-            }
-            
-            }else if (betErrorCode == -1) {
-            
-            PrintBetPayoutErrorResults(betResult){
-            viewModelPayoutData.clearBetState()
-            }
-            viewModelPayoutData.setTransactionCode("")
-        scanFinish = false
-            }
 
     val transactionCode by viewModelPayoutData.transactionCode.collectAsState()
 var showScanner by remember { mutableStateOf(false) }
@@ -568,25 +543,56 @@ if (dashboardData != null) {
         )
     }
     
-    if(showScannerDialog){
-    Box(modifier = Modifier.fillMaxSize()) {
-    
-        Column(
-            Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+    if (showScannerDialog) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.5f)), // Dim the background
+            contentAlignment = Alignment.Center
         ) {
-    BarcodeScannerScreen(
-            onScanResult = { code ->
-                viewModelPayoutData.setTransactionCode(code)
-                scanFinish = true
-            },
-            onCancel = {
-                showScannerDialog = false
-            }
+            // 1. The scanner is always visible when the overlay is active
+            BarcodeScannerScreen(
+                onScanResult = { code ->
+                    if (code.isNotEmpty()) {
+                        // Set the code and trigger the claim, but DO NOT close the scanner
+                        viewModelPayoutData.setTransactionCode(code)
+                        scanFinish = true
+                    }
+                },
+                onCancel = {
+                    // Only the cancel button can close the scanner overlay
+                    showScannerDialog = false
+                    // Also clear any lingering payout state when closing scanner
+                    viewModelPayoutData.clearBetState()
+                }
+            )
+
+            // 2. Payout dialogs are displayed on top of the scanner
+            if (betResponse != null) {
+                PayoutReceiptDialog(betResponse!!) {
+                    // Dismissing the dialog clears the state, making it disappear,
+                    // but the scanner underneath remains visible.
+                    viewModelPayoutData.clearBetState()
+                }
+                LaunchedEffect(betResponse) {
+                    printPayout(context, betResponse!!)
+                    if (!SessionManager.isSunmiDevice) {
+        printWebsocketPOS.sendPayoutPrint(
+            ip = SessionManager.posIpAddress ?: "192.168.8.100",
+            port = SessionManager.posPortAddress ?: "8080",
+            payoutResponse = betResponse!!,
+            SessionManager.cname ?: "",
+            SessionManager.userpassword ?: ""
         )
-        }
-        
+                            }else{
+                            printPayout(context, betResponse!!)
+                            }
+                }
+            } else if (betErrorCode == -1) {
+                PrintBetPayoutErrorResults(betResult) {
+                    viewModelPayoutData.clearBetState()
+                }
+            }
         }
     }
 
