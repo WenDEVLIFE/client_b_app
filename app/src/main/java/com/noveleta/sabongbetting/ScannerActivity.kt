@@ -80,6 +80,7 @@ import kotlin.random.Random
 
 import androidx.compose.foundation.gestures.detectTapGestures
 
+import androidx.lifecycle.Lifecycle
 
 class ScannerActivity : ComponentActivity() {
   private val permissionGranted = mutableStateOf(false)

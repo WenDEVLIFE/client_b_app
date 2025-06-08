@@ -438,7 +438,11 @@ var showScanner by remember { mutableStateOf(false) }
         Spacer(modifier = Modifier.width(12.dp))
 
         IconButton(onClick = {
-            navController.navigate("barcode_scanner")
+            navController.navigate("barcode_scanner") {
+    launchSingleTop = true      // Prevents multiple instances of scanner if already on top
+    restoreState = true         // (Optional) restores previous state if reselected in bottom nav
+}
+
         }) {
             Image(
                 painter = painterResource(id = R.drawable.ic_scan_barcode),
@@ -463,7 +467,6 @@ var showScanner by remember { mutableStateOf(false) }
             onScanResult = { code ->
                 viewModelPayoutData.setTransactionCode(code)
                 scanFinish = true
-                navController.popBackStack()
             },
             onCancel = {
                 navController.popBackStack()
