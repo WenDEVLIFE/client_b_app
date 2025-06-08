@@ -5,13 +5,13 @@
       "selection": {
         "end": {
           "column": 0,
-          "index": 14132,
-          "line": 391
+          "index": 1020,
+          "line": 25
         },
         "start": {
           "column": 0,
-          "index": 14132,
-          "line": 391
+          "index": 1020,
+          "line": 25
         }
       }
     },
@@ -31,5 +31,5 @@
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/tableLayout.kt"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/ReceiptDialog.kt"
 }
