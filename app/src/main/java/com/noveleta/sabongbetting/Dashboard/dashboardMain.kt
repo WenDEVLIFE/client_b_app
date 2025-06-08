@@ -273,38 +273,6 @@ var showScanner by remember { mutableStateOf(false) }
     val currentRoute = currentBackStackEntry?.destination?.route
     val isDarkTheme = isSystemInDarkTheme()
     
-
-    // Connecting to server progress dialog
-    if (showConnectingDialog) {
-        AlertDialog(
-            onDismissRequest = {},
-            title = { Text("Connecting to server...") },
-            text = { Text("Please wait while the app establishes connection.") },
-            confirmButton = {}
-        )
-    }
-    
-    if(showScannerDialog){
-    Box(modifier = Modifier.fillMaxSize()) {
-    
-        Column(
-            Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-    BarcodeScannerScreen(
-            onScanResult = { code ->
-                viewModelPayoutData.setTransactionCode(code)
-                scanFinish = true
-            },
-            onCancel = {
-                showScannerDialog = false
-            }
-        )
-        }
-        
-        }
-    }
      
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -589,6 +557,38 @@ if (dashboardData != null) {
 }
             }
         }
+        
+         // Connecting to server progress dialog
+    if (showConnectingDialog) {
+        AlertDialog(
+            onDismissRequest = {},
+            title = { Text("Connecting to server...") },
+            text = { Text("Please wait while the app establishes connection.") },
+            confirmButton = {}
+        )
+    }
+    
+    if(showScannerDialog){
+    Box(modifier = Modifier.fillMaxSize()) {
+    
+        Column(
+            Modifier
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+    BarcodeScannerScreen(
+            onScanResult = { code ->
+                viewModelPayoutData.setTransactionCode(code)
+                scanFinish = true
+            },
+            onCancel = {
+                showScannerDialog = false
+            }
+        )
+        }
+        
+        }
+    }
 
         // Exit confirmation dialog
         if (showExitDialog) {
