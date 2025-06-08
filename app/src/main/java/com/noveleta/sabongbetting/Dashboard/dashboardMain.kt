@@ -155,8 +155,7 @@ if(betResponse != null){
             payoutResponse = betResponse!!,
             SessionManager.cname ?: "",
             SessionManager.userpassword ?: ""
-        )
-        navController.navigate("barcode_scanner")
+            )
             }
             
             }else if (betErrorCode == -1) {
@@ -292,7 +291,6 @@ var showScanner by remember { mutableStateOf(false) }
                 scanFinish = true
             },
             onCancel = {
-            
                 showScannerDialog = false
             }
         )
