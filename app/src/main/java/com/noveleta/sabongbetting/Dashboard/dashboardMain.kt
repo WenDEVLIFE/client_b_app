@@ -285,6 +285,13 @@ var showScanner by remember { mutableStateOf(false) }
     }
     
     if(showScannerDialog){
+    Box(modifier = Modifier.fillMaxSize()) {
+    
+        Column(
+            Modifier
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
     BarcodeScannerScreen(
             onScanResult = { code ->
                 viewModelPayoutData.setTransactionCode(code)
@@ -294,6 +301,9 @@ var showScanner by remember { mutableStateOf(false) }
                 showScannerDialog = false
             }
         )
+        }
+        
+        }
     }
      
     ModalNavigationDrawer(
