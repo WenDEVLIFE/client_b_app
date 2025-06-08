@@ -184,68 +184,78 @@ fun BarcodeScannerScreen(
     }
 
     DisposableEffect(lifecycleOwner) {
-        val analysisUseCase = ImageAnalysis.Builder()
-            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-            .build()
-            .also { useCase ->
-                useCase.setAnalyzer(cameraExecutor) { imageProxy ->
-                    if (scanCompleted) {
-                        imageProxy.close()
-                        return@setAnalyzer
-                    }
+    val scanner = BarcodeScanning.getClient()
+    val cameraExecutor = Executors.newSingleThreadExecutor()
 
-                    val mediaImage = imageProxy.image
-                    if (mediaImage != null) {
-                        val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-                        scanner.process(image)
-                            .addOnSuccessListener { barcodes ->
-                                barcodes.firstOrNull()?.rawValue?.let { code ->
-                                    if (code.isNotEmpty() && !scanCompleted) {
-                                        scanCompleted = true
-                                        onScanResult(code)
-                                    }
+    val analysisUseCase = ImageAnalysis.Builder()
+        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+        .build()
+        .also { useCase ->
+            useCase.setAnalyzer(cameraExecutor) { imageProxy ->
+                if (scanCompleted) {
+                    imageProxy.close()
+                    return@setAnalyzer
+                }
+
+                val mediaImage = imageProxy.image
+                if (mediaImage != null) {
+                    val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+                    scanner.process(image)
+                        .addOnSuccessListener { barcodes ->
+                            barcodes.firstOrNull()?.rawValue?.let { code ->
+                                if (code.isNotEmpty() && !scanCompleted) {
+                                    scanCompleted = true
+                                    onScanResult(code)
                                 }
                             }
-                            .addOnFailureListener {
-                                Log.e("BarcodeScannerScreen", "Scanning failed", it)
-                            }
-                            .addOnCompleteListener {
-                                imageProxy.close()
-                            }
-                    } else {
-                        imageProxy.close()
-                    }
+                        }
+                        .addOnFailureListener {
+                            Log.e("BarcodeScannerScreen", "Scanning failed", it)
+                        }
+                        .addOnCompleteListener {
+                            imageProxy.close()
+                        }
+                } else {
+                    imageProxy.close()
                 }
             }
+        }
 
-        // Defer camera binding until PreviewView is ready
-        previewView.post {
-            cameraProviderFuture.addListener({
-                try {
-                    val cameraProvider = cameraProviderFuture.get()
-                    val preview = Preview.Builder()
-                        .setTargetRotation(previewView.display.rotation) // Ensure correct orientation
-                        .build()
-                        .also {
-                            it.setSurfaceProvider(previewView.surfaceProvider)
-                        }
+    val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
 
-                    val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
-                    if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-                        cameraProvider.unbindAll()
-                        cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, preview, analysisUseCase)
+    previewView.post {
+        cameraProviderFuture.addListener({
+            try {
+                val cameraProvider = cameraProviderFuture.get()
+                val preview = Preview.Builder()
+                    .setTargetRotation(previewView.display.rotation)
+                    .build()
+                    .also {
+                        it.setSurfaceProvider(previewView.surfaceProvider)
                     }
-                } catch (e: Exception) {
-                    Log.e("BarcodeScannerScreen", "Use case binding failed", e)
-                }
-            }, ContextCompat.getMainExecutor(context))
-        }
 
-        onDispose {
-            cleanUpCamera()
-        }
+                val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+                if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+                    cameraProvider.unbindAll()
+                    cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, preview, analysisUseCase)
+                }
+            } catch (e: Exception) {
+                Log.e("BarcodeScannerScreen", "Use case binding failed", e)
+            }
+        }, ContextCompat.getMainExecutor(context))
     }
+
+    onDispose {
+        try {
+            cameraProviderFuture.get().unbindAll()
+        } catch (e: Exception) {
+            Log.e("BarcodeScannerScreen", "Camera cleanup failed", e)
+        }
+        cameraExecutor.shutdown()
+    }
+}
+
 
     Box(modifier = modifier) {
         AndroidView(factory = { previewView }, modifier = Modifier.fillMaxSize())
