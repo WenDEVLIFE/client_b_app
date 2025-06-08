@@ -118,6 +118,7 @@ fun MainWithDrawer(networkMonitor: NetworkMonitor) {
     val viewModelDashboardData: LiveBettingViewModel = viewModel()
     val viewModelStaffBetData: PlaceBetsViewModel = viewModel()
     val viewModelPayoutData: SendPayoutViewModel = viewModel()
+    val viewModelCallWebsocket: CallWebsocketDashboard = viewModel()
     
     val errorMsg by viewModelDashboardData.errorMessage.collectAsState()
     val clipboard = LocalClipboardManager.current
