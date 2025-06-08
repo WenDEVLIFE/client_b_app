@@ -139,7 +139,7 @@ fun MainWithDrawer(networkMonitor: NetworkMonitor) {
     
     val userRole = SessionManager.roleID ?: "2"
     val companyId = SessionManager.accountID ?: "500"
-    
+    val navController = rememberNavController()
 
 if(betResponse != null){
             PayoutReceiptDialog(betResponse!!){
@@ -262,7 +262,7 @@ var showScanner by remember { mutableStateOf(false) }
         )
     }
 
-    val navController = rememberNavController()
+    
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val items = listOf(DrawerScreen.liveBet, DrawerScreen.placeBet, DrawerScreen.claimPayout, DrawerScreen.cancelBet,
