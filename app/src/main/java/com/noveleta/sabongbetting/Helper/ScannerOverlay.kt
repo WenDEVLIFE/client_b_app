@@ -23,6 +23,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun ScannerOverlayBox(
     modifier: Modifier = Modifier,
+    borderColor: Color = Color.Red,
     boxWidth: Dp = 250.dp,
     boxHeight: Dp = 250.dp
 ) {
@@ -64,7 +65,7 @@ fun ScannerOverlayBox(
                 // 4) optional red scan line
                 if (showLine) {
                     drawLine(
-                        color = Color.Red,
+                        color = borderColor,
                         start = Offset(left, centerY),
                         end = Offset(right, centerY),
                         strokeWidth = 3.dp.toPx(),

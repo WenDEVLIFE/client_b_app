@@ -147,113 +147,96 @@ fun BarcodeScannerScreen(
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-
-    // ML Kit scanner
-    val scanner = remember { BarcodeScanning.getClient() }
-    // Camera executor
-    val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
     var scanCompleted by remember { mutableStateOf(false) }
-val scope = CoroutineScope(Dispatchers.Main)
 
-    // PreviewView to show camera feed
-    AndroidView(
-        modifier = modifier,
-        factory = { ctx ->
-            PreviewView(ctx).apply {
-                scaleType = PreviewView.ScaleType.FILL_CENTER
-                implementationMode = PreviewView.ImplementationMode.COMPATIBLE
-            }
-        },
-        update = { previewView ->
-            val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-            cameraProviderFuture.addListener({
-                val cameraProvider = cameraProviderFuture.get()
+    // State for visual feedback (e.g., changing overlay color)
+    var overlayColor by remember { mutableStateOf(Color.Red) }
 
-                // 1) Preview use-case
-                val preview = Preview.Builder().build().also {
-                    it.setSurfaceProvider(previewView.surfaceProvider)
-                }
-
-                // 2) ImageAnalysis use-case
-                val analysis = ImageAnalysis.Builder()
-                    .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                    .build()
-                    .also { useCase ->
-useCase.setAnalyzer(cameraExecutor) { imageProxy ->
-    val mediaImage = imageProxy.image
-    val inputImage = mediaImage?.let {
-        InputImage.fromMediaImage(it, imageProxy.imageInfo.rotationDegrees)
+    val previewView = remember {
+        PreviewView(context).apply {
+            scaleType = PreviewView.ScaleType.FILL_CENTER
+            implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+        }
     }
 
-    if (inputImage != null && !scanCompleted) {
-        scanner.process(inputImage)
-            .addOnSuccessListener { barcodes ->
-                barcodes.firstOrNull()
-                    ?.rawValue
-                    ?.takeIf { it.isNotEmpty() }
-                    ?.also { code ->
-                        scanCompleted = true
-                        onScanResult(code)
-                        
-                        scope.launch {
-                    delay(3000)
-                    scanCompleted = false
-                }
-                    }
-            }
-            .addOnCompleteListener {
-                imageProxy.close()
-            }
-    } else {
-        imageProxy.close()
+    // This LaunchedEffect handles the "reset" logic for continuous scanning.
+    LaunchedEffect(scanCompleted) {
+        if (scanCompleted) {
+            overlayColor = Color.Green
+            delay(1500L) // Wait 1.5 seconds
+            overlayColor = Color.Red
+            scanCompleted = false // Reset for the next scan
+        }
     }
-}
-                    }
 
-                // 3) Bind to lifecycle
-                val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+    DisposableEffect(lifecycleOwner) {
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+        val cameraExecutor = Executors.newSingleThreadExecutor()
+        val scanner = BarcodeScanning.getClient()
+
+        val analysisUseCase = ImageAnalysis.Builder()
+            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+            .build()
+            .also {
+                it.setAnalyzer(cameraExecutor) { imageProxy ->
+                    if (scanCompleted) { // Drop frames if a scan was just completed
+                        imageProxy.close()
+                        return@setAnalyzer
+                    }
+                    val mediaImage = imageProxy.image
+                    if (mediaImage != null) {
+                        val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+                        scanner.process(image)
+                            .addOnSuccessListener { barcodes ->
+                                barcodes.firstOrNull()?.rawValue?.let { code ->
+                                    if (code.isNotEmpty() && !scanCompleted) {
+                                        scanCompleted = true // Trigger the reset logic
+                                        onScanResult(code)   // Send result to the parent
+                                    }
+                                }
+                            }
+                            .addOnFailureListener { e -> Log.e("BarcodeScannerScreen", "Scanning failed", e) }
+                            .addOnCompleteListener { imageProxy.close() }
+                    } else {
+                        imageProxy.close()
+                    }
+                }
+            }
+        
+        cameraProviderFuture.addListener({
+            val cameraProvider = cameraProviderFuture.get()
+            val preview = Preview.Builder().build().also { it.setSurfaceProvider(previewView.surfaceProvider) }
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+            try {
                 cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(
-                    lifecycleOwner,
-                    cameraSelector,
-                    preview,
-                    analysis
-                )
-            }, ContextCompat.getMainExecutor(context))
-        }
-    )
-    
-    // Overlay + controls
-        ScannerOverlayBox()
+                cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, preview, analysisUseCase)
+            } catch (exc: Exception) {
+                Log.e("BarcodeScannerScreen", "Use case binding failed", exc)
+            }
+        }, ContextCompat.getMainExecutor(context))
 
-        Box(
-            modifier = Modifier
+        onDispose {
+            Log.d("BarcodeScannerScreen", "Disposing scanner resources.")
+            cameraProviderFuture.get().unbindAll()
+            scanner.close()
+            cameraExecutor.shutdown()
+        }
+    }
+
+    Box(modifier = modifier) {
+        AndroidView(factory = { previewView }, modifier = Modifier.fillMaxSize())
+        ScannerOverlayBox(borderColor = overlayColor) 
+        
+        Column(
+            Modifier
                 .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            Text(
-                "Scan QRCode Receipt",
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.TopStart)
-            )
-            IconButton(
-                onClick = {
-                // shut down scanner to free resources
-                scanner.close()
-                cameraExecutor.shutdown()
-                onCancel()
-            },
-                modifier = Modifier.align(Alignment.TopEnd)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Cancel scanning",
-                    tint = Color.White
-                )
+                .padding(16.dp)) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text("Scan QRCode Receipt", color = Color.White, fontWeight = FontWeight.Bold)
+                IconButton(onClick = onCancel) {
+                    Icon(Icons.Default.Close, "Close Scanner", tint = Color.White)
+                }
             }
         }
+    }
 }
-
-
-

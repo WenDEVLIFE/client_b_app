@@ -273,13 +273,22 @@ fun PayoutReceiptDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-        title = { Text("Mobile App Transaction") },
+        shape = RoundedCornerShape(16.dp),
+        title = {
+            Text(
+                "Mobile App Transaction",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        },
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top,
                 modifier = Modifier
-                    .size(width = 320.dp, height = 380.dp)
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(vertical = 8.dp)
             ) {
                 // Safe barcode display
                 if (!response.barcode.isNullOrBlank()) {
@@ -294,40 +303,41 @@ fun PayoutReceiptDialog(
                                 }
                             }
                         },
-                        modifier = Modifier.size(200.dp)
+                        modifier = Modifier
+                            .size(200.dp)
+                            .padding(vertical = 8.dp)
                     )
                 }
 
-                Spacer(Modifier.height(8.dp))
-                if (response.transactionCode.isNotBlank()) {
-                    Text(text = response.transactionCode, fontSize = 15.sp)
+                response.transactionCode.takeIf { it.isNotBlank() }?.let {
+                    Text(text = it, fontSize = 15.sp)
                 }
 
-                if (response.transactionDate.isNotBlank()) {
-                    Text(text = response.transactionDate, fontSize = 13.sp)
+                response.transactionDate.takeIf { it.isNotBlank() }?.let {
+                    Text(text = it, fontSize = 13.sp)
                 }
 
-                if (response.systemName.isNotBlank()) {
-                    Text(text = response.systemName, fontSize = 13.sp)
+                response.systemName.takeIf { it.isNotBlank() }?.let {
+                    Text(text = it, fontSize = 13.sp)
                 }
 
-                if (response.transactionCashier.isNotBlank()) {
+                response.transactionCashier.takeIf { it.isNotBlank() }?.let {
                     Text(
-                        text = "Cashier: ${response.transactionCashier}",
+                        text = "Cashier: $it",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
+
                 val status = when (response.status) {
                     "REFUNDED" -> "REFUNDED"
                     "CLAIMED" -> "CLAIMED"
                     else -> "CLAIMED"
                 }
+                Spacer(Modifier.height(4.dp))
+                Text(text = status, fontSize = 14.sp, fontWeight = FontWeight.Bold)
 
                 Spacer(Modifier.height(4.dp))
-                Text(text =status, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                Spacer(Modifier.height(4.dp))
-
                 Text(
                     text = "Fight #: ${response.fightNumber}",
                     fontSize = 13.sp,
@@ -345,33 +355,31 @@ fun PayoutReceiptDialog(
                     fontWeight = FontWeight.Bold
                 )
 
-                if (response.amount.isNotBlank()) {
+                response.amount.takeIf { it.isNotBlank() }?.let {
                     Text(
-                        text = "AMOUNT: ${response.amount}",
+                        text = "AMOUNT: $it",
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
 
                 Spacer(Modifier.height(4.dp))
-                if (response.odds.isNotBlank()) {
+                response.odds.takeIf { it.isNotBlank() }?.let {
                     Text(
-                        text = "ODDS: ${response.odds}",
+                        text = "ODDS: $it",
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
 
                 Spacer(Modifier.height(4.dp))
-                if (response.payout.isNotBlank()) {
-                    Text(
-                        text = "PAYOUT: ${response.payout}",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                Text(
+                    text = "PAYOUT: ${response.payout}",
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold
+                )
 
-                Spacer(Modifier.height(4.dp))
+                Spacer(Modifier.height(8.dp))
             }
         },
         confirmButton = {
@@ -381,6 +389,7 @@ fun PayoutReceiptDialog(
         }
     )
 }
+
 
 @Composable
 fun TellerFundCashOutReceiptDialog(

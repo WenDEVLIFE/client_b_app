@@ -1,215 +1,35 @@
 {
   "allFiles": [
     {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/Content/testLayout.kt",
-      "selection": {
-        "end": {
-          "column": 39,
-          "index": 7958,
-          "line": 222
-        },
-        "start": {
-          "column": 39,
-          "index": 7958,
-          "line": 222
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/printBetResponse.kt",
-      "selection": {
-        "end": {
-          "column": 61,
-          "index": 2489,
-          "line": 69
-        },
-        "start": {
-          "column": 61,
-          "index": 2489,
-          "line": 69
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/printCancelBetting.kt",
-      "selection": {
-        "end": {
-          "column": 39,
-          "index": 1535,
-          "line": 38
-        },
-        "start": {
-          "column": 39,
-          "index": 1535,
-          "line": 38
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/printMobileWithdrawDeposit.kt",
-      "selection": {
-        "end": {
-          "column": 39,
-          "index": 3211,
-          "line": 78
-        },
-        "start": {
-          "column": 39,
-          "index": 3211,
-          "line": 78
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/printMoneyOnHand.kt",
-      "selection": {
-        "end": {
-          "column": 39,
-          "index": 3838,
-          "line": 67
-        },
-        "start": {
-          "column": 39,
-          "index": 3838,
-          "line": 67
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Helper/printPayoutResponse.kt",
-      "selection": {
-        "end": {
-          "column": 39,
-          "index": 1174,
-          "line": 30
-        },
-        "start": {
-          "column": 39,
-          "index": 1174,
-          "line": 30
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Dashboard/dashboardMain.kt",
-      "selection": {
-        "end": {
-          "column": 33,
-          "index": 16773,
-          "line": 462
-        },
-        "start": {
-          "column": 33,
-          "index": 16773,
-          "line": 462
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/.github/workflows/android-build.yml",
-      "selection": {
-        "end": {
-          "column": 56,
-          "index": 567,
-          "line": 29
-        },
-        "start": {
-          "column": 56,
-          "index": 567,
-          "line": 29
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/build.gradle",
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/ReceiptDialog.kt",
       "selection": {
         "end": {
           "column": 0,
-          "index": 4646,
-          "line": 143
+          "index": 14132,
+          "line": 391
         },
         "start": {
           "column": 0,
-          "index": 4646,
-          "line": 143
+          "index": 14132,
+          "line": 391
         }
       }
     },
     {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Enter/login.kt",
+      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/tableLayout.kt",
       "selection": {
         "end": {
-          "column": 94,
-          "index": 12385,
-          "line": 334
+          "column": 18,
+          "index": 22950,
+          "line": 604
         },
         "start": {
-          "column": 94,
-          "index": 12385,
-          "line": 334
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/printWebsocketPOS.kt",
-      "selection": {
-        "end": {
-          "column": 0,
-          "index": 0,
-          "line": 0
-        },
-        "start": {
-          "column": 0,
-          "index": 0,
-          "line": 0
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Factory/loginFactory.kt",
-      "selection": {
-        "end": {
-          "column": 0,
-          "index": 0,
-          "line": 0
-        },
-        "start": {
-          "column": 0,
-          "index": 0,
-          "line": 0
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Network/api/CheckUserApi.kt",
-      "selection": {
-        "end": {
-          "column": 0,
-          "index": 519,
-          "line": 19
-        },
-        "start": {
-          "column": 0,
-          "index": 234,
-          "line": 10
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/Api/RetrofitClient.kt",
-      "selection": {
-        "end": {
-          "column": 1,
-          "index": 2203,
-          "line": 63
-        },
-        "start": {
-          "column": 1,
-          "index": 2203,
-          "line": 63
+          "column": 18,
+          "index": 22950,
+          "line": 604
         }
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/.github/workflows/android-build.yml"
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/client_b_app/app/src/main/java/com/noveleta/sabongbetting/widgets/tableLayout.kt"
 }
