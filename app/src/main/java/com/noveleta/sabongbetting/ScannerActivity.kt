@@ -165,7 +165,7 @@ fun BarcodeScannerScreen(
             overlayColor = Color.Green
             delay(1500L) // Wait 1.5 seconds
             overlayColor = Color.Red
-            scanCompleted = false // Reset for the next scan
+            onCancel()
         }
     }
 
@@ -190,8 +190,9 @@ fun BarcodeScannerScreen(
                             .addOnSuccessListener { barcodes ->
                                 barcodes.firstOrNull()?.rawValue?.let { code ->
                                     if (code.isNotEmpty() && !scanCompleted) {
-                                        scanCompleted = true // Trigger the reset logic
-                                        onScanResult(code)   // Send result to the parent
+                                        scanCompleted = true
+                                        onScanResult(code)   
+                                        onCancel()
                                     }
                                 }
                             }

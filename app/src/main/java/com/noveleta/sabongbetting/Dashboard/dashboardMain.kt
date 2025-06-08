@@ -458,7 +458,7 @@ var showScanner by remember { mutableStateOf(false) }
                 modifier = Modifier.padding(innerPadding)
             ) {
             
-            composable("barcode_scanner") {
+    composable("barcode_scanner") {
         BarcodeScannerScreen(
             onScanResult = { code ->
                 viewModelPayoutData.setTransactionCode(code)
