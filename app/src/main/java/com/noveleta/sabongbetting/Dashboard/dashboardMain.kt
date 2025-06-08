@@ -588,6 +588,7 @@ if (dashboardData != null) {
             } else if (betErrorCode == -1) {
                 PrintBetPayoutErrorResults(betResult) {
                     viewModelPayoutData.clearBetState()
+                    showScannerDialog = false
                 }
             }
         }

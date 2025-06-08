@@ -178,8 +178,6 @@ fun BarcodeScannerScreen(
         if (scanCompleted) {
             overlayColor = Color.Green
             delay(1000L)
-            cleanUpCamera()
-            onCancel()
         }
     }
 
