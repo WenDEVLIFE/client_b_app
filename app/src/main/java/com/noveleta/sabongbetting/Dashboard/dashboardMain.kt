@@ -170,6 +170,33 @@ var showScanner by remember { mutableStateOf(false) }
         }
     }
     
+   if (betResponse != null && showScannerDialog) {
+                PayoutReceiptDialog(betResponse!!) {
+                    viewModelPayoutData.clearBetState()
+                }
+                LaunchedEffect(betResponse) {
+                viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
+    viewModelDashboardData.connectWebSocket()
+    viewModelStaffBetData.refreshWebSocket()
+                    if (!SessionManager.isSunmiDevice) {
+        printWebsocketPOS.sendPayoutPrint(
+            ip = SessionManager.posIpAddress ?: "192.168.8.100",
+            port = SessionManager.posPortAddress ?: "8080",
+            payoutResponse = betResponse!!,
+            SessionManager.cname ?: "",
+            SessionManager.userpassword ?: ""
+        )
+                            }else{
+                            printPayout(context, betResponse!!)
+                            }
+                }
+            } else if (betErrorCode == -1 && showScannerDialog) {
+                PrintBetPayoutErrorResults(betResult) {
+                    viewModelPayoutData.clearBetState()
+                    showScannerDialog = false
+                }
+            }
    
     val isConnected by networkMonitor.isConnected.collectAsState()
 
@@ -565,33 +592,7 @@ if (dashboardData != null) {
                    showScannerDialog = false
                 }
             )
-        if (betResponse != null) {
-                PayoutReceiptDialog(betResponse!!) {
-                    viewModelPayoutData.clearBetState()
-                }
-                LaunchedEffect(betResponse) {
-                viewModelCallWebsocket.sendDashboardTrigger()
-    viewModelCallWebsocket.sendBetsTrigger()
-    viewModelDashboardData.connectWebSocket()
-    viewModelStaffBetData.refreshWebSocket()
-                    if (!SessionManager.isSunmiDevice) {
-        printWebsocketPOS.sendPayoutPrint(
-            ip = SessionManager.posIpAddress ?: "192.168.8.100",
-            port = SessionManager.posPortAddress ?: "8080",
-            payoutResponse = betResponse!!,
-            SessionManager.cname ?: "",
-            SessionManager.userpassword ?: ""
-        )
-                            }else{
-                            printPayout(context, betResponse!!)
-                            }
-                }
-            } else if (betErrorCode == -1) {
-                PrintBetPayoutErrorResults(betResult) {
-                    viewModelPayoutData.clearBetState()
-                    showScannerDialog = false
-                }
-            }
+        
         }
     }
 
