@@ -149,7 +149,6 @@ fun BarcodeScannerScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     var scanCompleted by remember { mutableStateOf(false) }
 
-    // State for visual feedback (e.g., changing overlay color)
     var overlayColor by remember { mutableStateOf(Color.Red) }
 
     val previewView = remember {
@@ -159,30 +158,44 @@ fun BarcodeScannerScreen(
         }
     }
 
-    // This LaunchedEffect handles the "reset" logic for continuous scanning.
+    // Hold references outside to dispose early when scan completes
+    val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
+    val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
+    val scanner = remember { BarcodeScanning.getClient() }
+
+    // Clean-up function
+    fun cleanUpCamera() {
+        try {
+            val cameraProvider = cameraProviderFuture.get()
+            cameraProvider.unbindAll()
+            scanner.close()
+            cameraExecutor.shutdown()
+            Log.d("BarcodeScannerScreen", "Camera resources released.")
+        } catch (e: Exception) {
+            Log.e("BarcodeScannerScreen", "Error releasing camera resources", e)
+        }
+    }
+
     LaunchedEffect(scanCompleted) {
         if (scanCompleted) {
             overlayColor = Color.Green
-            delay(1500L) // Wait 1.5 seconds
-            overlayColor = Color.Red
-            onCancel()
+            delay(1000L) // Show green for 1 second
+            cleanUpCamera()
+            onCancel() // Exit scanner screen
         }
     }
 
     DisposableEffect(lifecycleOwner) {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-        val cameraExecutor = Executors.newSingleThreadExecutor()
-        val scanner = BarcodeScanning.getClient()
-
         val analysisUseCase = ImageAnalysis.Builder()
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .build()
             .also {
                 it.setAnalyzer(cameraExecutor) { imageProxy ->
-                    if (scanCompleted) { // Drop frames if a scan was just completed
+                    if (scanCompleted) {
                         imageProxy.close()
                         return@setAnalyzer
                     }
+
                     val mediaImage = imageProxy.image
                     if (mediaImage != null) {
                         val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
@@ -191,50 +204,62 @@ fun BarcodeScannerScreen(
                                 barcodes.firstOrNull()?.rawValue?.let { code ->
                                     if (code.isNotEmpty() && !scanCompleted) {
                                         scanCompleted = true
-                                        onScanResult(code)   
-                                        onCancel()
+                                        onScanResult(code)
                                     }
                                 }
                             }
-                            .addOnFailureListener { e -> Log.e("BarcodeScannerScreen", "Scanning failed", e) }
-                            .addOnCompleteListener { imageProxy.close() }
+                            .addOnFailureListener { e ->
+                                Log.e("BarcodeScannerScreen", "Scanning failed", e)
+                            }
+                            .addOnCompleteListener {
+                                imageProxy.close()
+                            }
                     } else {
                         imageProxy.close()
                     }
                 }
             }
-        
+
         cameraProviderFuture.addListener({
-            val cameraProvider = cameraProviderFuture.get()
-            val preview = Preview.Builder().build().also { it.setSurfaceProvider(previewView.surfaceProvider) }
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
             try {
-                cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, preview, analysisUseCase)
-            } catch (exc: Exception) {
-                Log.e("BarcodeScannerScreen", "Use case binding failed", exc)
+                val cameraProvider = cameraProviderFuture.get()
+                val preview = Preview.Builder().build().also {
+                    it.setSurfaceProvider(previewView.surfaceProvider)
+                }
+                val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+                if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+                    cameraProvider.unbindAll()
+                    cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, preview, analysisUseCase)
+                }
+            } catch (e: Exception) {
+                Log.e("BarcodeScannerScreen", "Use case binding failed", e)
             }
         }, ContextCompat.getMainExecutor(context))
 
         onDispose {
-            Log.d("BarcodeScannerScreen", "Disposing scanner resources.")
-            cameraProviderFuture.get().unbindAll()
-            scanner.close()
-            cameraExecutor.shutdown()
+            cleanUpCamera()
         }
     }
 
     Box(modifier = modifier) {
         AndroidView(factory = { previewView }, modifier = Modifier.fillMaxSize())
-        ScannerOverlayBox(borderColor = overlayColor) 
-        
+        ScannerOverlayBox(borderColor = overlayColor)
+
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(16.dp)) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                .padding(16.dp)
+        ) {
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text("Scan QRCode Receipt", color = Color.White, fontWeight = FontWeight.Bold)
-                IconButton(onClick = onCancel) {
+                IconButton(onClick = {
+                    cleanUpCamera()
+                    onCancel()
+                }) {
                     Icon(Icons.Default.Close, "Close Scanner", tint = Color.White)
                 }
             }
