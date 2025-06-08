@@ -157,6 +157,7 @@ if(betResponse != null){
             SessionManager.userpassword ?: ""
         )
             }
+            navController.navigate("barcode_scanner")
             }else if (betErrorCode == -1) {
             
             PrintBetPayoutErrorResults(betResult){
@@ -461,6 +462,7 @@ var showScanner by remember { mutableStateOf(false) }
             onScanResult = { code ->
                 viewModelPayoutData.setTransactionCode(code)
                 scanFinish = true
+                navController.popBackStack()
             },
             onCancel = {
                 navController.popBackStack()
