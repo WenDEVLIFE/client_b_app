@@ -169,15 +169,7 @@ var showScanner by remember { mutableStateOf(false) }
         }
     }
     
-    if(scanFinish){
-    viewModelPayoutData.claimPayout(
-      context,
-        userID = companyId,
-        roleID = userRole,
-        barcodeResult = transactionCode
-      )
-    }
-    
+   
     val isConnected by networkMonitor.isConnected.collectAsState()
 
     var signalLevel by remember { mutableStateOf(0) }
@@ -550,32 +542,37 @@ if (dashboardData != null) {
                 .background(Color.Black.copy(alpha = 0.5f)), // Dim the background
             contentAlignment = Alignment.Center
         ) {
+        
+         if(scanFinish){
+    viewModelPayoutData.claimPayout(
+      context,
+        userID = companyId,
+        roleID = userRole,
+        barcodeResult = transactionCode
+      )
+    }
+    
             // 1. The scanner is always visible when the overlay is active
             BarcodeScannerScreen(
                 onScanResult = { code ->
                     if (code.isNotEmpty()) {
-                        // Set the code and trigger the claim, but DO NOT close the scanner
-                        viewModelPayoutData.setTransactionCode(code)
-                        scanFinish = true
+                       viewModelPayoutData.setTransactionCode(code)
+              scanFinish = true
                     }
                 },
                 onCancel = {
-                    // Only the cancel button can close the scanner overlay
-                    showScannerDialog = false
-                    // Also clear any lingering payout state when closing scanner
-                    viewModelPayoutData.clearBetState()
+                   showScannerDialog = false
                 }
             )
-
-            // 2. Payout dialogs are displayed on top of the scanner
-            if (betResponse != null) {
+        if (betResponse != null) {
                 PayoutReceiptDialog(betResponse!!) {
-                    // Dismissing the dialog clears the state, making it disappear,
-                    // but the scanner underneath remains visible.
                     viewModelPayoutData.clearBetState()
                 }
                 LaunchedEffect(betResponse) {
-                    printPayout(context, betResponse!!)
+                viewModelCallWebsocket.sendDashboardTrigger()
+    viewModelCallWebsocket.sendBetsTrigger()
+    viewModelDashboardData.connectWebSocket()
+    viewModelStaffBetData.refreshWebSocket()
                     if (!SessionManager.isSunmiDevice) {
         printWebsocketPOS.sendPayoutPrint(
             ip = SessionManager.posIpAddress ?: "192.168.8.100",
